@@ -2,8 +2,20 @@
 ## This program pulls the data from the APIs ###
 # Inspect --- Network ---- Fetch/XHR --- Preview / Headers
 
-## task: review APIs
-# ESPN: headers, categories, positions, dropdown, *byathlete, teams
+### ESPN APIs ###
+# Task: download json files for each week for 2013 (wk1, wk2,...) and see if the json has weekly identifiers (do this on Tuesday)
+# The APIs are headers, categories, positions, dropdown, *byathlete, teams
+# NOTE: Use the "byathelete" API when pulling from the website and create .json files with the data 
+#  -line 19 "atheletes" is a list of dictionaries each named named "athlete" which has the player stats
+#  -line 29780 "categories" is a list of dictionaries that contain the column headers
+#  -each "athlete" has a "categories" list of the individual stats (column headers)
+#  -match the "categories" list starting on line 29780 with each "categories" for each "athlete" 
+#  -Task: Choose a sample of players, go through each category and ensure the data matches with the ESPN website
+#  -Each "athlete" has a unique identifieer called "id" and must be included along with the player name and league 
+#  -Task: I noticed when I pulled the passing data it did not pull every player due to page limitiation. Adjust the pagination and limits to pull all data
+# NOTE: The "byathlete" API covers the basic player stats but not all of the splits
+#  -Task: Pull data from the splits page if possible and compare
+#  -I will need home vs away, indoors / outdoors, grass / turf, opponent, and outcome  
 
 # import the libraries
 import requests
