@@ -3,16 +3,18 @@
 # Inspect --- Network ---- Fetch/XHR --- Preview / Headers
 
 ### ESPN APIs ###
-# Task: download json files for each week for 2013 (wk1, wk2,...) and see if the json has weekly identifiers (do this on Tuesday)
+# Task: download json files for each week for 2023 (wk1, wk2,...) and see if the json has weekly identifiers (do this on Tuesday)
 # The APIs are headers, categories, positions, dropdown, *byathlete, teams
+
 # NOTE: Use the "byathelete" API when pulling from the website and create .json files with the data 
 #  -line 19 "atheletes" is a list of dictionaries each named named "athlete" which has the player stats
 #  -line 29780 "categories" is a list of dictionaries that contain the column headers
 #  -each "athlete" has a "categories" list of the individual stats (column headers)
 #  -match the "categories" list starting on line 29780 with each "categories" for each "athlete" 
+
 #  -Task: Choose a sample of players, go through each category and ensure the data matches with the ESPN website
 #  -Each "athlete" has a unique identifieer called "id" and must be included along with the player name and league 
-#  -Task: I noticed when I pulled the passing data it did not pull every player due to page limitiation. Adjust the pagination and limits to pull all data
+
 # NOTE: The "byathlete" API covers the basic player stats but not all of the splits
 #  -Task: Pull data from the splits page if possible and compare
 #  -I will need home vs away, indoors / outdoors, grass / turf, opponent, and outcome  
@@ -21,13 +23,14 @@
 import requests
 import json
 import csv
+import random
+import time
 
-# Set the URLs
-NFL_test_url = "https://site.web.api.espn.com/apis/common/v3/sports/football/nfl/statistics/byathlete?region=us&lang=en&contentorigin=espn&isqualified=false&page=1&limit=50&category=offense%3Apassing&sort=passing.passingYards%3Adesc&season=2022&seasontype=2"
+
 
 # Make an HTTP GET request
 def fetch_data(url):
-    response = requests.get(NFL_test_url)
+    response = requests.get(url)
 
     # test the response
     if response.status_code == 200:
@@ -57,13 +60,32 @@ def write_standard_csv(data,file_name):
                 csv_writer.writerow(player_data)
 
 if __name__ == "__main__":
-    NFL_test_url = "https://site.web.api.espn.com/apis/common/v3/sports/football/nfl/statistics/byathlete?region=us&lang=en&contentorigin=espn&isqualified=false&page=1&limit=50&category=offense%3Apassing&sort=passing.passingYards%3Adesc&season=2022&seasontype=2"
+
+    # list of URLs
+    urls = [
+            "https://site.web.api.espn.com/apis/common/v3/sports/football/nfl/statistics/byathlete?region=us&lang=en&contentorigin=espn&isqualified=false&page=1&limit=50&category=offense%3Apassing&sort=passing.passingYards%3Adesc&season=2022&seasontype=2",
+            "https://site.web.api.espn.com/apis/common/v3/sports/football/nfl/statistics/byathlete?region=us&lang=en&contentorigin=espn&isqualified=false&page=1&limit=50&category=offense%3Arushing&sort=rushing.rushingYards%3Adesc&season=2022&seasontype=2",
+            "https://site.web.api.espn.com/apis/common/v3/sports/football/nfl/statistics/byathlete?region=us&lang=en&contentorigin=espn&isqualified=false&page=1&limit=50&category=offense%3Areceiving&sort=receiving.receivingYards%3Adesc&season=2022&seasontype=2",
+            "https://site.web.api.espn.com/apis/common/v3/sports/football/nfl/statistics/byathlete?region=us&lang=en&contentorigin=espn&isqualified=false&page=1&limit=50&category=defense&sort=defensive.totalTackles%3Adesc&season=2022&seasontype=2",
+            "https://site.web.api.espn.com/apis/common/v3/sports/football/nfl/statistics/byathlete?region=us&lang=en&contentorigin=espn&isqualified=false&page=2&limit=50&category=defense&sort=defensive.totalTackles%3Adesc&season=2022&seasontype=2",
+            "https://site.web.api.espn.com/apis/common/v3/sports/football/nfl/statistics/byathlete?region=us&lang=en&contentorigin=espn&isqualified=false&page=3&limit=50&category=defense&sort=defensive.totalTackles%3Adesc&season=2022&seasontype=2",
+            "https://site.web.api.espn.com/apis/common/v3/sports/football/nfl/statistics/byathlete?region=us&lang=en&contentorigin=espn&isqualified=false&page=1&limit=50&category=scoring&sort=scoring.totalPoints%3Adesc&season=2022&seasontype=2",
+            "https://site.web.api.espn.com/apis/common/v3/sports/football/nfl/statistics/byathlete?region=us&lang=en&contentorigin=espn&isqualified=false&page=1&limit=50&category=specialTeams%3Areturning&sort=returning.kickReturnYards%3Adesc&season=2022&seasontype=2",
+            "https://site.web.api.espn.com/apis/common/v3/sports/football/nfl/statistics/byathlete?region=us&lang=en&contentorigin=espn&isqualified=false&page=1&limit=50&category=specialTeams%3Akicking&sort=kicking.fieldGoalsMade%3Adesc&season=2022&seasontype=2",
+            "https://site.web.api.espn.com/apis/common/v3/sports/football/nfl/statistics/byathlete?region=us&lang=en&contentorigin=espn&isqualified=true&page=1&limit=50&category=specialTeams%3Apunting&sort=punting.grossAvgPuntYards%3Adesc&season=2022&seasontype=2"
+    ]
     
-    data = fetch_data(NFL_test_url)
+    for index, url in enumerate(urls):
+
+        # Randomized time delay between 1 and 6 seconds
+        time_delay = random.uniform(1,6)
+        time.sleep(time_delay)
+
+        data = fetch_data(url)
     
-    if data:
-        if "resultSet" in data and "rowSet" in data["resultSet"]:
-            write_standard_csv(data, 'nfl_data.csv')
-        else:
-            with open("nfl_data_alternate.json", "w") as txtfile:
-                json.dump(data, txtfile, indent=4)
+        if data:
+            if "resultSet" in data and "rowSet" in data["resultSet"]:
+                write_standard_csv(data, 'nfl_data.csv')
+            else:
+                with open(f"nfl_stats_{index}.json", "w") as txtfile:
+                    json.dump(data, txtfile, indent=4)
