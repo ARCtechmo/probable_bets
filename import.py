@@ -3,21 +3,28 @@
 # Inspect --- Network ---- Fetch/XHR --- Preview / Headers
 
 ### ESPN APIs ###
+# NOTE: The "siteapi" "byathlete" API covers the basic player stats (no API for splits and other status)
 # Task: download json files for each week for 2023 (wk1, wk2,...) and see if the json has weekly identifiers (do this on Tuesday)
-# The APIs are headers, categories, positions, dropdown, *byathlete, teams
-
-# NOTE: Use the "byathelete" API when pulling from the website and create .json files with the data 
 #  -line 19 "atheletes" is a list of dictionaries each named named "athlete" which has the player stats
 #  -line 29780 "categories" is a list of dictionaries that contain the column headers
 #  -each "athlete" has a "categories" list of the individual stats (column headers)
 #  -match the "categories" list starting on line 29780 with each "categories" for each "athlete" 
+#  -choose a sample of players, go through each category and ensure the data matches with the ESPN website
+#  -each "athlete" has a unique identifieer called "id" and must be included along with the player name and league 
 
-#  -Task: Choose a sample of players, go through each category and ensure the data matches with the ESPN website
-#  -Each "athlete" has a unique identifieer called "id" and must be included along with the player name and league 
+# Task: modify the code as necessary to download the .json files from the API
+## 4for4 Air Yards API ##
 
-# NOTE: The "byathlete" API covers the basic player stats but not all of the splits
-#  -Task: Pull data from the splits page if possible and compare
-#  -I will need home vs away, indoors / outdoors, grass / turf, opponent, and outcome  
+## FantasyPros projections API ## 
+# https://api.fantasypros.com/public/v2/json/nfl/{season}/projections
+
+## PFF API ##
+# https://www.pff.com/api/betting/best_bets?league=nfl
+
+# Task: update code to scrape the html (requests or beautifulsoup)
+## thelines.com ## game totals and implied team totals
+# https://www.thelines.com/betting/nfl/implied-team-totals/
+
 
 # import the libraries
 import requests
