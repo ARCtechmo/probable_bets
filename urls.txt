@@ -11,9 +11,6 @@ https://site.web.api.espn.com/apis/common/v3/sports/football/nfl/statistics/byat
 https://site.web.api.espn.com/apis/common/v3/sports/football/nfl/statistics/byathlete?region=us&lang=en&contentorigin=espn&isqualified=false&page=1&limit=50&category=specialTeams%3Akicking&sort=kicking.fieldGoalsMade%3Adesc&season=2022&seasontype=2
 https://site.web.api.espn.com/apis/common/v3/sports/football/nfl/statistics/byathlete?region=us&lang=en&contentorigin=espn&isqualified=true&page=1&limit=50&category=specialTeams%3Apunting&sort=punting.grossAvgPuntYards%3Adesc&season=2022&seasontype=2
 
-4for4 Air Yards API
-https://nfl-air-yards.uc.r.appspot.com/query?weeks=1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18&min-targets=0&sort-col=7&sort-asc=F&page=0
-
 PFF player and team props API
 https://www.pff.com/api/betting/best_bets?league=nfl
 
@@ -23,4 +20,8 @@ https://api.fantasypros.com/public/v2/json/nfl/{season}/projections
 
 thelines.com game totals and implied team totals (No API)
 https://www.thelines.com/betting/nfl/implied-team-totals/
+
+4for4 Air Yards
+https://nfl-air-yards.uc.r.appspot.com/query?weeks=1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18&min-targets=0&sort-col=7&sort-asc=F&page=0
+
 
