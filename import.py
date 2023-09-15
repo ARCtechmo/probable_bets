@@ -3,28 +3,28 @@
 # Inspect --- Network ---- Fetch/XHR --- Preview / Headers
 
 ### ESPN APIs ###
+#  Task: choose a sample of players, go through each category and ensure the data matches with the ESPN website
 # NOTE: The "siteapi" "byathlete" API covers the basic player stats (no API for splits and other status)
-# Task: download json files for each week for 2023 (wk1, wk2,...) and see if the json has weekly identifiers (do this on Tuesday)
+#  -"currentSeason" key (at the bottom of the jsont file) has the dates and regular season weeks
 #  -line 19 "atheletes" is a list of dictionaries each named named "athlete" which has the player stats
-#  -line 29780 "categories" is a list of dictionaries that contain the column headers
-#  -each "athlete" has a "categories" list of the individual stats (column headers)
-#  -match the "categories" list starting on line 29780 with each "categories" for each "athlete" 
-#  -choose a sample of players, go through each category and ensure the data matches with the ESPN website
 #  -each "athlete" has a unique identifieer called "id" and must be included along with the player name and league 
-
-# Task: modify the code as necessary to download the .json files from the API
+#  -line 29780 "categories" is a list of dictionaries that contain the column headers
+#  -match the "categories" list starting on line 29780 with each "categories" for each "athlete" 
+#  -each "athlete" has a "categories" list of the individual stats (column headers)
 
 ## FantasyPros projections API ## 
+# NOTE: waiting for the API key
 # https://api.fantasypros.com/public/v2/json/nfl/{season}/projections
 
 ## PFF API ##
 # https://www.pff.com/api/betting/best_bets?league=nfl
+# has unique id for each game: "game_id"
 
 # Task: update code to scrape the html (requests or beautifulsoup)
-
 ## thelines.com ## game totals and implied team totals
 # https://www.thelines.com/betting/nfl/implied-team-totals/
 
+# Task: update code to scrape the html (requests or beautifulsoup)
 ## 4for4 Air Yards ##
 # https://www.4for4.com/tools/air-yards
 
@@ -35,6 +35,11 @@ import csv
 import random
 import time
 from urllib.parse import urlparse, parse_qs
+from datetime import datetime 
+
+# Prompt the user to enter a year and use the current year if the input is blank
+user_input = input("Please enter the year you want to fetch data for (hit Enter for current year): ")
+year = user_input if user_input else str(datetime.now().year)
 
 # Make an HTTP GET request
 def fetch_data(url):
@@ -90,17 +95,17 @@ if __name__ == "__main__":
 
     # list of URLs
     urls = [
-            "https://site.web.api.espn.com/apis/common/v3/sports/football/nfl/statistics/byathlete?region=us&lang=en&contentorigin=espn&isqualified=false&page=1&limit=50&category=offense%3Apassing&sort=passing.passingYards%3Adesc&season=2022&seasontype=2",
-            "https://site.web.api.espn.com/apis/common/v3/sports/football/nfl/statistics/byathlete?region=us&lang=en&contentorigin=espn&isqualified=false&page=1&limit=50&category=offense%3Arushing&sort=rushing.rushingYards%3Adesc&season=2022&seasontype=2",
-            "https://site.web.api.espn.com/apis/common/v3/sports/football/nfl/statistics/byathlete?region=us&lang=en&contentorigin=espn&isqualified=false&page=1&limit=50&category=offense%3Areceiving&sort=receiving.receivingYards%3Adesc&season=2022&seasontype=2",
-            "https://site.web.api.espn.com/apis/common/v3/sports/football/nfl/statistics/byathlete?region=us&lang=en&contentorigin=espn&isqualified=false&page=1&limit=50&category=defense&sort=defensive.totalTackles%3Adesc&season=2022&seasontype=2",
-            "https://site.web.api.espn.com/apis/common/v3/sports/football/nfl/statistics/byathlete?region=us&lang=en&contentorigin=espn&isqualified=false&page=2&limit=50&category=defense&sort=defensive.totalTackles%3Adesc&season=2022&seasontype=2",
-            "https://site.web.api.espn.com/apis/common/v3/sports/football/nfl/statistics/byathlete?region=us&lang=en&contentorigin=espn&isqualified=false&page=3&limit=50&category=defense&sort=defensive.totalTackles%3Adesc&season=2022&seasontype=2",
-            "https://site.web.api.espn.com/apis/common/v3/sports/football/nfl/statistics/byathlete?region=us&lang=en&contentorigin=espn&isqualified=false&page=1&limit=50&category=scoring&sort=scoring.totalPoints%3Adesc&season=2022&seasontype=2",
-            "https://site.web.api.espn.com/apis/common/v3/sports/football/nfl/statistics/byathlete?region=us&lang=en&contentorigin=espn&isqualified=false&page=1&limit=50&category=specialTeams%3Areturning&sort=returning.kickReturnYards%3Adesc&season=2022&seasontype=2",
-            "https://site.web.api.espn.com/apis/common/v3/sports/football/nfl/statistics/byathlete?region=us&lang=en&contentorigin=espn&isqualified=false&page=1&limit=50&category=specialTeams%3Akicking&sort=kicking.fieldGoalsMade%3Adesc&season=2022&seasontype=2",
-            "https://site.web.api.espn.com/apis/common/v3/sports/football/nfl/statistics/byathlete?region=us&lang=en&contentorigin=espn&isqualified=true&page=1&limit=50&category=specialTeams%3Apunting&sort=punting.grossAvgPuntYards%3Adesc&season=2022&seasontype=2",
-
+            f"https://site.web.api.espn.com/apis/common/v3/sports/football/nfl/statistics/byathlete?region=us&lang=en&contentorigin=espn&isqualified=false&page=1&limit=50&category=offense%3Apassing&sort=passing.passingYards%3Adesc&season={year}&seasontype=2",
+            f"https://site.web.api.espn.com/apis/common/v3/sports/football/nfl/statistics/byathlete?region=us&lang=en&contentorigin=espn&isqualified=false&page=1&limit=50&category=offense%3Arushing&sort=rushing.rushingYards%3Adesc&season={year}&seasontype=2",
+            f"https://site.web.api.espn.com/apis/common/v3/sports/football/nfl/statistics/byathlete?region=us&lang=en&contentorigin=espn&isqualified=false&page=1&limit=50&category=offense%3Areceiving&sort=receiving.receivingYards%3Adesc&season={year}&seasontype=2",
+            f"https://site.web.api.espn.com/apis/common/v3/sports/football/nfl/statistics/byathlete?region=us&lang=en&contentorigin=espn&isqualified=false&page=1&limit=50&category=defense&sort=defensive.totalTackles%3Adesc&season={year}&seasontype=2",
+            f"https://site.web.api.espn.com/apis/common/v3/sports/football/nfl/statistics/byathlete?region=us&lang=en&contentorigin=espn&isqualified=false&page=2&limit=50&category=defense&sort=defensive.totalTackles%3Adesc&season={year}&seasontype=2",
+            f"https://site.web.api.espn.com/apis/common/v3/sports/football/nfl/statistics/byathlete?region=us&lang=en&contentorigin=espn&isqualified=false&page=3&limit=50&category=defense&sort=defensive.totalTackles%3Adesc&season={year}&seasontype=2",
+            f"https://site.web.api.espn.com/apis/common/v3/sports/football/nfl/statistics/byathlete?region=us&lang=en&contentorigin=espn&isqualified=false&page=1&limit=50&category=scoring&sort=scoring.totalPoints%3Adesc&season={year}&seasontype=2",
+            f"https://site.web.api.espn.com/apis/common/v3/sports/football/nfl/statistics/byathlete?region=us&lang=en&contentorigin=espn&isqualified=false&page=1&limit=50&category=specialTeams%3Areturning&sort=returning.kickReturnYards%3Adesc&season={year}&seasontype=2",
+            f"https://site.web.api.espn.com/apis/common/v3/sports/football/nfl/statistics/byathlete?region=us&lang=en&contentorigin=espn&isqualified=false&page=1&limit=50&category=specialTeams%3Akicking&sort=kicking.fieldGoalsMade%3Adesc&season={year}&seasontype=2",
+            f"https://site.web.api.espn.com/apis/common/v3/sports/football/nfl/statistics/byathlete?region=us&lang=en&contentorigin=espn&isqualified=true&page=1&limit=50&category=specialTeams%3Apunting&sort=punting.grossAvgPuntYards%3Adesc&season={year}&seasontype=2",
+            # f"https://www.pff.com/api/betting/best_bets?league=nfl"
             ]
     
     # loop through the urls
@@ -121,6 +126,10 @@ if __name__ == "__main__":
                 if json_file_name:
                     with open(json_file_name, "w") as txtfile:
                         json.dump(data, txtfile, indent=4)
-        
+
+            elif 'pff' in url:
+                 with open('pff_prop_bets', "w") as txtfile:
+                      json.dump(data, txtfile, indent=4)
+                 
         # elif "resultSet" in data and "rowSet" in data["resultSet"]:
         #     write_standard_csv(data, 'nfl_data.csv')
