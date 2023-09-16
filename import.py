@@ -30,6 +30,8 @@
 
 # import the libraries
 import requests
+from requests_html import HTMLSession
+from bs4 import BeautifulSoup
 import json
 import csv
 import random
@@ -37,27 +39,74 @@ import time
 from urllib.parse import urlparse, parse_qs
 from datetime import datetime 
 
-# Prompt the user to enter a year and use the current year if the input is blank
-user_input = input("Please enter the year you want to fetch data for (hit Enter for current year): ")
-year = user_input if user_input else str(datetime.now().year)
+ # list of URLs
+urls = [
+        # f"https://site.web.api.espn.com/apis/common/v3/sports/football/nfl/statistics/byathlete?region=us&lang=en&contentorigin=espn&isqualified=false&page=1&limit=50&category=offense%3Apassing&sort=passing.passingYards%3Adesc&season={year}&seasontype=2",
+        # f"https://site.web.api.espn.com/apis/common/v3/sports/football/nfl/statistics/byathlete?region=us&lang=en&contentorigin=espn&isqualified=false&page=1&limit=50&category=offense%3Arushing&sort=rushing.rushingYards%3Adesc&season={year}&seasontype=2",
+        # f"https://site.web.api.espn.com/apis/common/v3/sports/football/nfl/statistics/byathlete?region=us&lang=en&contentorigin=espn&isqualified=false&page=1&limit=50&category=offense%3Areceiving&sort=receiving.receivingYards%3Adesc&season={year}&seasontype=2",
+        # f"https://site.web.api.espn.com/apis/common/v3/sports/football/nfl/statistics/byathlete?region=us&lang=en&contentorigin=espn&isqualified=false&page=1&limit=50&category=defense&sort=defensive.totalTackles%3Adesc&season={year}&seasontype=2",
+        # f"https://site.web.api.espn.com/apis/common/v3/sports/football/nfl/statistics/byathlete?region=us&lang=en&contentorigin=espn&isqualified=false&page=2&limit=50&category=defense&sort=defensive.totalTackles%3Adesc&season={year}&seasontype=2",
+        # f"https://site.web.api.espn.com/apis/common/v3/sports/football/nfl/statistics/byathlete?region=us&lang=en&contentorigin=espn&isqualified=false&page=3&limit=50&category=defense&sort=defensive.totalTackles%3Adesc&season={year}&seasontype=2",
+        # f"https://site.web.api.espn.com/apis/common/v3/sports/football/nfl/statistics/byathlete?region=us&lang=en&contentorigin=espn&isqualified=false&page=1&limit=50&category=scoring&sort=scoring.totalPoints%3Adesc&season={year}&seasontype=2",
+        # f"https://site.web.api.espn.com/apis/common/v3/sports/football/nfl/statistics/byathlete?region=us&lang=en&contentorigin=espn&isqualified=false&page=1&limit=50&category=specialTeams%3Areturning&sort=returning.kickReturnYards%3Adesc&season={year}&seasontype=2",
+        # f"https://site.web.api.espn.com/apis/common/v3/sports/football/nfl/statistics/byathlete?region=us&lang=en&contentorigin=espn&isqualified=false&page=1&limit=50&category=specialTeams%3Akicking&sort=kicking.fieldGoalsMade%3Adesc&season={year}&seasontype=2",
+        # f"https://site.web.api.espn.com/apis/common/v3/sports/football/nfl/statistics/byathlete?region=us&lang=en&contentorigin=espn&isqualified=true&page=1&limit=50&category=specialTeams%3Apunting&sort=punting.grossAvgPuntYards%3Adesc&season={year}&seasontype=2",
+        # f"https://www.pff.com/api/betting/best_bets?league=nfl",
+        f"https://www.thelines.com/betting/nfl/implied-team-totals/"
+        ]
 
-# Make an HTTP GET request
+
+# Initialize data variable to avoid NameError
+data = None
+
+# Prompt the user to enter a year and use the current year if the input is blank
+# Ensure valid year input
+try:
+    user_input = input("Please enter the year you want to fetch data for (hit Enter for current year): ")
+    year = user_input if user_input else str(datetime.now().year)
+except ValueError:
+    print("Invalid year entered. Using current year instead.")
+    year = datetime.now().year
+
+# function for randomized time delay 
+def handle_random_delay(min_delay=1, max_delay=3):
+    time_delay = random.uniform(min_delay,max_delay)
+    time.sleep(time_delay)
+
+# function tests  HTTP GET request
 def fetch_data(url):
     response = requests.get(url)
 
     # test the response
-    if response.status_code == 200:
-        print(f"Successfully got the data: HTTP Status Code: {response.status_code}")
+    try:
+        response = requests.get(url)
+        response.raise_for_status()
+        print(f"Successfully retrieved {url}")
     
         # load the JSON from the URL
         return response.json()
     
     # return HTTPS failed response
-    else:
-        print(f"Failed to get data. HTTP Status Code: {response.status_code}")
+    except requests.RequestException as e:
+        print(f"Failed to retrieve {url}. Error: {e}")
+        return None
+
+# function tests HTTP requests for the html
+def fetch_html(url):
+
+    # test the response
+    try:
+        session = HTMLSession()
+        response = session.get(url)
+        print(f"Successfully retrieved {url}:")
+        return response.text
+    
+    # capture exception 
+    except Exception as e:
+        print(f"Failed to retrieve {url}. Error {e}")
         return None
     
-# dump JSON to a CSV file 
+# function to dump JSON to a CSV file 
 def write_standard_csv(data,file_name):
 
     # Open or create a .csv file to write to
@@ -72,7 +121,7 @@ def write_standard_csv(data,file_name):
         for player_data in data["resultSet"]["rowSet"]:
                 csv_writer.writerow(player_data)
 
-# parse the espn urls, name, and dump into json files
+# function parses and formats the ESPN urls
 def parse_espn_url(url):
 
         # Formulate JSON filename based on URL components
@@ -91,45 +140,56 @@ def parse_espn_url(url):
             return f"espn_{sort_value}_page{page_param}_{season_param}.json"
         return None
 
-if __name__ == "__main__":
+# function parses the ESPN urls and dumps into json files
+def handle_espn_data(url):
+     data = fetch_data(url)
+     if data:
+        json_file_name = parse_espn_url(url)
+        if json_file_name:
+            with open(json_file_name, "w") as txtfile:
+                json.dump(data, txtfile, indent=4)
 
-    # list of URLs
-    urls = [
-            f"https://site.web.api.espn.com/apis/common/v3/sports/football/nfl/statistics/byathlete?region=us&lang=en&contentorigin=espn&isqualified=false&page=1&limit=50&category=offense%3Apassing&sort=passing.passingYards%3Adesc&season={year}&seasontype=2",
-            f"https://site.web.api.espn.com/apis/common/v3/sports/football/nfl/statistics/byathlete?region=us&lang=en&contentorigin=espn&isqualified=false&page=1&limit=50&category=offense%3Arushing&sort=rushing.rushingYards%3Adesc&season={year}&seasontype=2",
-            f"https://site.web.api.espn.com/apis/common/v3/sports/football/nfl/statistics/byathlete?region=us&lang=en&contentorigin=espn&isqualified=false&page=1&limit=50&category=offense%3Areceiving&sort=receiving.receivingYards%3Adesc&season={year}&seasontype=2",
-            f"https://site.web.api.espn.com/apis/common/v3/sports/football/nfl/statistics/byathlete?region=us&lang=en&contentorigin=espn&isqualified=false&page=1&limit=50&category=defense&sort=defensive.totalTackles%3Adesc&season={year}&seasontype=2",
-            f"https://site.web.api.espn.com/apis/common/v3/sports/football/nfl/statistics/byathlete?region=us&lang=en&contentorigin=espn&isqualified=false&page=2&limit=50&category=defense&sort=defensive.totalTackles%3Adesc&season={year}&seasontype=2",
-            f"https://site.web.api.espn.com/apis/common/v3/sports/football/nfl/statistics/byathlete?region=us&lang=en&contentorigin=espn&isqualified=false&page=3&limit=50&category=defense&sort=defensive.totalTackles%3Adesc&season={year}&seasontype=2",
-            f"https://site.web.api.espn.com/apis/common/v3/sports/football/nfl/statistics/byathlete?region=us&lang=en&contentorigin=espn&isqualified=false&page=1&limit=50&category=scoring&sort=scoring.totalPoints%3Adesc&season={year}&seasontype=2",
-            f"https://site.web.api.espn.com/apis/common/v3/sports/football/nfl/statistics/byathlete?region=us&lang=en&contentorigin=espn&isqualified=false&page=1&limit=50&category=specialTeams%3Areturning&sort=returning.kickReturnYards%3Adesc&season={year}&seasontype=2",
-            f"https://site.web.api.espn.com/apis/common/v3/sports/football/nfl/statistics/byathlete?region=us&lang=en&contentorigin=espn&isqualified=false&page=1&limit=50&category=specialTeams%3Akicking&sort=kicking.fieldGoalsMade%3Adesc&season={year}&seasontype=2",
-            f"https://site.web.api.espn.com/apis/common/v3/sports/football/nfl/statistics/byathlete?region=us&lang=en&contentorigin=espn&isqualified=true&page=1&limit=50&category=specialTeams%3Apunting&sort=punting.grossAvgPuntYards%3Adesc&season={year}&seasontype=2",
-            # f"https://www.pff.com/api/betting/best_bets?league=nfl"
-            ]
+# function fetches .json data for pff prop bets 
+def handle_pff_data(url):
+    data = fetch_data(url)
+    if data:
+        with open('pff_prop_bets', "w") as txtfile:
+            json.dump(data, txtfile, indent=4)
+
+# function feteches html data from thelines website
+def handle_thelines_data(url):
+    html_content = fetch_html(url)
+    if html_content:
+        parse_thelines_html(html_content)
+        save_html_to_txt(html_content, "thelines_page")
+
+# function saves HTML to a .txt file
+def save_html_to_txt(html_content, filename):
+    with open(f"{filename}.txt", "w", encoding='utf-8') as txtfile:
+        txtfile.write(html_content)
+
+# function parses html from 'thelines' website
+def parse_thelines_html(html_content):
+
+    # Initialize BeautifulSoup object
+    soup = BeautifulSoup(html_content, 'lxml')
+    title = soup.title.string if soup.title else "No title found"
+    print(f"Page Title: {title}")
+
+# main loop
+if __name__ == "__main__":
     
-    # loop through the urls
+    # loop through the urls and fetch the data
     for url in urls:
 
-        # Randomized time delay between 1 and 6 seconds
-        # fetch the urls and assign to a variable        
-        time_delay = random.uniform(1,3)
-        time.sleep(time_delay)
-        data = fetch_data(url)
+        # execute time delay
+        handle_random_delay()
 
-        # test urls string splicing without fetching
-        # data = urls
+        if 'espn' in url:
+            handle_espn_data(url)
 
-        if data:
-            if 'espn' in url:
-                json_file_name = parse_espn_url(url)
-                if json_file_name:
-                    with open(json_file_name, "w") as txtfile:
-                        json.dump(data, txtfile, indent=4)
+        elif 'pff' in url:
+            handle_pff_data(url)
 
-            elif 'pff' in url:
-                 with open('pff_prop_bets', "w") as txtfile:
-                      json.dump(data, txtfile, indent=4)
-                 
-        # elif "resultSet" in data and "rowSet" in data["resultSet"]:
-        #     write_standard_csv(data, 'nfl_data.csv')
+        elif 'thelines' in url:
+            handle_thelines_data(url)
