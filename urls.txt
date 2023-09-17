@@ -15,11 +15,18 @@ PFF player and team props API
 https://www.pff.com/api/betting/best_bets?league=nfl
 
 fantasypros.com for player projections API
-https://api.fantasypros.com/public/v2/docs#introduction
 https://api.fantasypros.com/public/v2/json/nfl/{season}/projections
+https://api.fantasypros.com/public/v2/docs#introduction
 https://slatedocs.github.io/slate/?python#authentication
 
-thelines.com game totals and implied team totals (No API)
+rotowire
+https://www.rotowire.com/betting/nfl/tables/nfl-games.php?week=2
+
+
+rotocurve
+https://rotocurve.com/nfl/weekly-betting-lines-odds/
+
+thelines.com game totals and implied team totals (No API and blocks scraping)
 https://www.thelines.com/betting/nfl/implied-team-totals/
 
 4for4 Air Yards
