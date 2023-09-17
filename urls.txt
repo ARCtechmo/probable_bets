@@ -22,6 +22,8 @@ https://slatedocs.github.io/slate/?python#authentication
 rotowire
 https://www.rotowire.com/betting/nfl/tables/nfl-games.php?week=2
 
+airyards.com
+https://apps.airyards.com
 
 rotocurve
 https://rotocurve.com/nfl/weekly-betting-lines-odds/

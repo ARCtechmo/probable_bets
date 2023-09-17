@@ -24,6 +24,15 @@
 # https://www.rotowire.com/betting/nfl/tables/nfl-games.php?week={week}
 # has unique id for each game: "game_id
 
+## airyards CSV file only##
+# NOTE: website uses unique session ids and nounces as security measures to prevent webscraping; returns empty json files
+# https://apps.airyards.com/airyards.com_wopr_app/session
+
+# Tasks:
+# review json files
+# decide which categores to pull and build lists
+# outline your database design / tables
+
 # import the libraries
 import requests
 from requests_html import HTMLSession
@@ -117,6 +126,15 @@ def handle_rotowire_data(url):
                 json.dump(data, txtfile, indent=4)
         return data
 
+# function fetches .json data for nfl air yards
+def handle_airyards_data(url):
+    data = fetch_data(url)
+    if data:
+        with open('airyards1', "w") as txtfile:
+            json.dump(data, txtfile, indent=4)
+
+    return data
+
 # main loop
 ## Explanation of the 'if __name__ == "__main__"': ##
 # -only gets executed when the script is run directly
@@ -156,7 +174,7 @@ if __name__ == "__main__":
             # f"https://site.web.api.espn.com/apis/common/v3/sports/football/nfl/statistics/byathlete?region=us&lang=en&contentorigin=espn&isqualified=false&page=1&limit=50&category=specialTeams%3Akicking&sort=kicking.fieldGoalsMade%3Adesc&season={year}&seasontype=2",
             # f"https://site.web.api.espn.com/apis/common/v3/sports/football/nfl/statistics/byathlete?region=us&lang=en&contentorigin=espn&isqualified=true&page=1&limit=50&category=specialTeams%3Apunting&sort=punting.grossAvgPuntYards%3Adesc&season={year}&seasontype=2",
             # f"https://www.pff.com/api/betting/best_bets?league=nfl",
-            # f"https://www.rotowire.com/betting/nfl/tables/nfl-games.php?week={week}"
+            # f"https://www.rotowire.com/betting/nfl/tables/nfl-games.php?week={week}",
             
             ]
 
@@ -174,4 +192,7 @@ if __name__ == "__main__":
         
         elif 'rotowire' in url:
             handle_rotowire_data(url)
+        
+        elif 'airyards' in url:
+            handle_airyards_data(url)
 
