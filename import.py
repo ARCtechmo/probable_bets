@@ -20,13 +20,9 @@
 # https://www.pff.com/api/betting/best_bets?league=nfl
 # has unique id for each game: "game_id"
 
-# Task: update code to scrape the html (requests or beautifulsoup)
-## thelines.com ## game totals and implied team totals
-# https://www.thelines.com/betting/nfl/implied-team-totals/
-
-# Task: update code to scrape the html (requests or beautifulsoup)
-## 4for4 Air Yards ##
-# https://www.4for4.com/tools/air-yards
+## rotowire API ##
+# https://www.rotowire.com/betting/nfl/tables/nfl-games.php?week={week}
+# has unique id for each game: "game_id
 
 # import the libraries
 import requests
@@ -39,34 +35,8 @@ import time
 from urllib.parse import urlparse, parse_qs
 from datetime import datetime 
 
- # list of URLs
-urls = [
-        # f"https://site.web.api.espn.com/apis/common/v3/sports/football/nfl/statistics/byathlete?region=us&lang=en&contentorigin=espn&isqualified=false&page=1&limit=50&category=offense%3Apassing&sort=passing.passingYards%3Adesc&season={year}&seasontype=2",
-        # f"https://site.web.api.espn.com/apis/common/v3/sports/football/nfl/statistics/byathlete?region=us&lang=en&contentorigin=espn&isqualified=false&page=1&limit=50&category=offense%3Arushing&sort=rushing.rushingYards%3Adesc&season={year}&seasontype=2",
-        # f"https://site.web.api.espn.com/apis/common/v3/sports/football/nfl/statistics/byathlete?region=us&lang=en&contentorigin=espn&isqualified=false&page=1&limit=50&category=offense%3Areceiving&sort=receiving.receivingYards%3Adesc&season={year}&seasontype=2",
-        # f"https://site.web.api.espn.com/apis/common/v3/sports/football/nfl/statistics/byathlete?region=us&lang=en&contentorigin=espn&isqualified=false&page=1&limit=50&category=defense&sort=defensive.totalTackles%3Adesc&season={year}&seasontype=2",
-        # f"https://site.web.api.espn.com/apis/common/v3/sports/football/nfl/statistics/byathlete?region=us&lang=en&contentorigin=espn&isqualified=false&page=2&limit=50&category=defense&sort=defensive.totalTackles%3Adesc&season={year}&seasontype=2",
-        # f"https://site.web.api.espn.com/apis/common/v3/sports/football/nfl/statistics/byathlete?region=us&lang=en&contentorigin=espn&isqualified=false&page=3&limit=50&category=defense&sort=defensive.totalTackles%3Adesc&season={year}&seasontype=2",
-        # f"https://site.web.api.espn.com/apis/common/v3/sports/football/nfl/statistics/byathlete?region=us&lang=en&contentorigin=espn&isqualified=false&page=1&limit=50&category=scoring&sort=scoring.totalPoints%3Adesc&season={year}&seasontype=2",
-        # f"https://site.web.api.espn.com/apis/common/v3/sports/football/nfl/statistics/byathlete?region=us&lang=en&contentorigin=espn&isqualified=false&page=1&limit=50&category=specialTeams%3Areturning&sort=returning.kickReturnYards%3Adesc&season={year}&seasontype=2",
-        # f"https://site.web.api.espn.com/apis/common/v3/sports/football/nfl/statistics/byathlete?region=us&lang=en&contentorigin=espn&isqualified=false&page=1&limit=50&category=specialTeams%3Akicking&sort=kicking.fieldGoalsMade%3Adesc&season={year}&seasontype=2",
-        # f"https://site.web.api.espn.com/apis/common/v3/sports/football/nfl/statistics/byathlete?region=us&lang=en&contentorigin=espn&isqualified=true&page=1&limit=50&category=specialTeams%3Apunting&sort=punting.grossAvgPuntYards%3Adesc&season={year}&seasontype=2",
-        # f"https://www.pff.com/api/betting/best_bets?league=nfl",
-        f"https://www.thelines.com/betting/nfl/implied-team-totals/"
-        ]
-
-
 # Initialize data variable to avoid NameError
 data = None
-
-# Prompt the user to enter a year and use the current year if the input is blank
-# Ensure valid year input
-try:
-    user_input = input("Please enter the year you want to fetch data for (hit Enter for current year): ")
-    year = user_input if user_input else str(datetime.now().year)
-except ValueError:
-    print("Invalid year entered. Using current year instead.")
-    year = datetime.now().year
 
 # function for randomized time delay 
 def handle_random_delay(min_delay=1, max_delay=3):
@@ -90,37 +60,7 @@ def fetch_data(url):
     except requests.RequestException as e:
         print(f"Failed to retrieve {url}. Error: {e}")
         return None
-
-# function tests HTTP requests for the html
-def fetch_html(url):
-
-    # test the response
-    try:
-        session = HTMLSession()
-        response = session.get(url)
-        print(f"Successfully retrieved {url}:")
-        return response.text
-    
-    # capture exception 
-    except Exception as e:
-        print(f"Failed to retrieve {url}. Error {e}")
-        return None
-    
-# function to dump JSON to a CSV file 
-def write_standard_csv(data,file_name):
-
-    # Open or create a .csv file to write to
-    with open(file_name,'w', newline='') as csvfile:
-        csv_writer = csv.writer(csvfile)
-        
-        # Write header to CSV file
-        headers = data["resultSet"]["headers"]
-        csv_writer.writerow(headers)
-        
-        # Write data to CSV file
-        for player_data in data["resultSet"]["rowSet"]:
-                csv_writer.writerow(player_data)
-
+  
 # function parses and formats the ESPN urls
 def parse_espn_url(url):
 
@@ -148,6 +88,7 @@ def handle_espn_data(url):
         if json_file_name:
             with open(json_file_name, "w") as txtfile:
                 json.dump(data, txtfile, indent=4)
+        return data
 
 # function fetches .json data for pff prop bets 
 def handle_pff_data(url):
@@ -155,30 +96,70 @@ def handle_pff_data(url):
     if data:
         with open('pff_prop_bets', "w") as txtfile:
             json.dump(data, txtfile, indent=4)
+        return data
 
-# function feteches html data from thelines website
-def handle_thelines_data(url):
-    html_content = fetch_html(url)
-    if html_content:
-        parse_thelines_html(html_content)
-        save_html_to_txt(html_content, "thelines_page")
+# function parses the rotowire url
+def parse_rotowire_url(url):
+    query_string = urlparse(url).query
+    params = parse_qs(query_string)
+    week_param = params.get('week', [''])[0]
+    if week_param:
+        return f"rotowire_odds_lines_week_{week_param}.json"
+    return None
 
-# function saves HTML to a .txt file
-def save_html_to_txt(html_content, filename):
-    with open(f"{filename}.txt", "w", encoding='utf-8') as txtfile:
-        txtfile.write(html_content)
-
-# function parses html from 'thelines' website
-def parse_thelines_html(html_content):
-
-    # Initialize BeautifulSoup object
-    soup = BeautifulSoup(html_content, 'lxml')
-    title = soup.title.string if soup.title else "No title found"
-    print(f"Page Title: {title}")
+# function fetches .json for nfl lines
+def handle_rotowire_data(url):
+    data = fetch_data(url)
+    if data:
+        json_file_name = parse_rotowire_url(url)
+        if json_file_name:
+            with open(json_file_name, "w") as txtfile:
+                json.dump(data, txtfile, indent=4)
+        return data
 
 # main loop
+## Explanation of the 'if __name__ == "__main__"': ##
+# -only gets executed when the script is run directly
+# -main loop for data fetching and user input prompt only executes when the script is run directly.
+# -main loop will not get executed if import.py file is imported as a module
 if __name__ == "__main__":
-    
+
+    # Prompt the user to enter a year and use the current year if the input is blank
+    # Ensure valid year input
+    try:
+        user_input = input("Enter the year to fetch ESPN data (hit Enter for current year): ")
+        year = user_input if user_input else str(datetime.now().year)
+    except ValueError:
+        print("Invalid year entered. Using current year instead.")
+        year = datetime.now().year
+
+    try:
+        week_input = input("Enter the week to fetch rotowire odds/lines data: ")
+        week = week_input if week_input else None
+        if week is None:
+            print("Invalid week entered.")
+            exit()
+    except ValueError:
+        print("Invalid week entered.")
+        exit()
+
+    # list of URLs
+    urls = [
+            # f"https://site.web.api.espn.com/apis/common/v3/sports/football/nfl/statistics/byathlete?region=us&lang=en&contentorigin=espn&isqualified=false&page=1&limit=50&category=offense%3Apassing&sort=passing.passingYards%3Adesc&season={year}&seasontype=2",
+            # f"https://site.web.api.espn.com/apis/common/v3/sports/football/nfl/statistics/byathlete?region=us&lang=en&contentorigin=espn&isqualified=false&page=1&limit=50&category=offense%3Arushing&sort=rushing.rushingYards%3Adesc&season={year}&seasontype=2",
+            # f"https://site.web.api.espn.com/apis/common/v3/sports/football/nfl/statistics/byathlete?region=us&lang=en&contentorigin=espn&isqualified=false&page=1&limit=50&category=offense%3Areceiving&sort=receiving.receivingYards%3Adesc&season={year}&seasontype=2",
+            # f"https://site.web.api.espn.com/apis/common/v3/sports/football/nfl/statistics/byathlete?region=us&lang=en&contentorigin=espn&isqualified=false&page=1&limit=50&category=defense&sort=defensive.totalTackles%3Adesc&season={year}&seasontype=2",
+            # f"https://site.web.api.espn.com/apis/common/v3/sports/football/nfl/statistics/byathlete?region=us&lang=en&contentorigin=espn&isqualified=false&page=2&limit=50&category=defense&sort=defensive.totalTackles%3Adesc&season={year}&seasontype=2",
+            # f"https://site.web.api.espn.com/apis/common/v3/sports/football/nfl/statistics/byathlete?region=us&lang=en&contentorigin=espn&isqualified=false&page=3&limit=50&category=defense&sort=defensive.totalTackles%3Adesc&season={year}&seasontype=2",
+            # f"https://site.web.api.espn.com/apis/common/v3/sports/football/nfl/statistics/byathlete?region=us&lang=en&contentorigin=espn&isqualified=false&page=1&limit=50&category=scoring&sort=scoring.totalPoints%3Adesc&season={year}&seasontype=2",
+            # f"https://site.web.api.espn.com/apis/common/v3/sports/football/nfl/statistics/byathlete?region=us&lang=en&contentorigin=espn&isqualified=false&page=1&limit=50&category=specialTeams%3Areturning&sort=returning.kickReturnYards%3Adesc&season={year}&seasontype=2",
+            # f"https://site.web.api.espn.com/apis/common/v3/sports/football/nfl/statistics/byathlete?region=us&lang=en&contentorigin=espn&isqualified=false&page=1&limit=50&category=specialTeams%3Akicking&sort=kicking.fieldGoalsMade%3Adesc&season={year}&seasontype=2",
+            # f"https://site.web.api.espn.com/apis/common/v3/sports/football/nfl/statistics/byathlete?region=us&lang=en&contentorigin=espn&isqualified=true&page=1&limit=50&category=specialTeams%3Apunting&sort=punting.grossAvgPuntYards%3Adesc&season={year}&seasontype=2",
+            # f"https://www.pff.com/api/betting/best_bets?league=nfl",
+            # f"https://www.rotowire.com/betting/nfl/tables/nfl-games.php?week={week}"
+            
+            ]
+
     # loop through the urls and fetch the data
     for url in urls:
 
@@ -190,6 +171,7 @@ if __name__ == "__main__":
 
         elif 'pff' in url:
             handle_pff_data(url)
+        
+        elif 'rotowire' in url:
+            handle_rotowire_data(url)
 
-        elif 'thelines' in url:
-            handle_thelines_data(url)
