@@ -14,8 +14,7 @@ ESPN JSON (Foreign Key tables)
     "id","name","abbreviation"
 
 "status": (table)
-    "id": "1"
-    "name": "Active"
+    "id","name" 
 
 "teamName": (create a "teams" table)
 "teamShortName": 
@@ -59,3 +58,99 @@ ESPN JSON - player data
 	
 	
 
+{
+    "pagination": {
+        ...
+    },
+    "league": {
+        "id": "28",
+        "uid": "s:20~l:28",
+        "name": "National Football League",
+        "abbreviation": "NFL",
+        ...
+    },
+    "athletes": [
+        {
+            "athlete": {
+                "id": "3139477",
+                "uid": "s:20~l:28~a:3139477",
+                "guid": "37d87523-280a-9d4a-0adb-22cfc6d3619c",
+                "type": "football",
+                "firstName": "Patrick",
+                "lastName": "Mahomes",
+                ...
+
+                "links": [
+                    {
+                        ...
+                    },
+                    {
+                        ...
+                        ],
+                     ...
+                    },
+                ],
+                "headshot": {
+                    ...
+                },
+                "position": {
+                    "id": "8",
+                    "name": "Quarterback",
+                    "displayName": "Quarterback",
+                    "abbreviation": "QB",
+                    "leaf": true,
+                    "parent": {
+                        "leaf": false
+                    },
+                    "slug": "quarterback"
+                },
+                "status": {
+					"id": "1",
+					"name": "Active",
+					"type": "active",
+					"abbreviation": "Active"
+				},
+                "age": 27,
+				"teamName": "Chiefs",
+				"teamShortName": "KC",
+				"teams": [
+					{
+						"name": "Chiefs",
+						"abbreviation": "KC"
+					}
+				],
+				"slug": "patrick-mahomes",
+				"teamId": "12",
+				"teamUId": "s:20~l:28~t:12",
+				"teamLogos": [
+
+                ...
+
+
+    "currentSeason": {
+		"year": 2023,
+		"displayName": "2023",
+		"startDate": "2023-08-01T07:00:00.000+00:00",
+		"endDate": "2024-02-15T07:59:00.000+00:00",
+		"type": {
+			"id": "2",
+			"type": 2,
+			"name": "Regular Season",
+			"startDate": "2023-09-07T07:00:00.000+00:00",
+			"endDate": "2024-01-13T07:59:00.000+00:00",
+			"week": {
+				"number": 2,
+				"startDate": "2023-09-13T07:00:00.000+00:00",
+				"endDate": "2023-09-20T06:59:00.000+00:00",
+				"text": "Week 2"
+			}
+
+start here next: get year weeek, startDate and endDate then combine with the playerstatsi into
+Modify the code.  
+1) create a new list called "Player_Statistics"
+2) extract all key, value pairs embedded within the "currentSeason" dictionary.
+3) the keys in the "currentSeason" dictionary are the column headers and should be orderd as follows: "teamId", "teamUId", "teamName", and "teamShortName"
+4) add a condtional check: if the "teamId" or "teamUId" are already in the list then pass, else add the "teamId", "teamUId", "teamName", and "teamShortName" values to the list
+
+
+"year","displayName","startDate","endDate", "type","id", "type","name", "startDate", "endDate", "week", "number", "startDate", "endDate", "text"
