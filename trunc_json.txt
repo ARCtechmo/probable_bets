@@ -1,0 +1,61 @@
+
+ESPN JSON (Foreign Key tables)
+"league": "id" ,"uid","name","abbreviation"  (table)
+"athletes": (table)
+"athlete": (rows)
+    "id",
+    "uid",
+    "guid", 
+    "type",
+    "firstName",
+    "lastName"
+
+"position": (table)
+    "id","name","abbreviation"
+
+"status": (table)
+    "id": "1"
+    "name": "Active"
+
+"teamName": (create a "teams" table)
+"teamShortName": 
+"teamId": 
+"teamUId": 
+
+ESPN year / week JSON data 
+"currentSeason": 
+    "year": 
+    "startDate": 
+    "endDate": 
+    "type": 
+        "id": 
+        "type":
+        "name": 
+        "startDate": 
+        "endDate": 
+        "week": 
+            "number": 
+            "startDate": 
+            "endDate": 
+            "text": "Week 2"
+
+"requestedSeason": 
+    "year": 
+    "startDate":
+    "type": 
+        "id": 
+        "type": 
+        "name": 
+        "startDate": 
+        "endDate":
+        "week": {}
+
+"glossary": "abbreviation","displayName" (table)
+	
+ESPN JSON - player data
+"categories:" (Note: values are first - place in "athletes" table)
+"categories:" (Note: descriptions are at the bottom)
+
+	
+	
+
