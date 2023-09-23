@@ -1,3 +1,12 @@
+
+# parse the json data
+# tasks: create the player statsitics (write the table - see below)
+# - use the lists and json "categories" dictionaries
+# - don't worry about foreign keys; just create the rows as they should appear
+
+# task
+# import the entire glossary into a list that will be a table in the db.
+
 import json
 
 def read_json(file):
@@ -60,8 +69,8 @@ def extract_teams_data(data, team_keys, team_ids):
 
 def extract_seasons_data(data, season_keys, season_type_ids):
     season_type_list = []
-    current_season_data = data.get('currentSeason', {})
-    season_type_data = current_season_data.get('type', {})
+    requested_season_data = data.get('requestedSeason', {})
+    season_type_data = requested_season_data.get('type', {})
     type_id_tuple = tuple(season_type_data.get(k, None) for k in season_keys)
     if type_id_tuple not in season_type_ids:
         season_type_list.append(list(filter_data_by_keys(season_type_data, season_keys).values()))
@@ -70,8 +79,8 @@ def extract_seasons_data(data, season_keys, season_type_ids):
 
 def extract_week_data(data, week_keys, week_numbers):
     week_list = []
-    current_season_data = data.get('currentSeason', {})
-    week_data = current_season_data.get('type', {}).get('week', {})
+    requested_season_data = data.get('requestedSeason', {})
+    week_data = requested_season_data.get('type', {}).get('week', {})
     week_number = week_data.get('number', None)
     if week_number not in week_numbers:
         filtered_week_data = filter_data_by_keys(week_data, week_keys)
@@ -97,10 +106,11 @@ def main():
     week_list = []
 
     # Initialize sets for uniqueness checks
-    athlete_ids = set()
     team_ids = set()
-    week_numbers = set()
     season_type_ids = set()
+    athlete_ids = set()
+    week_ids = set()
+    league_ids = set()
 
     # Keys to extract
     league_keys = ["id", "name"]
@@ -112,23 +122,52 @@ def main():
     week_keys = ["number", "startDate", "endDate", "text"]
 
     # Extract data
-    league_list.append(list(extract_league_data(data).values()))
+    league_data = extract_league_data(data)
+    league_id = league_data.get('id', None)
+    if league_id not in league_ids:
+        league_list.append(list(league_data.values()))
+        league_ids.add(league_id)
+
     athletes_list.extend(extract_athlete_data(data, athlete_keys, athlete_ids))
     positions_list.extend(extract_positions_data(data, position_keys))
     status_list.extend(extract_status_data(data, status_keys))
     teams_list.extend(extract_teams_data(data, team_keys, team_ids))
     season_type_list.extend(extract_seasons_data(data, season_keys, season_type_ids))
-    week_list.extend(extract_week_data(data, week_keys, week_numbers))
+    week_list.extend(extract_week_data(data, week_keys, week_ids))
 
+     # Check if the lengths of the athlete data are equal
+    if len(athletes_list) == len(positions_list) == len(status_list):
+        print("All athlete lists are equal in length.")
+        print("athletes length: ", len(athletes_list))
+        print("positions length: ", len(positions_list))
+        print("status length: ",len(status_list))
+    else:
+        print("The lists are not equal in length.")
+
+    # check to ensure NFL team list is correct
+    if len(teams_list) == 32:
+        print("Length of teams list is correct: ", len(teams_list))
+    else:
+        print("Number of teams imported is not correct")
+        
     # Output results
+
     # print("=== League List ===")
     # print(league_keys )
     # print(league_list)
+
+    # print("\n=== Season Type List ===")
+    # print(season_keys)
+    # print(season_type_list)
+
+    # print("\n=== Week List ===")
+    # print(week_keys)
+    # print(week_list)
     
     # print("\n=== Athletes List ===")
     # print(athlete_keys)
     # print(athletes_list)
-    
+        
     # print("\n=== Positions List ===")
     # print(position_keys)
     # print(positions_list)
@@ -141,13 +180,32 @@ def main():
     # print(team_keys)
     # print(teams_list)
     
-    # print("\n=== Season Type List ===")
-    # print(season_keys)
-    # print(season_type_list)
     
-    # print("\n=== Week List ===")
-    # print(week_keys)
-    # print(week_list)
    
 if __name__ == "__main__":
     main()
+
+## task: sketch out a table ##
+# league_id, 
+# year (get this from "requestedSeason": {"year": 2022,),
+# seaon_type_id (get this from "requestedSeason": {"type": {id: },
+# athlete_id, position_id, player_status_id, team_id,
+
+# task: the next columns come from the "categories" dictionaries 
+# "labels" are the column headers
+# "GP","FF","FR","FTD"
+# "CMP","ATT","CMP%","YDS","AVG","YDS/G","LNG","TD","INT","SACK","SYL","QBR","RTG","QBR"
+# "CAR","YDS","AVG","LNG","BIG", "TD", "YDS/G", "FUM", "LST","FD"
+# "REC","TGTS", "YDS", "AVG", "TD", "LNG", "BIG", "YDS/G", "FUM", "LST", "YAC", "FD"
+# "SOLO","AST", "TOT", "SACK", "SCKYDS", "TFL", "PD", "LNG"
+# "INT", "YDS", "TD"
+# "RUSH", "REC", "RET", "TD", "FG", "PAT", "2PT", "PTS", "TP/G"
+# "ATT", "YDS", "AVG", "LNG", "TD", "ATT", "YDS", "AVG", "LNG", "TD", "FC"
+# "FGM", "FGA", "FG%", "LNG", "FGM 1-19", "FGM 20-29", "FGM 30-39", "FGM 40-49", "50+", "FGA 1-19", "FGA 20-29", "FGA 30-39", "FGA 40-49", "FGA 50+", "XPM", "XPA", "XP%"
+# "PUNTS", "YDS", "LNG", "AVG", "NET", "PBLK", "IN20", "TB", "FC", "ATT", "YDS", "AVG"
+
+# task:
+# the values come from the "categories" dictionary: values and ranks 
+
+# task add conditional checks to ensure there are no duplicate rows
+# task add conditional checks for length of lists
