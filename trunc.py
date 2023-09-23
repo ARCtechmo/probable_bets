@@ -2,22 +2,28 @@
 ### ESPN JSON ###
 import json
 
+
+# file = 'trunc_espn.json'
+file = 'espn_passing_passingYards_page1_2022.json'
 # read JSON files
-with open('trunc_espn.json', 'r') as f:
+with open(file, 'r') as f:
     data = json.load(f)
 
-# initialize empty lists for 'league' and 'athletes'
+# initialize empty lists 
 league_list = []
 athletes_list = []
 positions_list = []
 status_list = []
 teams_list = []
 season_type_list = [] 
+player_statistics_list = []
+week_list = []
 
 # initialize sets for uniqueness checks
 team_ids = set()
 season_type_ids = set()
 athlete_ids = set()
+week_numbers = set()
 
 # extract Key-Value pairs for 'league' and put them in a list
 league_data = data.get('league', {})
@@ -63,10 +69,11 @@ for athlete in athletes_data:
         team_ids.add(team_id)
         team_ids.add(team_uid)
 
-# extract key-value pairs for 'currentSeason' and 'type'
+# extract key-value pairs 
 current_season_data = data.get('currentSeason', {})
 season_type_data = current_season_data.get('type', {})
 season_type_keys = ["id", "type", "name"]  
+week_keys = ["number", "startDate", "endDate", "text"] 
 
 # create a tuple from values of 'id', 'type', and 'name'
 type_id_tuple = tuple(season_type_data.get(k, None) for k in season_type_keys)
@@ -77,20 +84,44 @@ if type_id_tuple not in season_type_ids:
     season_type_list.append(list(filtered_season_type_data.values()))
     season_type_ids.add(type_id_tuple)
 
+# loop through 'currentSeason' to extract 'week' information
+for key, value in current_season_data.items():
+    if key == 'type':
+        week_data = value.get('week', {})
+        week_number = week_data.get('number', None)
+
+        # check for uniqueness based on 'number'
+        if week_number not in week_numbers:
+            filtered_week_data = {k: v for k, v in week_data.items() if k in week_keys}
+
+            # Modify date format: keep only the date part
+            if 'startDate' in filtered_week_data:
+                filtered_week_data['startDate'] = filtered_week_data['startDate'].split('T')[0]
+            
+            if 'endDate' in filtered_week_data:
+                filtered_week_data['endDate'] = filtered_week_data['endDate'].split('T')[0]
+
+            week_list.append(list(filtered_week_data.values()))
+
+            # add to the set for future checks
+            week_numbers.add(week_number)
+
 # the keys will serve as column headers
 league_columns = [k for k in league_data.keys() if k not in ['slug', 'shortName']]
 athletes_columns = athlete_keys
 positions_columns = position_keys
 status_columns = status_keys
-season_type_columns = season_type_keys  # New column headers for season_type
+week_columns = week_keys
+
 
 # Print the column headers and the lists
-# print(f"League Foreign Key Columns (Keys): {league_columns}")
-# print(f"Athletes Foreign Key Table Columns (Keys): {athletes_columns}")
-# print(f"Positions Foreign Key Table Columns (Keys): {positions_columns}")
-# print(f"Status Foreign Key Table Columns (Keys): {status_columns}")
-# print(f"Teams Columns (Keys): {team_keys}")
-# print(f"Season Type Columns (Keys): {season_type_columns}")
+# print(f"League Foreign Key Table Columns: {league_columns}")
+# print(f"Athletes Foreign Key Table Columns: {athletes_columns}")
+# print(f"Positions Foreign Key Table Columns: {positions_columns}")
+# print(f"Player Status Foreign Key Table Columns: {status_columns}")
+# print(f"Teams Foreign Key Table Columns: {team_keys}")
+# print(f"Season Type Foreign Key Table Columns: {season_type_keys}")
+# print(f"Week Columns: {week_columns}")
 
 # print(f"League Foreign Key Data (Values): {league_list}")
 # print(f"Athletes Foreign Key Data (Values): {athletes_list}")
@@ -98,6 +129,5 @@ season_type_columns = season_type_keys  # New column headers for season_type
 # print(f"Status Foreign Key Data (Values): {status_list}")
 # print(f"Teams Data (Values): {teams_list}")
 # print(f"Season Type Data (Values): {season_type_list}")
+# print(f"Week Data (Values): {week_list}")
 
-## task: see the notes in the trunc_json.txt
-## work on the final list: player_statistics
