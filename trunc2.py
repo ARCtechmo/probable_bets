@@ -92,6 +92,42 @@ def extract_week_data(data, week_keys, week_numbers):
         week_numbers.add(week_number)
     return week_list
 
+# extract athlete 'values'
+def extract_athlete_values(data):
+    player_statistics_list = []
+    athletes_data = data.get('athletes',[])
+    for athlete in athletes_data:
+        values_list = []
+        categories = athlete.get('categories',[])
+        for category in categories:
+            values = category.get('values',[])
+            for value in values:
+                if value in [None, '-','']:
+                    value = 'null'
+                elif isinstance(value, float):
+                    value = round(value, 1)
+                values_list.append(value)
+        player_statistics_list.append(values_list)
+    return player_statistics_list            
+
+# extract athlete 'ranks'
+def extract_athlete_ranks(data):
+    player_rank_list = []
+    athletes_data = data.get('athletes', [])
+    for athlete in athletes_data:
+        ranks_list = []
+        categories = athlete.get('categories', [])
+        for category in categories:
+            ranks = category.get('ranks', [])
+            for rank in ranks:
+                if rank in [None, '-','']:
+                    rank = 'null'
+                else:
+                    rank = int(rank)
+                ranks_list.append(rank)
+        player_rank_list.append(ranks_list)
+    return player_rank_list
+
 def main():
     file = 'espn_passing_passingYards_page1_2022.json'
     data = read_json(file)
@@ -104,6 +140,8 @@ def main():
     teams_list = []
     season_type_list = []
     week_list = []
+    player_statistics_list = []
+    player_rank_list = []
 
     # Initialize sets for uniqueness checks
     team_ids = set()
@@ -134,21 +172,26 @@ def main():
     teams_list.extend(extract_teams_data(data, team_keys, team_ids))
     season_type_list.extend(extract_seasons_data(data, season_keys, season_type_ids))
     week_list.extend(extract_week_data(data, week_keys, week_ids))
-
-     # Check if the lengths of the athlete data are equal
-    if len(athletes_list) == len(positions_list) == len(status_list):
-        print("All athlete lists are equal in length.")
-        print("athletes length: ", len(athletes_list))
-        print("positions length: ", len(positions_list))
-        print("status length: ",len(status_list))
-    else:
-        print("The lists are not equal in length.")
-
+    player_statistics_list.extend(extract_athlete_values(data))
+    player_rank_list.extend(extract_athlete_ranks(data))
+      
     # check to ensure NFL team list is correct
     if len(teams_list) == 32:
         print("Length of teams list is correct: ", len(teams_list))
     else:
         print("Number of teams imported is not correct")
+
+    # Check if the lengths of the athlete data are equal
+    if len(athletes_list) == len(positions_list) == len(status_list):
+        print("All athlete lists are equal in length.")
+        print("athletes length: ", len(athletes_list))
+        print("positions length: ", len(positions_list))
+        print("status length: ",len(status_list))
+        print("values length: ", len(player_statistics_list))
+        print("ranks length: ", len(player_rank_list))
+    else:
+        print("The lists are not equal in length.")
+
         
     # Output results
 
@@ -179,8 +222,12 @@ def main():
     # print("\n=== Teams List ===")
     # print(team_keys)
     # print(teams_list)
+
+    # print("\n=== Player Statistics List ===")
+    # print(player_statistics_list[2])
     
-    
+    # print("\n=== Player Rank List ===")
+    # print(player_rank_list[2])
    
 if __name__ == "__main__":
     main()
@@ -209,3 +256,4 @@ if __name__ == "__main__":
 
 # task add conditional checks to ensure there are no duplicate rows
 # task add conditional checks for length of lists
+
