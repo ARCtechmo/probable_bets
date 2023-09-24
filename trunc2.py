@@ -1,11 +1,8 @@
 
 # parse the json data
-# tasks: create the player statsitics (write the table - see below)
-# - use the lists and json "categories" dictionaries
-# - don't worry about foreign keys; just create the rows as they should appear
 
-# task
-# import the entire glossary into a list that will be a table in the db.
+# Task: I have all the json data in the form of lists
+# Task: Now combine all of the list into a single row of data to be exported
 
 import json
 
@@ -128,6 +125,34 @@ def extract_athlete_ranks(data):
         player_rank_list.append(ranks_list)
     return player_rank_list
 
+# extract "labels" from the "categories" dictionary
+def extract_categories_labels(data):
+    values_rank_keys = []
+    categories_data = data.get('categories', [])
+    for category in categories_data:
+        labels = category.get('labels', [])
+        values_rank_keys.extend(labels)
+    return values_rank_keys
+
+# extract 'displayNames' from the 'categories' dictionary
+def extract_display_names(data):
+    display_names_list = []
+    categories_data = data.get('categories', [])
+    for category in categories_data:
+        display_names = category.get('displayNames', [])
+        if display_names:
+            display_names_list.extend(display_names)
+    return display_names_list
+
+# extract 'descriptions' from the 'categories' dictionary
+def extract_descriptions(data):
+    descriptions_list = []
+    categories_data = data.get('categories', [])
+    for category in categories_data:
+        description = category.get('descriptions', [])
+        descriptions_list.extend(description)
+    return descriptions_list
+
 def main():
     file = 'espn_passing_passingYards_page1_2022.json'
     data = read_json(file)
@@ -158,6 +183,7 @@ def main():
     team_keys = ["teamId", "teamUId", "teamName", "teamShortName"]
     season_keys = ["id", "type", "name"]
     week_keys = ["number", "startDate", "endDate", "text"]
+    values_rank_keys = extract_categories_labels(data)
 
     # Extract data
     league_data = extract_league_data(data)
@@ -174,6 +200,8 @@ def main():
     week_list.extend(extract_week_data(data, week_keys, week_ids))
     player_statistics_list.extend(extract_athlete_values(data))
     player_rank_list.extend(extract_athlete_ranks(data))
+    display_names_list = extract_display_names(data)
+    descriptions_list = extract_descriptions(data)
       
     # check to ensure NFL team list is correct
     if len(teams_list) == 32:
@@ -182,17 +210,27 @@ def main():
         print("Number of teams imported is not correct")
 
     # Check if the lengths of the athlete data are equal
-    if len(athletes_list) == len(positions_list) == len(status_list):
-        print("All athlete lists are equal in length.")
+    if len(athletes_list) == len(positions_list) == len(status_list) == len(player_statistics_list) == len(player_rank_list):
+        print("\nAll athlete lists are equal in length.")
         print("athletes length: ", len(athletes_list))
         print("positions length: ", len(positions_list))
         print("status length: ",len(status_list))
         print("values length: ", len(player_statistics_list))
         print("ranks length: ", len(player_rank_list))
     else:
-        print("The lists are not equal in length.")
+        print("The athletes lists are not equal in length!!")
 
-        
+    # Check if the lengths of the athlete 'values' and 'ranks' data are equal to the 'labels' columns
+    if len(values_rank_keys) == len(player_statistics_list[0]) == len(player_rank_list[0]) == len(display_names_list) == len(descriptions_list):
+        print("\nPlayer statistics column and row lengths are equal.")
+        print("# of value_rank columns: ", len(values_rank_keys))
+        print("# of player statistics", len(player_statistics_list[0]))
+        print("# of player ranks", len(player_rank_list[0]))
+        print("# of displayNames columns: ",len(display_names_list))
+        print("# of descriptions columns: ",len(descriptions_list))
+    else:
+        print("player statistics column and row lengths are not equal!!")
+    
     # Output results
 
     # print("=== League List ===")
@@ -228,32 +266,17 @@ def main():
     
     # print("\n=== Player Rank List ===")
     # print(player_rank_list[2])
+
+    # print("\n=== Values Rank Keys ===")
+    # print(values_rank_keys)
+
+    # print("\n=== Display Names List ===")
+    # print(display_names_list)
+    
+    # print("\n=== Descriptions List ===")
+    # print(descriptions_list)
    
 if __name__ == "__main__":
     main()
 
-## task: sketch out a table ##
-# league_id, 
-# year (get this from "requestedSeason": {"year": 2022,),
-# seaon_type_id (get this from "requestedSeason": {"type": {id: },
-# athlete_id, position_id, player_status_id, team_id,
-
-# task: the next columns come from the "categories" dictionaries 
-# "labels" are the column headers
-# "GP","FF","FR","FTD"
-# "CMP","ATT","CMP%","YDS","AVG","YDS/G","LNG","TD","INT","SACK","SYL","QBR","RTG","QBR"
-# "CAR","YDS","AVG","LNG","BIG", "TD", "YDS/G", "FUM", "LST","FD"
-# "REC","TGTS", "YDS", "AVG", "TD", "LNG", "BIG", "YDS/G", "FUM", "LST", "YAC", "FD"
-# "SOLO","AST", "TOT", "SACK", "SCKYDS", "TFL", "PD", "LNG"
-# "INT", "YDS", "TD"
-# "RUSH", "REC", "RET", "TD", "FG", "PAT", "2PT", "PTS", "TP/G"
-# "ATT", "YDS", "AVG", "LNG", "TD", "ATT", "YDS", "AVG", "LNG", "TD", "FC"
-# "FGM", "FGA", "FG%", "LNG", "FGM 1-19", "FGM 20-29", "FGM 30-39", "FGM 40-49", "50+", "FGA 1-19", "FGA 20-29", "FGA 30-39", "FGA 40-49", "FGA 50+", "XPM", "XPA", "XP%"
-# "PUNTS", "YDS", "LNG", "AVG", "NET", "PBLK", "IN20", "TB", "FC", "ATT", "YDS", "AVG"
-
-# task:
-# the values come from the "categories" dictionary: values and ranks 
-
-# task add conditional checks to ensure there are no duplicate rows
-# task add conditional checks for length of lists
 
