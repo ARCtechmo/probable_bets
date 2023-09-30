@@ -35,13 +35,12 @@
 
 # import the libraries
 import requests
-from requests_html import HTMLSession
-from bs4 import BeautifulSoup
+import os
 import json
 import csv
 import random
 import time
-from urllib.parse import urlparse, parse_qs
+from urllib.parse import urlparse, urlencode, parse_qs
 from datetime import datetime 
 
 # Initialize data variable to avoid NameError
@@ -135,9 +134,97 @@ def handle_airyards_data(url):
 
     return data
 
+
+# function to generate FantasyPros URLs based on the positions
+def generate_fantasy_pros_urls(season, positions=None, week=None, scoring=None):
+    
+    # fetch API 
+    base_url = f"https://api.fantasypros.com/public/v2/json/nfl/{season}/projections"
+    
+    # positions
+    positions_list = ['QB','RB','WR','TE','K','DST','IDP','DL','LB','DB'] if positions is None else positions.split(',')
+    
+    # make sure that positions_str is a raw string, not a string containing quotes
+    scoring_str = scoring.replace("'", "") if scoring else None
+    generated_urls = []
+
+    for position in positions_list:
+        params = {'position': position}
+        if week:
+            params['week'] = week
+        if scoring:
+            params['scoring'] = scoring_str
+        query_string = urlencode(params)
+        full_url = f"{base_url}?{query_string}"
+        generated_urls.append(full_url)
+
+    return generated_urls
+
+# FIXME: Need to create separate json files for each url based on position
+# fantasy_pros_projections_2023_QB.json
+# fantasy_pros_projections_2023_RB.json
+
+# function to handle data from FantasyPros
+def handle_fantasy_pros_data(season, positions=None, week=None, scoring=None):
+
+    # get api key from environment variable
+    api_key = os.environ.get('api_key')
+    if not api_key:
+        print("API key is not set in environment variables.")
+        return None  
+        
+    # Set headers
+    headers = {'x-api-key': api_key}  
+    generated_urls = generate_fantasy_pros_urls(season, positions, week, scoring)
+
+    # Check if URLs are generated
+    if generated_urls is None:
+        print("No URLs were generated.")
+        return None
+    
+    for full_url in generated_urls:
+        print(f"Fetching data for URL: {full_url}")
+        
+    # Fetch data
+    response = requests.get(full_url, headers=headers)
+
+    try:
+        # Check if the request was successful
+        response.raise_for_status()  
+        print(f"Successfully retrieved data for season {season} from FantasyPros.")
+
+        # Parse JSON data
+        data = response.json()
+
+        # Create unique JSON filename based on parameters
+        filename_suffix = f"{season}"
+        if week: filename_suffix += f"_week{week}"
+        if scoring: filename_suffix += f"_{scoring}"
+
+        # Extract the position from the URL query params
+        query_string = urlparse(full_url).query
+        params = parse_qs(query_string)
+        position_param = params.get('position', [''])[0]
+        if position_param:
+            filename_suffix += f"_position_{position_param}"
+        
+        # Save JSON to a file
+        with open(f"fantasy_pros_projections_{season}.json", "w") as txtfile:
+            json.dump(data, txtfile, indent=4)
+
+        return data
+    
+    except requests.RequestException as e:
+        print(f"Failed to retrieve data from FantasyPros. Error: {e}")
+        return None
+
+
+## FIXME: add option if user wants to retrieve data from a specific api
 # main loop
 ## Explanation of the 'if __name__ == "__main__"': ##
-# -only gets executed when the script is run directly
+# -main loop only gets executed when the script is run directly
+
+   
 # -main loop for data fetching and user input prompt only executes when the script is run directly.
 # -main loop will not get executed if import.py file is imported as a module
 if __name__ == "__main__":
@@ -151,6 +238,10 @@ if __name__ == "__main__":
         print("Invalid year entered. Using current year instead.")
         year = datetime.now().year
 
+    # FIXME: I want automatic weekly input
+    # make a list of the weeks from espn
+    # match the current week to the espn week list
+    # format the string to a number
     try:
         week_input = input("Enter the week to fetch rotowire odds/lines data: ")
         week = week_input if week_input else None
@@ -160,6 +251,11 @@ if __name__ == "__main__":
     except ValueError:
         print("Invalid week entered.")
         exit()
+    
+    # Fetch FantasyPros data for the current year
+    season = datetime.now().year
+    fantasy_pros_urls = handle_fantasy_pros_data(season,week=None, scoring='STD')
+    
 
     # list of URLs
     urls = [
@@ -175,8 +271,14 @@ if __name__ == "__main__":
             # f"https://site.web.api.espn.com/apis/common/v3/sports/football/nfl/statistics/byathlete?region=us&lang=en&contentorigin=espn&isqualified=true&page=1&limit=50&category=specialTeams%3Apunting&sort=punting.grossAvgPuntYards%3Adesc&season={year}&seasontype=2",
             # f"https://www.pff.com/api/betting/best_bets?league=nfl",
             # f"https://www.rotowire.com/betting/nfl/tables/nfl-games.php?week={week}",
-            
             ]
+    
+    # Append FantasyPros URLs to the urls list
+    if fantasy_pros_urls is not None:
+        urls.extend(fantasy_pros_urls)
+    else:
+        print("No FantasyPros URLs.")
+
 
     # loop through the urls and fetch the data
     for url in urls:
@@ -192,7 +294,7 @@ if __name__ == "__main__":
         
         elif 'rotowire' in url:
             handle_rotowire_data(url)
-        
+
         elif 'airyards' in url:
             handle_airyards_data(url)
 
