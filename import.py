@@ -1,36 +1,19 @@
 
-## This program pulls the data from the APIs ###
+###  This program pulls the data from  APIs ###
 # Inspect --- Network ---- Fetch/XHR --- Preview / Headers
-
-### ESPN APIs ###
-#  Task: choose a sample of players, go through each category and ensure the data matches with the ESPN website
-# NOTE: The "siteapi" "byathlete" API covers the basic player stats (no API for splits and other status)
-#  -"currentSeason" key (at the bottom of the jsont file) has the dates and regular season weeks
-#  -line 19 "atheletes" is a list of dictionaries each named named "athlete" which has the player stats
-#  -each "athlete" has a unique identifieer called "id" and must be included along with the player name and league 
-#  -line 29780 "categories" is a list of dictionaries that contain the column headers
-#  -match the "categories" list starting on line 29780 with each "categories" for each "athlete" 
-#  -each "athlete" has a "categories" list of the individual stats (column headers)
-
-## FantasyPros projections API ## 
-# NOTE: waiting for the API key
-# https://api.fantasypros.com/public/v2/json/nfl/{season}/projections
-
-## PFF API ##
-# https://www.pff.com/api/betting/best_bets?league=nfl
-# has unique id for each game: "game_id"
+# NOTE: Store API keys in your OS as an environment variable
+### NOTE: DO NOT PUT YOUR API KEY INTO THE CODE!!!! ###
 
 ## rotowire API ##
 # https://www.rotowire.com/betting/nfl/tables/nfl-games.php?week={week}
 # has unique id for each game: "game_id
 
-## airyards CSV file only##
-# NOTE: website uses unique session ids and nounces as security measures to prevent webscraping; returns empty json files
-# https://apps.airyards.com/airyards.com_wopr_app/session
+# Task:
+# updated fetch_data() function to accept headers
+# make sure the espn api still pulls correctly
 
-# Tasks:
-# review json files
-# decide which categores to pull and build lists
+# task: go through the fp api and organize the information into lists
+
 # outline your database design / tables
 
 # import the libraries
@@ -52,12 +35,12 @@ def handle_random_delay(min_delay=1, max_delay=3):
     time.sleep(time_delay)
 
 # function tests  HTTP GET request
-def fetch_data(url):
-    response = requests.get(url)
+def fetch_data(url, headers=None):
+    response = requests.get(url, headers=headers)
 
     # test the response
     try:
-        response = requests.get(url)
+        # response = requests.get(url)
         response.raise_for_status()
         print(f"Successfully retrieved {url}")
     
@@ -102,7 +85,7 @@ def handle_espn_data(url):
 def handle_pff_data(url):
     data = fetch_data(url)
     if data:
-        with open('pff_prop_bets', "w") as txtfile:
+        with open('pff_prop_bets.json', "w") as txtfile:
             json.dump(data, txtfile, indent=4)
         return data
 
@@ -125,16 +108,6 @@ def handle_rotowire_data(url):
                 json.dump(data, txtfile, indent=4)
         return data
 
-# function fetches .json data for nfl air yards
-def handle_airyards_data(url):
-    data = fetch_data(url)
-    if data:
-        with open('airyards1', "w") as txtfile:
-            json.dump(data, txtfile, indent=4)
-
-    return data
-
-
 # function to generate FantasyPros URLs based on the positions
 def generate_fantasy_pros_urls(season, positions=None, week=None, scoring=None):
     
@@ -142,7 +115,7 @@ def generate_fantasy_pros_urls(season, positions=None, week=None, scoring=None):
     base_url = f"https://api.fantasypros.com/public/v2/json/nfl/{season}/projections"
     
     # positions
-    positions_list = ['QB','RB','WR','TE','K','DST','IDP','DL','LB','DB'] if positions is None else positions.split(',')
+    positions_list = ['QB','RB','WR','TE','K','DST'] if positions is None else positions.split(',')
     
     # make sure that positions_str is a raw string, not a string containing quotes
     scoring_str = scoring.replace("'", "") if scoring else None
@@ -160,64 +133,40 @@ def generate_fantasy_pros_urls(season, positions=None, week=None, scoring=None):
 
     return generated_urls
 
-# FIXME: Need to create separate json files for each url based on position
-# fantasy_pros_projections_2023_QB.json
-# fantasy_pros_projections_2023_RB.json
+# function to generate the JSON filename based on the FantasyPros URL
+def generate_fantasy_pros_filename(url, season):
+    query_string = urlparse(url).query
+    params = parse_qs(query_string)
+    position_param = params.get('position', [''])[0]
+    scoring_param = params.get('scoring', [''])[0]
+    
+    filename_suffix = f"{position_param}_projections_{season}"
+    if scoring_param:
+        filename_suffix += f"_{scoring_param}"
+    
+    return f"fantasy_pros_{filename_suffix}.json"
 
 # function to handle data from FantasyPros
 def handle_fantasy_pros_data(season, positions=None, week=None, scoring=None):
-
-    # get api key from environment variable
     api_key = os.environ.get('api_key')
     if not api_key:
         print("API key is not set in environment variables.")
-        return None  
-        
-    # Set headers
-    headers = {'x-api-key': api_key}  
+        return None
+    
+    headers = {'x-api-key': api_key}
     generated_urls = generate_fantasy_pros_urls(season, positions, week, scoring)
-
-    # Check if URLs are generated
     if generated_urls is None:
         print("No URLs were generated.")
         return None
     
     for full_url in generated_urls:
         print(f"Fetching data for URL: {full_url}")
-        
-    # Fetch data
-    response = requests.get(full_url, headers=headers)
-
-    try:
-        # Check if the request was successful
-        response.raise_for_status()  
-        print(f"Successfully retrieved data for season {season} from FantasyPros.")
-
-        # Parse JSON data
-        data = response.json()
-
-        # Create unique JSON filename based on parameters
-        filename_suffix = f"{season}"
-        if week: filename_suffix += f"_week{week}"
-        if scoring: filename_suffix += f"_{scoring}"
-
-        # Extract the position from the URL query params
-        query_string = urlparse(full_url).query
-        params = parse_qs(query_string)
-        position_param = params.get('position', [''])[0]
-        if position_param:
-            filename_suffix += f"_position_{position_param}"
-        
-        # Save JSON to a file
-        with open(f"fantasy_pros_projections_{season}.json", "w") as txtfile:
-            json.dump(data, txtfile, indent=4)
-
-        return data
-    
-    except requests.RequestException as e:
-        print(f"Failed to retrieve data from FantasyPros. Error: {e}")
-        return None
-
+        response = fetch_data(full_url, headers)
+        if response:
+            json_file_name = generate_fantasy_pros_filename(full_url, season)
+            if json_file_name:
+                with open(json_file_name, "w") as txtfile:
+                    json.dump(response, txtfile, indent=4)
 
 ## FIXME: add option if user wants to retrieve data from a specific api
 # main loop
@@ -279,7 +228,6 @@ if __name__ == "__main__":
     else:
         print("No FantasyPros URLs.")
 
-
     # loop through the urls and fetch the data
     for url in urls:
 
@@ -294,7 +242,3 @@ if __name__ == "__main__":
         
         elif 'rotowire' in url:
             handle_rotowire_data(url)
-
-        elif 'airyards' in url:
-            handle_airyards_data(url)
-
