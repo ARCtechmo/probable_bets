@@ -5,9 +5,6 @@
 # NOTE: "projection" missing on player props becuase odds are available 24 to 36 hours prior to kickoff.
 # NOTE: player and team ids do not match ESPN ids so do not use these for fk
 
-# Task: 
-# you will need to match the player_id and team_id (fk) the espn json file
-# then add fk numbers to the list for player and team
 
 # loop over the dictionary and pull the keys and values
 import json
@@ -59,7 +56,7 @@ def main():
     print(("props values length: "),len(player_props_list[0]))
 
     print("\nKeys:", keys_order)
-    print("\nValues:", player_props_list)
+    print("\nValues:", player_props_list[0])
 
 if __name__ == "__main__":
     main()
