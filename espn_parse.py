@@ -1,8 +1,8 @@
 
 # parse the json data
 
-# Task: I have all the json data in the form of lists
-# Task: Now combine all of the list into a single row of data to be exported
+# Task: modify the code to read multiple files
+# Task: combine all of the list into a single row of data to be exported
 
 import json
 
@@ -233,33 +233,33 @@ def main():
     
     # Output results
 
-    # print("=== League List ===")
-    # print(league_keys )
-    # print(league_list)
+    print("=== League List ===")
+    print(league_keys )
+    print(league_list)
 
-    # print("\n=== Season Type List ===")
-    # print(season_keys)
-    # print(season_type_list)
+    print("\n=== Season Type List ===")
+    print(season_keys)
+    print(season_type_list)
 
     # print("\n=== Week List ===")
     # print(week_keys)
     # print(week_list)
     
-    # print("\n=== Athletes List ===")
-    # print(athlete_keys)
-    # print(athletes_list)
+    print("\n=== Athletes List ===")
+    print(athlete_keys)
+    print(athletes_list[0])
         
-    # print("\n=== Positions List ===")
-    # print(position_keys)
-    # print(positions_list)
+    print("\n=== Positions List ===")
+    print(position_keys)
+    print(positions_list[0])
     
-    # print("\n=== Status List ===")
-    # print(status_keys)
-    # print(status_list)
+    print("\n=== Status List ===")
+    print(status_keys)
+    print(status_list)
     
-    # print("\n=== Teams List ===")
-    # print(team_keys)
-    # print(teams_list)
+    print("\n=== Teams List ===")
+    print(team_keys)
+    print(teams_list[0])
 
     # print("\n=== Player Statistics List ===")
     # print(player_statistics_list[2])
