@@ -3,6 +3,8 @@
 
 # Task: modify the code to read multiple files
 # Task: combine all of the list into a single row of data to be exported
+# Task: add conditional checks to ensure the file is present in the directory
+
 
 import json
 
