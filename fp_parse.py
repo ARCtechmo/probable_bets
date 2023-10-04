@@ -5,6 +5,7 @@
 # loop over the dictionary and pull the keys and values
 import json
 import os
+from datetime import datetime
 
 def read_json(file):
     with open(file, 'r') as f:
@@ -49,13 +50,17 @@ def get_key_values(sample_player):
     return ['season', 'week', 'name', 'position_id', 'team_id'] + list(sample_player['stats'].keys())
 
 def main():
+
+    # Get the current year in YYYY format
+    year = datetime.now().strftime('%Y') 
+
     files = [
-    'fantasy_pros_DST_projections_2023_STD.json',
-    'fantasy_pros_K_projections_2023_STD.json',
-    'fantasy_pros_QB_projections_2023_STD.json',
-    'fantasy_pros_RB_projections_2023_STD.json',
-    'fantasy_pros_TE_projections_2023_STD.json',
-    'fantasy_pros_WR_projections_2023_STD.json'
+    f'fantasy_pros_DST_projections_{year}_STD.json',
+    f'fantasy_pros_K_projections_{year}_STD.json',
+    f'fantasy_pros_QB_projections_{year}_STD.json',
+    f'fantasy_pros_RB_projections_{year}_STD.json',
+    f'fantasy_pros_TE_projections_{year}_STD.json',
+    f'fantasy_pros_WR_projections_{year}_STD.json'
     ]
 
     for file in files:
