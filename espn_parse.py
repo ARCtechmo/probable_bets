@@ -1,12 +1,13 @@
 
 # parse the json data
 
-# Task: modify the code to read multiple files
 # Task: combine all of the list into a single row of data to be exported
-# Task: add conditional checks to ensure the file is present in the directory
-
 
 import json
+import os
+import re
+from glob import glob
+from datetime import datetime
 
 def read_json(file):
     with open(file, 'r') as f:
@@ -155,11 +156,23 @@ def extract_descriptions(data):
         descriptions_list.extend(description)
     return descriptions_list
 
+# fixme modify to get separate lists for each position because they will be separate tables
 def main():
-    file = 'espn_passing_passingYards_page1_2022.json'
-    data = read_json(file)
 
-    # Initialize empty lists
+    # get the current year in YYYY format
+    year = datetime.now().strftime('%Y')
+
+    # use glob to get all JSON files in the current directory
+    all_files = glob('*.json')
+    
+    # filter files using regular expression
+    regex_pattern = r'espn_(defensive_totalTackles|kicking_fieldGoalsMade|passing_passingYards|punting_grossAvgPuntYards|receiving_receivingYards|returning_kickReturnYards|rushing_rushingYards|scoring_totalPoints)_page\d+_\d+.json'
+    files = [f for f in all_files if re.match(regex_pattern, f)]
+    
+    # print the length of the files list to test it
+    print(f"Number of files matching the regular expression: {len(files)}")
+
+    # initialize empty lists
     league_list = []
     athletes_list = []
     positions_list = []
@@ -170,40 +183,50 @@ def main():
     player_statistics_list = []
     player_rank_list = []
 
-    # Initialize sets for uniqueness checks
+    # initialize sets for uniqueness checks
     team_ids = set()
     season_type_ids = set()
     athlete_ids = set()
     week_ids = set()
     league_ids = set()
+    
+    for file in files:
 
-    # Keys to extract
-    league_keys = ["id", "name"]
-    athlete_keys = ["id", "uid", "guid", "type", "firstName", "lastName"]
-    position_keys = ["id", "name", "abbreviation"]
-    status_keys = ["id", "name"]
-    team_keys = ["teamId", "teamUId", "teamName", "teamShortName"]
-    season_keys = ["id", "type", "name"]
-    week_keys = ["number", "startDate", "endDate", "text"]
-    values_rank_keys = extract_categories_labels(data)
+        # check if the file contains the current year
+        if year not in file:
+            proceed = input(f"The file {file} is not from the current year {year}. Do you want to proceed? (y/n): ")
+            if proceed.lower() != 'y':
+                continue  # skip to the next file if user says no
 
-    # Extract data
-    league_data = extract_league_data(data)
-    league_id = league_data.get('id', None)
-    if league_id not in league_ids:
-        league_list.append(list(league_data.values()))
-        league_ids.add(league_id)
+        data = read_json(file)
 
-    athletes_list.extend(extract_athlete_data(data, athlete_keys, athlete_ids))
-    positions_list.extend(extract_positions_data(data, position_keys))
-    status_list.extend(extract_status_data(data, status_keys))
-    teams_list.extend(extract_teams_data(data, team_keys, team_ids))
-    season_type_list.extend(extract_seasons_data(data, season_keys, season_type_ids))
-    week_list.extend(extract_week_data(data, week_keys, week_ids))
-    player_statistics_list.extend(extract_athlete_values(data))
-    player_rank_list.extend(extract_athlete_ranks(data))
-    display_names_list = extract_display_names(data)
-    descriptions_list = extract_descriptions(data)
+        # keys to extract
+        league_keys = ["id", "name"]
+        athlete_keys = ["id", "uid", "guid", "type", "firstName", "lastName"]
+        position_keys = ["id", "name", "abbreviation"]
+        status_keys = ["id", "name"]
+        team_keys = ["teamId", "teamUId", "teamName", "teamShortName"]
+        season_keys = ["id", "type", "name"]
+        week_keys = ["number", "startDate", "endDate", "text"]
+        values_rank_keys = extract_categories_labels(data)
+
+        # extract data
+        league_data = extract_league_data(data)
+        league_id = league_data.get('id', None)
+        if league_id not in league_ids:
+            league_list.append(list(league_data.values()))
+            league_ids.add(league_id)
+
+        athletes_list.extend(extract_athlete_data(data, athlete_keys, athlete_ids))
+        positions_list.extend(extract_positions_data(data, position_keys))
+        status_list.extend(extract_status_data(data, status_keys))
+        teams_list.extend(extract_teams_data(data, team_keys, team_ids))
+        season_type_list.extend(extract_seasons_data(data, season_keys, season_type_ids))
+        week_list.extend(extract_week_data(data, week_keys, week_ids))
+        player_statistics_list.extend(extract_athlete_values(data))
+        player_rank_list.extend(extract_athlete_ranks(data))
+        display_names_list = extract_display_names(data)
+        descriptions_list = extract_descriptions(data)
       
     # check to ensure NFL team list is correct
     if len(teams_list) == 32:
@@ -235,36 +258,36 @@ def main():
     
     # Output results
 
-    print("=== League List ===")
-    print(league_keys )
-    print(league_list)
+    # print("=== League List ===")
+    # print(league_keys )
+    # print(league_list)
 
-    print("\n=== Season Type List ===")
-    print(season_keys)
-    print(season_type_list)
+    # print("\n=== Season Type List ===")
+    # print(season_keys)
+    # print(season_type_list)
 
     # print("\n=== Week List ===")
     # print(week_keys)
     # print(week_list)
     
-    print("\n=== Athletes List ===")
-    print(athlete_keys)
-    print(athletes_list[0])
+    # print("\n=== Athletes List ===")
+    # print(athlete_keys)
+    # print(athletes_list)
         
-    print("\n=== Positions List ===")
-    print(position_keys)
-    print(positions_list[0])
+    # print("\n=== Positions List ===")
+    # print(position_keys)
+    # print(positions_list[0])
     
-    print("\n=== Status List ===")
-    print(status_keys)
-    print(status_list)
+    # print("\n=== Status List ===")
+    # print(status_keys)
+    # print(status_list)
     
-    print("\n=== Teams List ===")
-    print(team_keys)
-    print(teams_list[0])
+    # print("\n=== Teams List ===")
+    # print(team_keys)
+    # print(teams_list[0])
 
     # print("\n=== Player Statistics List ===")
-    # print(player_statistics_list[2])
+    # print(player_statistics_list[0])
     
     # print("\n=== Player Rank List ===")
     # print(player_rank_list[2])
