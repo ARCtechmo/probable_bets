@@ -1,13 +1,12 @@
 ## parse the pff json file ##
 
 # Notes on the json file
-# Task: download the json data on Sunday morning to 
-# NOTE: "projection" missing on player props becuase odds are available 24 to 36 hours prior to kickoff.
+# NOTE: some player "projections" props missing becuase odds are available 24 to 36 hours prior to kickoff.
 # NOTE: player and team ids do not match ESPN ids so do not use these for fk
-
 
 # loop over the dictionary and pull the keys and values
 import json
+import os
 
 def read_json(file):
     with open(file, 'r') as f:
@@ -48,8 +47,13 @@ def extract_player_props(data):
 
 def main():
     file = 'pff_prop_bets.json'
-    data = read_json(file)
 
+    # Check if the file exists in the current directory
+    if not os.path.exists(file):  
+        print(f"{file} not in the directory.")  
+        return  
+    
+    data = read_json(file)
     keys_order, player_props_list = extract_player_props(data)
 
     print("props columns length:", len(keys_order))
