@@ -4,6 +4,7 @@
 
 # loop over the dictionary and pull the keys and values
 import json
+import os
 
 def read_json(file):
     with open(file, 'r') as f:
@@ -11,7 +12,7 @@ def read_json(file):
 
 # extract required player data into a list of lists.
 # each inner list contains details for a unique player based on fpid.
-def extract_player_data(players):
+def extract_player_data(season, week, players):
     extracted_data = []
     unique_fpids = set()
     unique_rows = set()
@@ -31,7 +32,7 @@ def extract_player_data(players):
         team_id = player['team_id']
         stats = player['stats']
         
-        player_data = [name, position_id, team_id] + [stats[key] for key in stats.keys()]
+        player_data = [season, week, name, position_id, team_id] + [stats[key] for key in stats.keys()]
         
         # Skip duplicate rows based on player_data
         player_data_tuple = tuple(player_data)
@@ -45,7 +46,7 @@ def extract_player_data(players):
 
 # gets the key values based on a sample player dictionary.
 def get_key_values(sample_player):
-    return ['name', 'position_id', 'team_id'] + list(sample_player['stats'].keys())
+    return ['season', 'week', 'name', 'position_id', 'team_id'] + list(sample_player['stats'].keys())
 
 def main():
     files = [
@@ -59,15 +60,24 @@ def main():
 
     for file in files:
 
+        # Check if the file exists in the current directory
+        if not os.path.exists(file):
+            print(f"{file} not in the directory.")
+            continue  # Skip the rest of the loop for this file
+
         # file = 'fantasy_pros_QB_projections_2023_STD.json'
         data = read_json(file)
 
         # Extract position from the filename
         position = file.split('_')[2]
-    
+
+        # pass season and week to extract_player_data function
+        season = data['season']
+        week = data['week']
+
         if position == 'DST':
             DST_key_values = get_key_values(data['players'][0])
-            DST_extracted_data = extract_player_data(data['players'])
+            DST_extracted_data = extract_player_data(season, week, data['players'])
 
             # Check if key length matches data length for each player
             if all(len(DST_key_values) == len(player_data) for player_data in DST_extracted_data):
@@ -80,7 +90,7 @@ def main():
         
         elif position == 'K':
             K_key_values = get_key_values(data['players'][0])
-            K_extracted_data = extract_player_data(data['players'])
+            K_extracted_data = extract_player_data(season, week, data['players'])
 
             # Check if key length matches data length for each player
             if all(len(K_key_values) == len(player_data) for player_data in K_extracted_data):
@@ -94,7 +104,7 @@ def main():
 
         elif position == 'QB':
             QB_key_values = get_key_values(data['players'][0])
-            QB_extracted_data = extract_player_data(data['players'])
+            QB_extracted_data = extract_player_data(season, week, data['players'])
 
             # Check if key length matches data length for each player
             if all(len(QB_key_values) == len(player_data) for player_data in QB_extracted_data):
@@ -107,7 +117,7 @@ def main():
 
         elif position == 'RB':
             RB_key_values = get_key_values(data['players'][0])
-            RB_extracted_data = extract_player_data(data['players'])
+            RB_extracted_data = extract_player_data(season, week, data['players'])
 
             # Check if key length matches data length for each player
             if all(len(RB_key_values) == len(player_data) for player_data in RB_extracted_data):
@@ -120,7 +130,7 @@ def main():
 
         elif position == 'TE':
             TE_key_values = get_key_values(data['players'][0])
-            TE_extracted_data = extract_player_data(data['players'])
+            TE_extracted_data = extract_player_data(season, week, data['players'])
 
             # Check if key length matches data length for each player
             if all(len(TE_key_values) == len(player_data) for player_data in TE_extracted_data):
@@ -133,15 +143,15 @@ def main():
 
         elif position == 'WR':
             WR_key_values = get_key_values(data['players'][0])
-            WR_extracted_data = extract_player_data(data['players'])
+            WR_extracted_data = extract_player_data(season, week, data['players'])
 
             # Check if key length matches data length for each player
             if all(len(WR_key_values) == len(player_data) for player_data in WR_extracted_data):
                 print(f"\nKey lengths match value lengths for {position}.")
             else:
                 print(f"\nKey lengths do NOT match value lengths for {position}.")
-            print(f"Key Values for {position}:", WR_key_values)  
-            print(f"Extracted Data for {position}:", WR_extracted_data[:1])
+            # print(f"Key Values for {position}:", WR_key_values)  
+            # print(f"Extracted Data for {position}:", WR_extracted_data[:1])
 
 if __name__ == "__main__":
     main()
