@@ -279,54 +279,46 @@ def main():
 
 
 #################### BEGIN: Checks and Tests ##########################
-    # fixme
-    # check to ensure NFL team list is correct
-    # if len(teams_list) == 32:
-    #     print("\nLength of teams list is correct: ", len(teams_list))
-    # else:
-    #     print("\nNumber of teams imported is not correct")
-
-    # Check if the lengths of the athlete data are equal
-    # if len(nested_teams_list) == len(nested_athletes_list) == len(nested_positions_list) == len(nested_status_list) == len(nested_player_statistics_list) == len(nested_player_rank_list):
-    #     print("\nAll categtory lists of nested lists are equal in length.")
-    #     print("athletes length: ", len(nested_athletes_list))
-    #     print("positions length: ", len(nested_positions_list))
-    #     print("status length: ",len(nested_status_list))
-    #     print("values length: ", len(nested_player_statistics_list))
-    #     print("ranks length: ", len(nested_player_rank_list))
-    # else:
-    #     print("The category lists of nested lists are not equal in length!!")
-    #     print("athletes length: ", len(nested_athletes_list))
-    #     print("positions length: ", len(nested_positions_list))
-    #     print("status length: ",len(nested_status_list))
-    #     print("values length: ", len(nested_player_statistics_list))
-    #     print("ranks length: ", len(nested_player_rank_list))
-
-    # # Check if the lengths of the athlete 'values' and 'ranks' data are equal to the 'labels' columns
-    # if len(values_rank_keys) == len(player_statistics_list[0]) == len(player_rank_list[0]) == len(display_names_list) == len(descriptions_list):
-    #     print("\nPlayer statistics column and row lengths are equal.")
-    #     print("# of value_rank columns: ", len(values_rank_keys))
-    #     print("# of player statistics", len(player_statistics_list[0]))
-    #     print("# of player ranks", len(player_rank_list[0]))
-    #     print("# of displayNames columns: ",len(display_names_list))
-    #     print("# of descriptions columns: ",len(descriptions_list))
-    # else:
-    #     print("player statistics column and row lengths are not equal!!")
-
-    # TASK: experiment and test - some nested lists do not match
-    # check if the lenghts of the nested list of players are equal
-    # for i in range(len(nested_player_statistics_list)):
-    #     print(f"Lengths of nested lists at index {i}:")
-    #     print(f"  nested_status_list: {len(nested_status_list[i])}")
-    #     print(f"  nested_player_statistics_list: {len(nested_player_statistics_list[i])}")
-    #     print(f"  nested_player_rank_list: {len(nested_player_rank_list[i])}")
-    #     print(f"  nested_teams_list: {len(nested_teams_list[i])}")
-    #     print(f"  nested_positions_list: {len(nested_positions_list[i])}")
-    #     print(f"  nested_athletes_list: {len(nested_athletes_list[i])}")
-    #     print()
     
-    # Task: experimen and test - 
-    # Create a dictionary to hold all the nested lists
+    ## check if the lengths of the athlete data are equal
+    if len(nested_teams_list) == len(nested_athletes_list) == len(nested_positions_list) == len(nested_status_list) == len(nested_player_statistics_list) == len(nested_player_rank_list):
+        print("\nAll categtory lists of nested lists are equal in length.")
+        print("athletes length: ", len(nested_athletes_list))
+        print("positions length: ", len(nested_positions_list))
+        print("status length: ",len(nested_status_list))
+        print("values length: ", len(nested_player_statistics_list))
+        print("ranks length: ", len(nested_player_rank_list))
+    else:
+        print("\nThe category lists of nested lists are not equal in length!!")
+        print("athletes length: ", len(nested_athletes_list))
+        print("positions length: ", len(nested_positions_list))
+        print("status length: ",len(nested_status_list))
+        print("values length: ", len(nested_player_statistics_list))
+        print("ranks length: ", len(nested_player_rank_list))
+
+    ## check if the lengths of the athlete 'values' and 'ranks' data are equal to the 'labels' columns
+    if len(values_rank_keys) == len(player_statistics_list[0]) == len(player_rank_list[0]) == len(display_names_list) == len(descriptions_list):
+        print("\nPlayer statistics column and row lengths are equal.")
+        print("# of value_rank columns: ", len(values_rank_keys))
+        print("# of player statistics", len(player_statistics_list[0]))
+        print("# of player ranks", len(player_rank_list[0]))
+        print("# of displayNames columns: ",len(display_names_list))
+        print("# of descriptions columns: ",len(descriptions_list))
+    else:
+        print("player statistics column and row lengths are not equal!!")
+
+    ## check if the lenghts of the nested list of players are equal
+    for i in range(len(nested_player_statistics_list)):
+        print(f"\nLengths of nested lists at index {i}:")
+        print(f"  nested_status_list: {len(nested_status_list[i])}")
+        print(f"  nested_player_statistics_list: {len(nested_player_statistics_list[i])}")
+        print(f"  nested_player_rank_list: {len(nested_player_rank_list[i])}")
+        print(f"  nested_teams_list: {len(nested_teams_list[i])}")
+        print(f"  nested_positions_list: {len(nested_positions_list[i])}")
+        print(f"  nested_athletes_list: {len(nested_athletes_list[i])}")
+        print()
+    
+    ## test lines: dictionary to hold all the nested lists
     nested_lists_dict = {
     'nested_status_list': nested_status_list,
     'nested_player_statistics_list': nested_player_statistics_list,
@@ -335,7 +327,7 @@ def main():
     'nested_positions_list': nested_positions_list,
     'nested_athletes_list': nested_athletes_list
     }
-    # task
+    # test lines: 
     # Iterate through each main list and print the lengths of its nested lists
     for list_name, main_list in nested_lists_dict.items():
         print(f"Checking lengths for {list_name}:")
@@ -363,6 +355,8 @@ def main():
     # print(week_list)
     ### End: league, season, and week lists ###
  
+
+    ### BEGIN: tests for all of the categories nested lists ###
     ## test ##
     ## NOTE: test result: correct output ##
     # NOTE: the nested..._list will caputure the team for each player
@@ -461,6 +455,8 @@ def main():
     #     count += len(n)
     #     print(n)
     # print("total player ranks:", count, '\n')
+    ### END: tests for all of the categories nested lists ###
+    
 #################### END: Checks and Tests ##########################
 
 
