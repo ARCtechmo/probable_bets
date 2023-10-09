@@ -1,8 +1,6 @@
 
 # parse the json data
 
-# Task: combine all of the list into a single row of data to be exported
-
 import json
 import os
 import re
@@ -178,6 +176,136 @@ def extract_descriptions(data):
         descriptions_list.extend(description)
     return descriptions_list
 
+def combine_league_season_week(league_list, season_type_list, week_list):
+    combined_list = []
+    # Appending elements based on the specified indices
+    combined_list.append(league_list[0][0])
+    combined_list.append(season_type_list[0][1])
+    combined_list.append(week_list[0][1])
+    combined_list.append(week_list[0][2])
+    combined_list.append(week_list[0][3])
+    
+    return combined_list
+
+# # function contains all athlete statistics, fk categories, and fk
+# NOTE: this function is needed to compare and combine with other json files
+def append_foreign_keys_to_player_data(
+        nested_athletes_list, nested_positions_list, nested_teams_list, 
+        nested_status_list, nested_player_statistics_list,combined_list
+        ):
+
+    modified_statistics_list = []
+
+    # Loop through each set of nested lists
+    for i, player_statistics in enumerate(nested_player_statistics_list):
+        for j, stats in enumerate(player_statistics):
+            new_row = [
+                combined_list[0],  # League ID
+                combined_list[1],  # Season Type
+                combined_list[2],  # Week Number
+                combined_list[3],  # Week Start Date
+                combined_list[4],  # Week End Date
+            ]
+            new_row.extend(nested_athletes_list[i][j])
+            new_row.extend(nested_positions_list[i][j])
+            new_row.extend(nested_teams_list[i][j])
+            new_row.extend(nested_status_list[i][j])
+            new_row.extend(stats)
+            modified_statistics_list.append(new_row)
+    
+    return modified_statistics_list
+
+# function contains all rank information, fk categories, and fk
+# NOTE: this function is needed to compare and combine with other json files
+def append_foreign_keys_to_player_rank_data(
+        nested_athletes_list, nested_positions_list, 
+        nested_teams_list, nested_status_list, 
+        nested_player_rank_list,combined_list
+        ):
+
+    modified_rank_list = []
+
+    # Loop through each set of nested lists
+    for i, player_rank in enumerate(nested_player_rank_list):
+        for j, rank in enumerate(player_rank):
+            new_row = [
+                combined_list[0],  # League ID
+                combined_list[1],  # Season Type
+                combined_list[2],  # Week Number
+                combined_list[3],  # Week Start Date
+                combined_list[4],  # Week End Date
+            ]
+            new_row.extend(nested_athletes_list[i][j])
+            new_row.extend(nested_positions_list[i][j])
+            new_row.extend(nested_teams_list[i][j])
+            new_row.extend(nested_status_list[i][j])
+            new_row.extend(rank)
+            modified_rank_list.append(new_row)
+    
+    return modified_rank_list
+
+
+# function append sonly the foreign key IDs for player statistics data
+def append_reduced_foreign_keys_to_player_data(
+        nested_athletes_list, nested_positions_list, 
+        nested_teams_list, nested_status_list, 
+        nested_player_statistics_list,combined_list
+        ):
+
+    modified_statistics_list = []
+
+    # Loop through each set of nested lists
+    for i, player_statistics in enumerate(nested_player_statistics_list):
+        for j, stats in enumerate(player_statistics):
+            new_row = [
+                combined_list[0],  # League ID
+                combined_list[1],  # Season Type
+                combined_list[2],  # Week Number
+                combined_list[3],  # Week Start Date
+                combined_list[4],  # Week End Date
+                ]
+
+            # only keep the ID fields for athlete, position, team and status
+            new_row.append(nested_athletes_list[i][j][0])  # Athlete ID
+            new_row.append(nested_positions_list[i][j][0])  # Position ID
+            new_row.append(nested_teams_list[i][j][0])  # Team ID
+            new_row.append(nested_status_list[i][j][0])  # Status ID
+            new_row.extend(stats)
+            modified_statistics_list.append(new_row)  
+
+    return modified_statistics_list
+
+# function appends only the foreign key IDs for player rank data
+
+def append_reduced_foreign_keys_to_player_rank_data(
+        nested_athletes_list, nested_positions_list, 
+        nested_teams_list, nested_status_list, 
+        nested_player_rank_list,combined_list
+        ):
+
+    modified_rank_list = []
+
+    # Loop through each set of nested lists
+    for i, player_rank in enumerate(nested_player_rank_list):
+        for j, rank in enumerate(player_rank):
+            new_row = [
+                combined_list[0],  # League ID
+                combined_list[1],  # Season Type
+                combined_list[2],  # Week Number
+                combined_list[3],  # Week Start Date
+                combined_list[4],  # Week End Date
+                ]
+
+            # only keep the ID fields for athlete, position, team and status
+            new_row.append(nested_athletes_list[i][j][0])  # Athlete ID
+            new_row.append(nested_positions_list[i][j][0])  # Position ID
+            new_row.append(nested_teams_list[i][j][0])  # Team ID
+            new_row.append(nested_status_list[i][j][0])  # Status ID
+            new_row.extend(rank)
+            modified_rank_list.append(new_row)  
+
+    return modified_rank_list
+
 def main():
 
     # get the current year in YYYY format
@@ -269,6 +397,9 @@ def main():
         display_names_list = extract_display_names(data)
         descriptions_list = extract_descriptions(data)
 
+
+        combined_list = combine_league_season_week(league_list, season_type_list, week_list)
+        
         # Append the lists to the nested lists at the end of each file iteration
         nested_status_list.append(status_list) 
         nested_player_statistics_list.append(player_statistics_list) 
@@ -277,67 +408,97 @@ def main():
         nested_positions_list.append(positions_list) 
         nested_athletes_list.append(athletes_list)   
 
+        athlete_statistics_fk_list = append_foreign_keys_to_player_data(
+        nested_player_statistics_list, 
+        nested_athletes_list, 
+        nested_positions_list, 
+        nested_teams_list, 
+        nested_status_list, 
+        combined_list
+        )
+
+        athlete_rank_fk_list = append_foreign_keys_to_player_rank_data(
+        nested_player_rank_list, 
+        nested_athletes_list, 
+        nested_positions_list, 
+        nested_teams_list, 
+        nested_status_list, 
+        combined_list
+        )
+
+        reduced_athlete_statistics_fk_list = append_reduced_foreign_keys_to_player_data(
+        nested_athletes_list, nested_positions_list, 
+        nested_teams_list, nested_status_list, 
+        nested_player_statistics_list, combined_list
+        )
+        
+        reduced_athlete_rank_fk_list = append_reduced_foreign_keys_to_player_rank_data(
+        nested_athletes_list, nested_positions_list, 
+        nested_teams_list, nested_status_list, 
+        nested_player_rank_list, combined_list
+        )
 
 #################### BEGIN: Checks and Tests ##########################
     
-    ## check if the lengths of the athlete data are equal
-    if len(nested_teams_list) == len(nested_athletes_list) == len(nested_positions_list) == len(nested_status_list) == len(nested_player_statistics_list) == len(nested_player_rank_list):
-        print("\nAll categtory lists of nested lists are equal in length.")
-        print("athletes length: ", len(nested_athletes_list))
-        print("positions length: ", len(nested_positions_list))
-        print("status length: ",len(nested_status_list))
-        print("values length: ", len(nested_player_statistics_list))
-        print("ranks length: ", len(nested_player_rank_list))
-    else:
-        print("\nThe category lists of nested lists are not equal in length!!")
-        print("athletes length: ", len(nested_athletes_list))
-        print("positions length: ", len(nested_positions_list))
-        print("status length: ",len(nested_status_list))
-        print("values length: ", len(nested_player_statistics_list))
-        print("ranks length: ", len(nested_player_rank_list))
+    # ## check if the lengths of the athlete data are equal
+    # if len(nested_teams_list) == len(nested_athletes_list) == len(nested_positions_list) == len(nested_status_list) == len(nested_player_statistics_list) == len(nested_player_rank_list):
+    #     print("\nAll categtory lists of nested lists are equal in length.")
+    #     print("athletes length: ", len(nested_athletes_list))
+    #     print("positions length: ", len(nested_positions_list))
+    #     print("status length: ",len(nested_status_list))
+    #     print("values length: ", len(nested_player_statistics_list))
+    #     print("ranks length: ", len(nested_player_rank_list))
+    # else:
+    #     print("\nThe category lists of nested lists are not equal in length!!")
+    #     print("athletes length: ", len(nested_athletes_list))
+    #     print("positions length: ", len(nested_positions_list))
+    #     print("status length: ",len(nested_status_list))
+    #     print("values length: ", len(nested_player_statistics_list))
+    #     print("ranks length: ", len(nested_player_rank_list))
 
-    ## check if the lengths of the athlete 'values' and 'ranks' data are equal to the 'labels' columns
-    if len(values_rank_keys) == len(player_statistics_list[0]) == len(player_rank_list[0]) == len(display_names_list) == len(descriptions_list):
-        print("\nPlayer statistics column and row lengths are equal.")
-        print("# of value_rank columns: ", len(values_rank_keys))
-        print("# of player statistics", len(player_statistics_list[0]))
-        print("# of player ranks", len(player_rank_list[0]))
-        print("# of displayNames columns: ",len(display_names_list))
-        print("# of descriptions columns: ",len(descriptions_list))
-    else:
-        print("player statistics column and row lengths are not equal!!")
+    # ## check if the lengths of the athlete 'values' and 'ranks' data are equal to the 'labels' columns
+    # if len(values_rank_keys) == len(player_statistics_list[0]) == len(player_rank_list[0]) == len(display_names_list) == len(descriptions_list):
+    #     print("\nPlayer statistics column and row lengths are equal.")
+    #     print("# of value_rank columns: ", len(values_rank_keys))
+    #     print("# of player statistics", len(player_statistics_list[0]))
+    #     print("# of player ranks", len(player_rank_list[0]))
+    #     print("# of displayNames columns: ",len(display_names_list))
+    #     print("# of descriptions columns: ",len(descriptions_list))
+    # else:
+    #     print("player statistics column and row lengths are not equal!!")
 
-    ## check if the lenghts of the nested list of players are equal
-    for i in range(len(nested_player_statistics_list)):
-        print(f"\nLengths of nested lists at index {i}:")
-        print(f"  nested_status_list: {len(nested_status_list[i])}")
-        print(f"  nested_player_statistics_list: {len(nested_player_statistics_list[i])}")
-        print(f"  nested_player_rank_list: {len(nested_player_rank_list[i])}")
-        print(f"  nested_teams_list: {len(nested_teams_list[i])}")
-        print(f"  nested_positions_list: {len(nested_positions_list[i])}")
-        print(f"  nested_athletes_list: {len(nested_athletes_list[i])}")
-        print()
+    # ## check if the lenghts of the nested list of players are equal
+    # for i in range(len(nested_player_statistics_list)):
+    #     print(f"\nLengths of nested lists at index {i}:")
+    #     print(f"  nested_status_list: {len(nested_status_list[i])}")
+    #     print(f"  nested_player_statistics_list: {len(nested_player_statistics_list[i])}")
+    #     print(f"  nested_player_rank_list: {len(nested_player_rank_list[i])}")
+    #     print(f"  nested_teams_list: {len(nested_teams_list[i])}")
+    #     print(f"  nested_positions_list: {len(nested_positions_list[i])}")
+    #     print(f"  nested_athletes_list: {len(nested_athletes_list[i])}")
+    #     print()
     
-    ## test lines: dictionary to hold all the nested lists
-    nested_lists_dict = {
-    'nested_status_list': nested_status_list,
-    'nested_player_statistics_list': nested_player_statistics_list,
-    'nested_player_rank_list': nested_player_rank_list,
-    'nested_teams_list': nested_teams_list,
-    'nested_positions_list': nested_positions_list,
-    'nested_athletes_list': nested_athletes_list
-    }
-    # test lines: 
-    # Iterate through each main list and print the lengths of its nested lists
-    for list_name, main_list in nested_lists_dict.items():
-        print(f"Checking lengths for {list_name}:")
-        for i, nested_list in enumerate(main_list):
-            print(f"  Length of nested list at index {i}: {len(nested_list)}")
-        print()
+    # ## test lines: dictionary to hold all the nested lists
+    # nested_lists_dict = {
+    # 'nested_status_list': nested_status_list,
+    # 'nested_player_statistics_list': nested_player_statistics_list,
+    # 'nested_player_rank_list': nested_player_rank_list,
+    # 'nested_teams_list': nested_teams_list,
+    # 'nested_positions_list': nested_positions_list,
+    # 'nested_athletes_list': nested_athletes_list
+    # }
+    # # test lines: 
+    # # Iterate through each main list and print the lengths of its nested lists
+    # for list_name, main_list in nested_lists_dict.items():
+    #     print(f"Checking lengths for {list_name}:")
+    #     for i, nested_list in enumerate(main_list):
+    #         print(f"  Length of nested list at index {i}: {len(nested_list)}")
+    #     print()
+
 
     ### Begin: league, season, and week lists ###
-    # NOTE:  append to each player list
-    # NOTE:  use as foreign keys for the db
+    # NOTE: append to each player list
+    # NOTE: use as foreign keys for the db
 
     # NOTE: no changes required
     # print("=== League List ===")
@@ -348,30 +509,31 @@ def main():
     # print("\n=== Season Type List ===")
     # print(season_keys)
     # print(season_type_list)
+    # print(season_type_list[0][1])
 
     # NOTE: no changes required
     # print("\n=== Week List ===")
     # print(week_keys)
     # print(week_list)
+    # print(week_list[0][1], week_list[0][2])
     ### End: league, season, and week lists ###
  
-
     ### BEGIN: tests for all of the categories nested lists ###
     ## test ##
     ## NOTE: test result: correct output ##
-    # NOTE: the nested..._list will caputure the team for each player
-    # NOTE: either use the nested---list or the teams_list as the fk table 
-    # print("\n=== Teams List ===")
-    # print(team_keys) # NOTE: no change to keys required
-    # print(teams_list) # NOTE: no change required and can use as fk table
-    #
-    # print("\n----------player teams----------:")
+    # NOTE: the nested..._list caputures each player to match with the stats
+    # NOTE: the expanded nested..._list will serve as the fk table
+    # print("\n=== Athletes List ===")
+    print(athlete_keys) # NOTE: no change to keys required
+    # print(athletes_list) # NOTE: no change needed but will not use the nested
+    # 
+    # print("\n----------athletes----------:")
     # count = 0
-    # for n in nested_teams_list:
+    # for n in nested_athletes_list:
     #     print('\n',len(n))
     #     count += len(n)
     #     print(n)
-    # print("total player teams:", count,"\n")
+    # print("total number of athletes:", count,"\n")
 
     ## test ##
     ## NOTE: test result: correct output ##
@@ -391,19 +553,19 @@ def main():
 
     ## test ##
     ## NOTE: test result: correct output ##
-    # NOTE: the nested..._list caputures each player to match with the stats
-    # NOTE: the expanded nested..._list will serve as the fk table
-    # print("\n=== Athletes List ===")
-    # print(athlete_keys) # NOTE: no change to keys required
-    # print(athletes_list) # NOTE: no change needed but will not use the nested
-    # 
-    # print("\n----------athletes----------:")
+    # NOTE: the nested..._list will caputure the team for each player
+    # NOTE: either use the nested---list or the teams_list as the fk table 
+    # print("\n=== Teams List ===")
+    # print(team_keys) # NOTE: no change to keys required
+    # print(teams_list) # NOTE: no change required and can use as fk table
+    #
+    # print("\n----------player teams----------:")
     # count = 0
-    # for n in nested_athletes_list:
+    # for n in nested_teams_list:
     #     print('\n',len(n))
     #     count += len(n)
     #     print(n)
-    # print("total number of athletes:", count,"\n")
+    # print("total player teams:", count,"\n") 
     
     ## test ##
     ## NOTE: test result: correct output ##
@@ -423,9 +585,6 @@ def main():
 
     ## test ##
     ## NOTE: test result: correct output ##
-    # task: create loops to caputre the lists in the correct order w/enumerate
-    # task: append league, season, week, athletes, teams, status and rank lists as fk numbers
-    # task: append to the beginning of the list
     # print("\n=== Player Statistics List ===")
     # print("\nplayer stats length:",len(nested_player_statistics_list))
     #
@@ -456,7 +615,39 @@ def main():
     #     print(n)
     # print("total player ranks:", count, '\n')
     ### END: tests for all of the categories nested lists ###
-    
+
+    ## test ##
+    # NOTE: test result: correct output ##
+    print("\n===League, Season, and Week foreign keys list===")
+    # print("Combined list:", combined_list)
+
+    ## test ##
+    # TASK: Verify json file data matches the output 
+    print("\n=== Testing athlete_statistics_fk_list ===")
+    for i, athlete_stats in enumerate(athlete_statistics_fk_list):
+        print('\n',athlete_stats)
+        print(f"Athlete stats at index {i}: {athlete_stats}")
+
+    ## test ##
+    # TASK: Verify json file data matches the output 
+    print("\n=== Testing athlete_rank_fk_list ===")
+    for i, athlete_stats in enumerate(athlete_rank_fk_list):
+        print(f"Athlete rank at index {i}: {athlete_stats}")
+
+    ## test ##
+    # TASK: Verify json file data matches the output  
+    # TASK: only the IDs for athlete, positions, teams, and status are included
+    print("\n=== Testing reduced_athlete_statistics_fk_list ===")
+    for i, athlete_stats in enumerate(reduced_athlete_statistics_fk_list):
+        print(f"\nReduced athlete stats at index {i}: {athlete_stats}")
+
+    ## test ##
+    # TASK: Verify json file data matches the output 
+    # TASK: only the IDs for athlete, positions, teams, and status are included
+    print("\n=== Testing reduced_athlete_rank_fk_list ===")
+    for i, athlete_stats in enumerate(reduced_athlete_rank_fk_list):
+        print(f"Reduced athlete rank at index {i}: {athlete_stats}")
+
 #################### END: Checks and Tests ##########################
 
 
