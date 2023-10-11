@@ -14,6 +14,10 @@ def read_json(file):
 def filter_data_by_keys(data, keys):
     return {k: v for k, v in data.items() if k in keys}
 
+def extract_count_data(data):
+    number_of_athletes = data.get('pagination', {})
+    return filter_data_by_keys(number_of_athletes,["count"])
+
 def extract_league_data(data):
     league_data = data.get('league', {})
     return filter_data_by_keys(league_data, ["id", "name"])
@@ -524,7 +528,7 @@ def main():
     # NOTE: the nested..._list caputures each player to match with the stats
     # NOTE: the expanded nested..._list will serve as the fk table
     # print("\n=== Athletes List ===")
-    print(athlete_keys) # NOTE: no change to keys required
+    # print(athlete_keys) # NOTE: no change to keys required
     # print(athletes_list) # NOTE: no change needed but will not use the nested
     # 
     # print("\n----------athletes----------:")
@@ -616,37 +620,81 @@ def main():
     # print("total player ranks:", count, '\n')
     ### END: tests for all of the categories nested lists ###
 
+    ### BEGIN: Tests of the combined lists ###
+
     ## test ##
     # NOTE: test result: correct output ##
-    print("\n===League, Season, and Week foreign keys list===")
+    # print("\n===League, Season, and Week foreign keys list===")
     # print("Combined list:", combined_list)
 
     ## test ##
-    # TASK: Verify json file data matches the output 
-    print("\n=== Testing athlete_statistics_fk_list ===")
-    for i, athlete_stats in enumerate(athlete_statistics_fk_list):
-        print('\n',athlete_stats)
-        print(f"Athlete stats at index {i}: {athlete_stats}")
+    # print("\n=== Testing athlete_statistics_fk_list ===")
+    # count = 0
+    # for i, athlete_stats in enumerate(athlete_statistics_fk_list):
+    #     print('\n',athlete_stats)
+    #     print(f"Athlete stats at index {i}: {athlete_stats}")
+    #     count +=1
+    # print(count)
 
     ## test ##
-    # TASK: Verify json file data matches the output 
-    print("\n=== Testing athlete_rank_fk_list ===")
-    for i, athlete_stats in enumerate(athlete_rank_fk_list):
-        print(f"Athlete rank at index {i}: {athlete_stats}")
+    # print("\n=== Testing athlete_rank_fk_list ===")
+    # count = 0
+    # for i, athlete_stats in enumerate(athlete_rank_fk_list):
+    #     print(f"Athlete rank at index {i}: {athlete_stats}")
+    #     count +=1
+    # print(count)
 
     ## test ##
-    # TASK: Verify json file data matches the output  
-    # TASK: only the IDs for athlete, positions, teams, and status are included
-    print("\n=== Testing reduced_athlete_statistics_fk_list ===")
-    for i, athlete_stats in enumerate(reduced_athlete_statistics_fk_list):
-        print(f"\nReduced athlete stats at index {i}: {athlete_stats}")
+    # only the IDs for athlete, positions, teams, and status are included
+    # print("\n=== Testing reduced_athlete_statistics_fk_list ===")
+    # count = 0
+    # for i, athlete_stats in enumerate(reduced_athlete_statistics_fk_list):
+    #     print(f"\nReduced athlete stats at index {i}: {athlete_stats}")
+    #     count +=1
+    # print(count)
 
     ## test ##
-    # TASK: Verify json file data matches the output 
-    # TASK: only the IDs for athlete, positions, teams, and status are included
-    print("\n=== Testing reduced_athlete_rank_fk_list ===")
-    for i, athlete_stats in enumerate(reduced_athlete_rank_fk_list):
-        print(f"Reduced athlete rank at index {i}: {athlete_stats}")
+    # only the IDs for athlete, positions, teams, and status are included
+    # print("\n=== Testing reduced_athlete_rank_fk_list ===")
+    # count = 0
+    # for i, athlete_stats in enumerate(reduced_athlete_rank_fk_list):
+    #     print(f"Reduced athlete rank at index {i}: {athlete_stats}")
+    #     count +=1
+    # print(count)
+
+    ## test ##
+    # FIXME: the count_from_json variable only counts the last json file
+    # fixme: the counts are not correct becuase the import.py is not getting all urls
+    # task: fix the import issues first then come back to this part
+    # task: build a loop to grab the "count" key, value from all the json files
+    # verify the total "count" in the json files is equal to the 
+    # ...total length of athlete_statistics_fk_list and athlete_rank_fk_list
+    count_from_json = extract_count_data(data).get('count',0)
+   
+    if len(athlete_statistics_fk_list) == count_from_json:
+        print("Count of athletes in the JSON  files matches the length of the combined athletes lists.")
+    else:
+        print("Counts mismatch. Please check the data.")
+
+    if len(athlete_rank_fk_list) == count_from_json:
+        print("Count of athletes in the JSON  files matches the length of the combined athletes lists.")
+    else:
+        print("Counts mismatch. Please check the data.")
+    
+    count_athletes = 0
+    for i in reduced_athlete_statistics_fk_list:
+        count_athletes +=1
+    print("\njson files count: ", count_from_json)
+    print("number of athletes in stats lists: ", count_athletes)
+
+    count_athletes = 0
+    for i in reduced_athlete_rank_fk_list:
+        count_athletes +=1
+    print("\njson files count: ", count_from_json)
+    print("number of athletes in rank lists: ", count_athletes)
+
+
+    ### END: Tests of the combined lists ###
 
 #################### END: Checks and Tests ##########################
 
