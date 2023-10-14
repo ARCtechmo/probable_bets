@@ -27,7 +27,9 @@ from urllib.parse import urlparse, urlencode, parse_qs
 from datetime import datetime 
 from math import ceil
 
-# Initialize data variable to avoid NameError
+# initialize data variable to avoid NameError
+# initialize sort_data dictionary
+# dict stores count, limit, and total athletes fetched for each unique "sort"
 data = None
 
 ## Task: NEW: evaluate ###
@@ -78,22 +80,10 @@ def parse_espn_url(url):
             return f"espn_{sort_value}_page{page_param}_{season_param}.json"
         return None
 
-# original unmodified function 
-# function parses the ESPN urls and dumps into json files
-# NOTE: DOES NOT CAPUTRE EVERY URL PAGE - 
-# def handle_espn_data(url):
-#      data = fetch_data(url)
-#      if data:
-#         json_file_name = parse_espn_url(url)
-#         if json_file_name:
-#             with open(json_file_name, "w") as txtfile:
-#                 json.dump(data, txtfile, indent=4)
-#         return data
-
 ## Task: new modified function -- evaluate and test
 # function parses the ESPN urls and dumps into json files
 # code modifications to handle separate counts for each "sort" criteria
-def handle_espn_data(url):
+def handle_espn_data(url, remaining_athletes=None):
     data = fetch_data(url)
     count = 0
     limit = 0
@@ -102,15 +92,31 @@ def handle_espn_data(url):
 
     if data:
 
-        # Extract count, limit, and sort from the data for pagination
-        count = data.get('count', 0)
-        limit = data.get('limit', 0)
+        # Debug: print out what the data looks like
+        print(f"Debug: Data keys available: {data.keys()}")
 
-        # Assuming you can get the sort parameter from the data; otherwise, parse from URL
+        # Extract count, limit, and sort from the data for pagination
+        # count = data.get('count', 0)
+        # limit = data.get('limit', 0)
+        count = data.get('pagination', {}).get('count', 0)
+        limit = data.get('pagination', {}).get('limit', 0)
+
+        # Debug: Print extracted values
+        print(f"Debug: Extracted count: {count}, limit: {limit}")
+
+        # assuming you can get the sort parameter from the data; otherwise, parse from URL
         sort_param = data.get('sort', '')  
 
-        # Get the number of athletes fetched in this page
-        athletes_fetched = len(data.get('athletes', []))
+        athletes = data.get('athletes', [])
+
+
+        # If remaining_athletes is specified, trim the list to that size
+        if remaining_athletes is not None:
+            athletes = athletes[:remaining_athletes]
+
+        # get the number of athletes fetched in this page
+        # athletes_fetched = len(data.get('athletes', []))
+        athletes_fetched = len(athletes)
 
         json_file_name = parse_espn_url(url)
         if json_file_name:
@@ -118,6 +124,52 @@ def handle_espn_data(url):
                 json.dump(data, txtfile, indent=4)
 
     return count, limit, athletes_fetched, sort_param
+
+# implement pagination in the if __name__ == "__main__" block
+def handle_espn_pagination(initial_espn_url):
+    count,limit, athletes_fetched, sort_param = handle_espn_data(initial_espn_url)
+    
+    # Debug: Print fetched values
+    print(f"Debug: In handle_espn_pagination, count: {count}, limit: {limit}")
+    
+    if limit == 0:
+        print(f"Limit is zero for URL: {initial_espn_url}. Skipping pagination.")
+        return
+    
+    sort_data[sort_param] = {'count': count, 'limit': limit, 'total_athletes_fetched': 0}
+    sort_data[sort_param]['total_athletes_fetched'] += athletes_fetched
+    total_pages = ceil(count / limit)
+
+    # Initialize remaining athletes count
+    remaining_athletes = count - athletes_fetched
+    print(f"Fetching {athletes_fetched} athletes for {sort_param} on page 1")  
+  
+    for page in range(2, total_pages + 1):
+        espn_url = initial_espn_url.replace("page=1", f"page={page}")
+
+        if remaining_athletes >= limit:
+            _, _, athletes_fetched, _ = handle_espn_data(espn_url)
+            print(f"Fetching {athletes_fetched} athletes for {sort_param} on page {page}")  
+        
+        # Fetch only the remaining athletes for the last page
+        else:
+            _, _, athletes_fetched, _ = handle_espn_data(espn_url, remaining_athletes)
+            print(f"Fetching remaining {athletes_fetched} athletes for {sort_param} on page {page}")  
+
+        sort_data[sort_param]['total_athletes_fetched'] += athletes_fetched
+        
+        # Update remaining athletes count
+        remaining_athletes -= athletes_fetched  
+
+# add a verification step for fetching all athletes 
+def verify_data_fetched(sort_data):
+    for sort_param, data in sort_data.items():
+        if data['total_athletes_fetched'] == data['count']:
+            print(f"Successfully fetched all athletes for sort: {sort_param}.")
+        else:
+            print(f"Data might be incomplete for sort: {sort_param}. \
+                  Total athletes fetched: {data['total_athletes_fetched']}, \
+                  expected: {data['count']}.")
 
 # function fetches .json data for pff prop bets 
 def handle_pff_data(url):
@@ -225,7 +277,7 @@ if __name__ == "__main__":
         print("Invalid year entered. Using current year instead.")
         year = datetime.now().year
 
-    # FIXME: I want automatic weekly input
+    # FIXME: I want automate weekly input
     # make a list of the weeks from espn
     # match the current week to the espn week list
     # format the string to a number
@@ -241,7 +293,7 @@ if __name__ == "__main__":
     
     # Fetch FantasyPros data for the current year
     season = datetime.now().year
-    fantasy_pros_urls = handle_fantasy_pros_data(season,week=None, scoring='STD')
+    # fantasy_pros_urls = handle_fantasy_pros_data(season,week=None, scoring='STD')
     
     # list of URLs
     urls = [
@@ -253,62 +305,29 @@ if __name__ == "__main__":
     # fixme: espn url api not capturing all pages
     # task: evaluate and test
     espn_urls = [
-            # f"https://site.web.api.espn.com/apis/common/v3/sports/football/nfl/statistics/byathlete?region=us&lang=en&contentorigin=espn&isqualified=false&page=1&limit=50&category=offense%3Apassing&sort=passing.passingYards%3Adesc&season={year}&seasontype=2",
-            # f"https://site.web.api.espn.com/apis/common/v3/sports/football/nfl/statistics/byathlete?region=us&lang=en&contentorigin=espn&isqualified=false&page=1&limit=50&category=offense%3Arushing&sort=rushing.rushingYards%3Adesc&season={year}&seasontype=2",
-            # f"https://site.web.api.espn.com/apis/common/v3/sports/football/nfl/statistics/byathlete?region=us&lang=en&contentorigin=espn&isqualified=false&page=1&limit=50&category=offense%3Areceiving&sort=receiving.receivingYards%3Adesc&season={year}&seasontype=2",
-            # f"https://site.web.api.espn.com/apis/common/v3/sports/football/nfl/statistics/byathlete?region=us&lang=en&contentorigin=espn&isqualified=false&page=1&limit=50&category=defense&sort=defensive.totalTackles%3Adesc&season={year}&seasontype=2",
-            # f"https://site.web.api.espn.com/apis/common/v3/sports/football/nfl/statistics/byathlete?region=us&lang=en&contentorigin=espn&isqualified=false&page=1&limit=50&category=scoring&sort=scoring.totalPoints%3Adesc&season={year}&seasontype=2",
-            # f"https://site.web.api.espn.com/apis/common/v3/sports/football/nfl/statistics/byathlete?region=us&lang=en&contentorigin=espn&isqualified=false&page=1&limit=50&category=specialTeams%3Areturning&sort=returning.kickReturnYards%3Adesc&season={year}&seasontype=2",
-            # f"https://site.web.api.espn.com/apis/common/v3/sports/football/nfl/statistics/byathlete?region=us&lang=en&contentorigin=espn&isqualified=false&page=1&limit=50&category=specialTeams%3Akicking&sort=kicking.fieldGoalsMade%3Adesc&season={year}&seasontype=2",
-            # f"https://site.web.api.espn.com/apis/common/v3/sports/football/nfl/statistics/byathlete?region=us&lang=en&contentorigin=espn&isqualified=true&page=1&limit=50&category=specialTeams%3Apunting&sort=punting.grossAvgPuntYards%3Adesc&season={year}&seasontype=2",
+            f"https://site.web.api.espn.com/apis/common/v3/sports/football/nfl/statistics/byathlete?region=us&lang=en&contentorigin=espn&isqualified=false&page=1&limit=50&category=offense%3Apassing&sort=passing.passingYards%3Adesc&season={year}&seasontype=2",
+            f"https://site.web.api.espn.com/apis/common/v3/sports/football/nfl/statistics/byathlete?region=us&lang=en&contentorigin=espn&isqualified=false&page=1&limit=50&category=offense%3Arushing&sort=rushing.rushingYards%3Adesc&season={year}&seasontype=2",
+            f"https://site.web.api.espn.com/apis/common/v3/sports/football/nfl/statistics/byathlete?region=us&lang=en&contentorigin=espn&isqualified=false&page=1&limit=50&category=offense%3Areceiving&sort=receiving.receivingYards%3Adesc&season={year}&seasontype=2",
+            f"https://site.web.api.espn.com/apis/common/v3/sports/football/nfl/statistics/byathlete?region=us&lang=en&contentorigin=espn&isqualified=false&page=1&limit=50&category=defense&sort=defensive.totalTackles%3Adesc&season={year}&seasontype=2",
+            f"https://site.web.api.espn.com/apis/common/v3/sports/football/nfl/statistics/byathlete?region=us&lang=en&contentorigin=espn&isqualified=false&page=1&limit=50&category=scoring&sort=scoring.totalPoints%3Adesc&season={year}&seasontype=2",
+            f"https://site.web.api.espn.com/apis/common/v3/sports/football/nfl/statistics/byathlete?region=us&lang=en&contentorigin=espn&isqualified=false&page=1&limit=50&category=specialTeams%3Areturning&sort=returning.kickReturnYards%3Adesc&season={year}&seasontype=2",
+            f"https://site.web.api.espn.com/apis/common/v3/sports/football/nfl/statistics/byathlete?region=us&lang=en&contentorigin=espn&isqualified=false&page=1&limit=50&category=specialTeams%3Akicking&sort=kicking.fieldGoalsMade%3Adesc&season={year}&seasontype=2",
+            f"https://site.web.api.espn.com/apis/common/v3/sports/football/nfl/statistics/byathlete?region=us&lang=en&contentorigin=espn&isqualified=true&page=1&limit=50&category=specialTeams%3Apunting&sort=punting.grossAvgPuntYards%3Adesc&season={year}&seasontype=2"
         ]
     
     # TASK: evaluate and test
     # Loop through all the ESPN URLs 
     for initial_espn_url in espn_urls:
+        handle_espn_pagination(initial_espn_url)
+
+        # Verify the data
+        verify_data_fetched(sort_data)
         
-        # Fetch the first page to get count, limit, and sort for pagination
-        count, limit, athletes_fetched, sort_param = handle_espn_data(initial_espn_url)
-
-        # Initialize data for this sort
-        sort_data[sort_param] = {'count': count, 'limit': limit, 'total_athletes_fetched': 0}
-
-        # Update total_athletes_fetched for this sort
-        sort_data[sort_param]['total_athletes_fetched'] += athletes_fetched
-
-        # Calculate the total number of pages
-        total_pages = ceil(count / limit)
-
-        # Loop through all the pages
-        # Start from page 2 as we have already fetched page 1
-        for page in range(2, total_pages + 1):  
-
-            # Modify the URL for each page
-            espn_url = initial_espn_url.replace("page=1", f"page={page}")
-
-            # Fetch the data for each page
-            _, _, athletes_fetched, _ = handle_espn_data(espn_url)
-
-
-            # Update total_athletes_fetched for this sort
-            sort_data[sort_param]['total_athletes_fetched'] += athletes_fetched
-
-        # Verify if the total number of athletes fetched matches 
-        # ...the count for this sort
-        if sort_data[sort_param]['total_athletes_fetched'] == sort_data[sort_param]['count']:
-            print(f"Successfully fetched all athletes for sort: {sort_param}.")
-
-        else:
-            print(f"Data might be incomplete for sort: {sort_param}. \
-                  Total athletes fetched: {sort_data[sort_param]['total_athletes_fetched']}, \
-                  expected: {sort_data[sort_param]['count']}.")
-
-
     # Append FantasyPros URLs to the urls list
-    if fantasy_pros_urls is not None:
-        urls.extend(fantasy_pros_urls)
-    else:
-        print("No FantasyPros URLs.")
+    # if fantasy_pros_urls is not None:
+    #     urls.extend(fantasy_pros_urls)
+    # else:
+    #     print("No FantasyPros URLs.")
 
     # loop through the urls and fetch the data
     for url in urls:
@@ -316,11 +335,10 @@ if __name__ == "__main__":
         # execute time delay
         handle_random_delay()
 
-        if 'espn' in url:
-            handle_espn_data(url)
-
-        elif 'pff' in url:
-            handle_pff_data(url)
+        if 'pff' in url:
+            # handle_pff_data(url)
+            pass
         
         elif 'rotowire' in url:
-            handle_rotowire_data(url)
+            # handle_rotowire_data(url)
+            pass
