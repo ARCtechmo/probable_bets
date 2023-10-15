@@ -8,9 +8,7 @@
 # https://www.rotowire.com/betting/nfl/tables/nfl-games.php?week={week}
 # has unique id for each game: "game_id
 
-# Task:
-# updated fetch_data() function to accept headers
-# make sure the espn api still pulls correctly
+
 
 # task: go through the fp api and organize the information into lists
 
@@ -32,8 +30,6 @@ from math import ceil
 # dict stores count, limit, and total athletes fetched for each unique "sort"
 data = None
 
-## Task: NEW: evaluate ###
-# handle_espn_data() function modified
 # Dictionary to store count, limit, and total athletes fetched 
 # ...for each unique "sort"
 sort_data = {}
@@ -80,7 +76,6 @@ def parse_espn_url(url):
             return f"espn_{sort_value}_page{page_param}_{season_param}.json"
         return None
 
-## Task: new modified function -- evaluate and test
 # function parses the ESPN urls and dumps into json files
 # code modifications to handle separate counts for each "sort" criteria
 def handle_espn_data(url, remaining_athletes=None):
@@ -263,7 +258,6 @@ def handle_fantasy_pros_data(season, positions=None, week=None, scoring=None):
 ## Explanation of the 'if __name__ == "__main__"': ##
 # -main loop only gets executed when the script is run directly
 
-   
 # -main loop for data fetching and user input prompt only executes when the script is run directly.
 # -main loop will not get executed if import.py file is imported as a module
 if __name__ == "__main__":
@@ -301,9 +295,6 @@ if __name__ == "__main__":
             # f"https://www.rotowire.com/betting/nfl/tables/nfl-games.php?week={week}",
             ]
     
-
-    # fixme: espn url api not capturing all pages
-    # task: evaluate and test
     espn_urls = [
             f"https://site.web.api.espn.com/apis/common/v3/sports/football/nfl/statistics/byathlete?region=us&lang=en&contentorigin=espn&isqualified=false&page=1&limit=50&category=offense%3Apassing&sort=passing.passingYards%3Adesc&season={year}&seasontype=2",
             f"https://site.web.api.espn.com/apis/common/v3/sports/football/nfl/statistics/byathlete?region=us&lang=en&contentorigin=espn&isqualified=false&page=1&limit=50&category=offense%3Arushing&sort=rushing.rushingYards%3Adesc&season={year}&seasontype=2",
@@ -315,7 +306,6 @@ if __name__ == "__main__":
             f"https://site.web.api.espn.com/apis/common/v3/sports/football/nfl/statistics/byathlete?region=us&lang=en&contentorigin=espn&isqualified=true&page=1&limit=50&category=specialTeams%3Apunting&sort=punting.grossAvgPuntYards%3Adesc&season={year}&seasontype=2"
         ]
     
-    # TASK: evaluate and test
     # Loop through all the ESPN URLs 
     for initial_espn_url in espn_urls:
         handle_espn_pagination(initial_espn_url)
