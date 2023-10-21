@@ -1,6 +1,6 @@
 
 # parse the json data
-
+import database
 import json
 import os
 import re
@@ -286,6 +286,13 @@ def append_reduced_foreign_keys_to_player_rank_data(
 
     return modified_rank_list
 
+
+def insert_into_database(league_list, season_type_list):
+    conn = database.create_connection()
+    database.insert_into_league(conn, league_list)
+    database.insert_into_season(conn, season_type_list)
+    conn.close()
+
 def main():
 
     # get the current year in YYYY format
@@ -418,9 +425,16 @@ def main():
         nested_player_rank_list, combined_list
         )
 
+    ## TASK: create the functions in database.py to export data to the db
+    ## TASK: add the remaining foreign key tabels: teams, positions, athletes, etc...
     ####### BEGIN: Export athlete statstics to db #######
-    ## Task: add code to export to the db
-    ## Task: come back to this after you build the db
+    # create a tuple for season type
+    export_season_type_tuple = (season_type_list[0][1], season_type_list[0][2])
+
+    # Wrap the tuple inside a list
+    export_season_type_list = [export_season_type_tuple]
+    insert_into_database(league_list, export_season_type_list)
+
     count_athletes = 0
     for i in export_athlete_statistics_fk_list:
         count_athletes +=1
