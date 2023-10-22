@@ -75,7 +75,64 @@ def insert_into_season(conn, season_data):
         else:
             print(f"Skipping invalid data: {data}")
     conn.commit()
-## TASK: create the remaining functions to export data to the db
+
+def insert_into_teams(conn, teams_data):
+    cur = conn.cursor()
+    for team_row in teams_data:
+        if isinstance(team_row, (list, tuple)) and len(team_row) == 4:
+            id, teamUID, teamName, teamShortName = team_row
+            
+            # check for duplicate entries based on id and teamUID
+            cur.execute("SELECT * FROM teams WHERE id = ? OR teamUID = ?", (id, teamUID))
+            existing_entry = cur.fetchone()
+            if existing_entry is None:
+                # insert new entry
+                cur.execute("INSERT INTO teams (id, teamUID, teamName, teamShortName) VALUES (?, ?, ?, ?)",
+                            (id, teamUID, teamName, teamShortName))
+        else:
+            print(f"Skipping invalid data: {team_row}")
+    conn.commit()
+
+def insert_into_positions(conn, positions_data):
+    cur = conn.cursor()
+    for position_row in positions_data:
+        if isinstance(position_row, (list, tuple)) and len(position_row) == 3:  
+            id, position, abbr = position_row
+            cur.execute("SELECT * FROM positions WHERE id=?", (id,))
+            if cur.fetchone() is None:
+                cur.execute("INSERT INTO positions (id, position, abbr) VALUES (?, ?, ?)", (id, position, abbr))
+        else:
+            print(f"Skipping invalid data: {position_row}")
+    conn.commit()
+
+def insert_into_athlete_status(conn, status_data):
+    cur = conn.cursor()
+    for status_row in status_data:
+        if isinstance(status_row, (list, tuple)) and len(status_row) == 2: 
+            id, status = status_row
+            cur.execute("SELECT * FROM athleteStatus WHERE id=?", (id,))
+            if cur.fetchone() is None:
+                cur.execute("INSERT INTO athleteStatus (id, status) VALUES (?, ?)", (id, status))
+        else:
+            print(f"Skipping invalid data: {status_row}")
+    conn.commit()
+
+#FIXME Fix the count discrepancy
+## export_nested_athlete_list count is correct
+## count in "athletes" differs from export_nested_athlete_list count
+## UNIQUE CONSTRAINTS may be causing the issue 
+def insert_into_athletes(conn, athletes_data):
+    cur = conn.cursor()
+    for athlete_row in athletes_data:
+        if isinstance(athlete_row, (list, tuple)) and len(athlete_row) == 6: 
+            id, uid, guid, sport, firstName, lastName = athlete_row
+            cur.execute("SELECT * FROM athletes WHERE id=?", (id,))
+            if cur.fetchone() is None:
+                cur.execute("INSERT INTO athletes (id, uid, guid, sport, firstName, lastName) VALUES (?,?,?,?,?,?)",
+                            (id, uid, guid, sport, firstName, lastName))
+        else:
+            print(f"Skipping invalid data: {athlete_row}")
+    conn.commit()
 
 if __name__ == '__main__':
     # Create a connection to the database
