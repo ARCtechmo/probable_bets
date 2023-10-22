@@ -287,10 +287,18 @@ def append_reduced_foreign_keys_to_player_rank_data(
     return modified_rank_list
 
 
-def insert_into_database(league_list, season_type_list):
+def insert_into_database(
+        league_list, season_type_list, nested_teams_list, 
+        nested_positions_list, nested_status_list,
+        nested_athletes_list
+        ):
     conn = database.create_connection()
     database.insert_into_league(conn, league_list)
     database.insert_into_season(conn, season_type_list)
+    database.insert_into_teams(conn, nested_teams_list)
+    database.insert_into_positions(conn, nested_positions_list)
+    database.insert_into_athlete_status(conn, nested_status_list)
+    database.insert_into_athletes(conn, nested_athletes_list)
     conn.close()
 
 def main():
@@ -429,12 +437,48 @@ def main():
     ## TASK: add the remaining foreign key tabels: teams, positions, athletes, etc...
     ####### BEGIN: Export athlete statstics to db #######
     # create a tuple for season type
-    export_season_type_tuple = (season_type_list[0][1], season_type_list[0][2])
-
     # Wrap the tuple inside a list
+    export_season_type_tuple = (season_type_list[0][1], season_type_list[0][2])
     export_season_type_list = [export_season_type_tuple]
-    insert_into_database(league_list, export_season_type_list)
 
+    # make nested_teams_list compatible with the insert_into_teams() function
+    # flatten out the two-level nestd lists
+    export_nested_teams_list = []
+    for inner_lst in nested_teams_list:
+        for row in inner_lst:
+            export_nested_teams_list.append(row)
+    
+    # make nested_positions_list compatible with the insert_into_teams() function
+    # flatten out the two-level nestd lists
+    export_nested_positions_list = []
+    for inner_lst in nested_positions_list:
+        for row in inner_lst:
+            export_nested_positions_list.append(row)
+    
+    # make nested_status_list compatible with the insert_into_teams() function
+    # flatten out the two-level nestd lists
+    export_nested_status_list = []
+    for inner_lst in nested_status_list:
+        for row in inner_lst:
+            export_nested_status_list.append(row)
+    
+
+    ## TASK: run a loop on export_nested_athlete_list to test for duplicates athletes
+    # make nested_status_list compatible with the insert_into_teams() function
+    # flatten out the two-level nestd lists
+    export_nested_athlete_list = []
+    for inner_lst in nested_athletes_list:
+        for row in inner_lst:
+            export_nested_athlete_list.append(row)
+    
+    # export the data
+    insert_into_database(league_list, export_season_type_list, 
+                         export_nested_teams_list, export_nested_positions_list,
+                         export_nested_status_list, export_nested_athlete_list
+                         )
+    ####### END: Export athlete statstics to db #######
+
+    ### BEGIN TEST: total counts should match ###
     count_athletes = 0
     for i in export_athlete_statistics_fk_list:
         count_athletes +=1
@@ -446,7 +490,12 @@ def main():
         count_athletes +=1
     print("number of athletes in rank lists: ", count_athletes)
     print("number of athletes in stats lists: ", len(export_athlete_rank_fk_list))
-    ####### END: Export athlete statstics to db #######
+    print("number of athlete team rows: ", len(export_nested_teams_list))
+    print("number of athlete position rows: ", len(export_nested_positions_list))
+    print("number of athlete status rows: ",len(export_nested_positions_list))
+    print("number of athlete rows: ",len(export_nested_athlete_list))
+    ### END TEST: total counts should match ###
+    
 
 #################### BEGIN: Checks and Tests ##########################
     
@@ -570,7 +619,7 @@ def main():
     # ## NOTE: either use the nested---list or the teams_list as the fk table 
     # print("\n=== Teams List ===")
     # print(team_keys) # NOTE: no change to keys required
-    # print(teams_list) # NOTE: no change required and can use as fk table
+    # print(teams_list) # NOTE: no change required but use "nested_teams_list"
     
     # print("\n----------player teams----------:")
     # count = 0
