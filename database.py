@@ -45,8 +45,125 @@ def create_tables(conn):
         CREATE TABLE IF NOT EXISTS athleteStatus(
         id INTEGER NOT NULL PRIMARY KEY,
         status TEXT NOT NULL
-        )
-       
+        );
+
+        CREATE TABLE playerStatistics(
+        leagueFK INTEGER NOT NULL,
+        seasonFK INTEGER NOT NULL,
+        weekStart TEXT,
+        weekEnd TEXT,
+        week TEXT,
+        playerFK INTEGER NOT NULL,
+        PlayerPositionFK INTEGER NOT NULL,
+        playerTeamFK INTEGER,
+        playerStatusFK INTEGER,
+        GamesPlayed TEXT,
+        ForcedFumbles TEXT,
+        FumblesRecovered TEXT,
+        FumblesTouchdowns TEXT,
+        Completions TEXT,
+        PassingAttempts TEXT,
+        CompletionPercentage TEXT,
+        PassingYards TEXT,
+        YardsPerPassAttempt TEXT,
+        PassingYardsPerGame TEXT,
+        LongestPass TEXT,
+        PassingTouchdowns TEXT,
+        Interceptions TEXT,
+        TotalSacks TEXT,
+        SackYardsLost TEXT,
+        TotalQBR TEXT,
+        PasserRating TEXT,
+        AdjustedQBR TEXT,
+        RushingAttempts TEXT,
+        RushingYards TEXT,
+        YardsPerRushAttempt TEXT,
+        LongRushing TEXT,
+        Yards20PlusRushingPlays TEXT,
+        RushingTouchdowns TEXT,
+        RushingYardsPerGame TEXT,
+        RushingFumbles TEXT,
+        RushingFumblesLost TEXT,
+        Rushing1stDowns TEXT,
+        Receptions TEXT,
+        ReceivingTargets TEXT,
+        ReceivingYards TEXT,
+        YardsPerReception TEXT,
+        ReceivingTouchdowns TEXT,
+        LongReception TEXT,
+        Yards20PlusReceivingPlays TEXT,
+        ReceivingYardsPerGame TEXT,
+        ReceivingFumbles TEXT,
+        ReceivingFumblesLost TEXT,
+        ReceivingYardsAfterCatch TEXT,
+        ReceivingFirstDowns TEXT,
+        SoloTackles TEXT,
+        AssistTackles TEXT,
+        TotalTackles TEXT,
+        Sacks TEXT,
+        SackYards TEXT,
+        TacklesForLoss TEXT,
+        PassesDefended TEXT,
+        LongInterception TEXT,
+        Interceptions_duplicate TEXT,
+        InterceptionYards TEXT,
+        InterceptionTouchdowns TEXT,
+        RushingTouchdowns_duplicate TEXT,
+        ReceivingTouchdowns_duplicate TEXT,
+        ReturnTouchdowns TEXT,
+        TotalTouchdowns TEXT,
+        FieldGoals TEXT,
+        KickExtraPoints TEXT,
+        TotalTwoPointConversions TEXT,
+        TotalPoints TEXT,
+        TotalPointsPerGame TEXT,
+        KickReturns TEXT,
+        KickReturnYards TEXT,
+        YardsPerKickReturn TEXT,
+        LongKickReturn TEXT,
+        KickReturnTouchdowns TEXT,
+        PuntReturns TEXT,
+        PuntReturnYards TEXT,
+        YardsPerPuntReturn TEXT,
+        LongPuntReturn TEXT,
+        PuntReturnTouchdowns TEXT,
+        PuntReturnFairCatches TEXT,
+        FieldGoalMade TEXT,
+        FieldGoalAttempts TEXT,
+        FieldGoalPercentage TEXT,
+        LongFieldGoalMade TEXT,
+        FieldGoalsMade119 TEXT,
+        FieldGoalsMade2029 TEXT,
+        FieldGoalsMade3039 TEXT,
+        FieldGoalsMade4049 TEXT,
+        FieldGoalsMade50Plus TEXT,
+        FieldGoalAttempts119 TEXT,
+        FieldGoalAttempts2029 TEXT,
+        FieldGoalAttempts3039 TEXT,
+        FieldGoalAttempts4049 TEXT,
+        FieldGoalAttempts50Plus TEXT,
+        ExtraPointsMade TEXT,
+        ExtraPointAttempts TEXT,
+        ExtraPointPercentage TEXT,
+        Punts TEXT,
+        PuntYards TEXT,
+        LongPunt TEXT,
+        GrossAveragePuntYards TEXT,
+        NetAveragePuntYards TEXT,
+        PuntsBlocked TEXT,
+        PuntsInside20 TEXT,
+        Touchbacks TEXT,
+        FairCatches TEXT,
+        PuntReturns_duplicate TEXT,
+        PuntReturnYards_duplicate TEXT,
+        AveragePuntReturnYards TEXT,
+        FOREIGN KEY(leagueFK) REFERENCES league (id) ON UPDATE CASCADE,
+        FOREIGN KEY(seasonFK) REFERENCES season (id) ON UPDATE CASCADE,
+        FOREIGN KEY(playerFK) REFERENCES athletes (id) ON UPDATE CASCADE,
+        FOREIGN KEY(PlayerPositionFK) REFERENCES positions (id) ON UPDATE CASCADE,
+        FOREIGN KEY(playerTeamFK) REFERENCES teams (id) ON UPDATE CASCADE,
+        FOREIGN KEY(playerStatusFK) REFERENCES athleteStatus (id) ON UPDATE CASCADE
+    )            
         '''
     )
     conn.commit()
@@ -117,10 +234,6 @@ def insert_into_athlete_status(conn, status_data):
             print(f"Skipping invalid data: {status_row}")
     conn.commit()
 
-#FIXME Fix the count discrepancy
-## export_nested_athlete_list count is correct
-## count in "athletes" differs from export_nested_athlete_list count
-## UNIQUE CONSTRAINTS may be causing the issue 
 def insert_into_athletes(conn, athletes_data):
     cur = conn.cursor()
     for athlete_row in athletes_data:
@@ -140,3 +253,4 @@ if __name__ == '__main__':
 
     # Create tables
     create_tables(conn)
+
