@@ -247,6 +247,36 @@ def insert_into_athletes(conn, athletes_data):
             print(f"Skipping invalid data: {athlete_row}")
     conn.commit()
 
+def insert_into_playerStatistics(conn, statistics_data):
+    cur = conn.cursor()
+
+    # fetch column names
+    cur.execute("PRAGMA table_info(playerStatistics)")
+    columns = cur.fetchall()
+    column_names = ", ".join([column[1] for column in columns])
+    for stat_row in statistics_data:
+        if isinstance(stat_row, (list, tuple)) and len(stat_row) == 109: 
+
+            # extract the specific columns from the stat_row for duplicate checking
+            weekStart, weekEnd, week, playerFK = stat_row[2], stat_row[3], stat_row[4], stat_row[5]
+
+            # check for duplicate row based on 'weekStart', 'weekEnd', 'week', 'playerFK'
+            cur.execute("SELECT * FROM playerStatistics WHERE weekStart = ? AND weekEnd = ? AND week = ? AND playerFK = ?", 
+                        (weekStart, weekEnd, week, playerFK))
+            
+            # dynamically generate the placeholders for the values
+            if cur.fetchone() is None:
+                placeholders = ", ".join("?" * len(stat_row))
+                sql_query = f"INSERT INTO playerStatistics ({column_names}) VALUES ({placeholders})"
+                cur.execute(sql_query, stat_row)
+            else:
+                print(f"Skipping duplicate data for playerFK={playerFK}, weekStart={weekStart}, weekEnd={weekEnd}, week={week}")
+        else:    
+            print(f"Skipping invalid data: {stat_row}")
+    conn.commit()
+
+## task: add functionality to export export_athlete_rank_fk_list
+
 if __name__ == '__main__':
     # Create a connection to the database
     conn = create_connection()
