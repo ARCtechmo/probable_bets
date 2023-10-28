@@ -103,8 +103,8 @@ def extract_athlete_values(data):
         for category in categories:
             values = category.get('values',[])
             for value in values:
-                if value in [None, '-','']:
-                    value = 'null'
+                if value in [None, '-','','null',' ']:
+                    value = None
                 elif isinstance(value, float):
                     value = round(value, 1)
                 values_list.append(value)
@@ -121,8 +121,8 @@ def extract_athlete_ranks(data):
         for category in categories:
             ranks = category.get('ranks', [])
             for rank in ranks:
-                if rank in [None, '-','']:
-                    rank = 'null'
+                if rank in [None, '-','',' ','null']:
+                    rank = None
                 else:
                     rank = int(rank)
                 ranks_list.append(rank)
@@ -290,7 +290,7 @@ def append_reduced_foreign_keys_to_player_rank_data(
 def insert_into_database(
         league_list, season_type_list, nested_teams_list, 
         nested_positions_list, nested_status_list,
-        nested_athletes_list
+        nested_athletes_list,export_athlete_statistics_fk_list
         ):
     conn = database.create_connection()
     database.insert_into_league(conn, league_list)
@@ -299,6 +299,10 @@ def insert_into_database(
     database.insert_into_positions(conn, nested_positions_list)
     database.insert_into_athlete_status(conn, nested_status_list)
     database.insert_into_athletes(conn, nested_athletes_list)
+
+    ## modification
+    database.insert_into_playerStatistics(conn, export_athlete_statistics_fk_list)
+    
     conn.close()
 
 ## for testing only ##
@@ -478,14 +482,15 @@ def main():
         for row in inner_lst:
             export_nested_athlete_list.append(row)
   
-    # TASK: add the functionality to export the export_athlete_statistics_fk_list
-    
+   ## task: add functionality to export export_athlete_rank_fk_list
+
     # export the data
     # insert_into_database(league_list, export_season_type_list, 
     #                      export_nested_teams_list, export_nested_positions_list,
-    #                      export_nested_status_list, export_nested_athlete_list
+    #                      export_nested_status_list, export_nested_athlete_list,
+    #                      export_athlete_statistics_fk_list
     #                      )
-    ####### END: Export athlete statstics to db #######
+    ####### END: Export athlete statistics to db #######
 
     ### BEGIN TEST: total counts should match ###
     count_athletes = 0
@@ -504,13 +509,8 @@ def main():
     print("number of athlete status rows: ",len(export_nested_positions_list))
     print("number of athlete rows: ",len(export_nested_athlete_list))
     print("number of athlete stats rows:",len(export_athlete_statistics_fk_list))
-
-    # Test for duplicate entries 
-    if has_duplicates_nested(export_nested_athlete_list):
-        print("The athletes list has duplicates.")
-        print("There will be a count discrepancy.")
-    else:
-        print("The athletes list does not have duplicates.")
+    print("number of athlete ranks rows:",len(export_athlete_rank_fk_list))
+    
     ### END TEST: total counts should match ###
     
 
@@ -721,22 +721,30 @@ def main():
 
     ## test ##
     # only the IDs for athlete, positions, teams, and status are included
-    print("\n=== Testing export_athlete_statistics_fk_list ===")
-    count = 0
-    for i, athlete_stats in enumerate(export_athlete_statistics_fk_list):
+    # print("\n=== Testing export_athlete_statistics_fk_list ===")
+    # count = 0
+    # for i, athlete_stats in enumerate(export_athlete_statistics_fk_list):
         # print(f"\n athlete stats at index {i}: {athlete_stats}")
         # print(athlete_stats)
-        count +=1
-    print(count)
+    #     count +=1
+    # print(count)
 
     ## test ##
     # # only the IDs for athlete, positions, teams, and status are included
-    # print("\n=== Testing export_athlete_rank_fk_list ===")
-    # count = 0
-    # for i, athlete_stats in enumerate(export_athlete_rank_fk_list):
-    #     print(f"athlete rank at index {i}: {athlete_stats}")
-    #     count +=1
-    # print(count)
+    print("\n=== Testing export_athlete_rank_fk_list ===")
+    count = 0
+    for i, athlete_stats in enumerate(export_athlete_rank_fk_list):
+        # print(f"athlete rank at index {i}: {athlete_stats}")
+        print(athlete_stats)
+        count +=1
+    print(count)
+
+    # Test for duplicate entries 
+    # if has_duplicates_nested(export_nested_athlete_list):
+    #     print("The athletes list has duplicates.")
+    #     print("There will be a count discrepancy.")
+    # else:
+    #     print("The athletes list does not have duplicates.")
   
     ### END: Tests of the combined lists ###
 
@@ -747,18 +755,18 @@ def main():
     # NOTE: match these column names with the nested_player_statistics_list
     # NOTE: build a table: values_rank_keys (fk) display_names_list, descriptions_list
     # print("\n=== Name of Stats List ===")
-    # print(display_names_list) # NOTE: no changes required
-    print("Stats names count:",len(display_names_list))
+    # print(len(display_names_list)) # NOTE: no changes required
+    # print("Stats names count:",len(display_names_list))
         
     # print("\n=== Descriptions List ===")
     # print(descriptions_list) # NOTE: no changes required
-    print("Stats descriptions count:",len(descriptions_list))
+    # print("Stats descriptions count:",len(descriptions_list))
     ### End: Names and descriptions of the statistical categories ###
 
     # Iterate through display_names_list and descriptions_list
-    for display_name, description in zip(display_names_list, descriptions_list):
-        # Perform your required operations with display_name and description here
-        print({display_name}, {description})
+    # for display_name, description in zip(display_names_list, descriptions_list):
+    #     # Perform your required operations with display_name and description here
+    #     print({display_name}, {description})
 
    
 if __name__ == "__main__":
