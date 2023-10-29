@@ -1,4 +1,8 @@
 
+## Task: Test output
+# Download a new set of espn json files
+# run SQL queries and compare the output with the actual stats on the site
+
 # parse the json data
 import database
 import json
@@ -290,7 +294,8 @@ def append_reduced_foreign_keys_to_player_rank_data(
 def insert_into_database(
         league_list, season_type_list, nested_teams_list, 
         nested_positions_list, nested_status_list,
-        nested_athletes_list,export_athlete_statistics_fk_list
+        nested_athletes_list,export_athlete_statistics_fk_list,
+        export_athlete_rank_fk_list
         ):
     conn = database.create_connection()
     database.insert_into_league(conn, league_list)
@@ -299,10 +304,8 @@ def insert_into_database(
     database.insert_into_positions(conn, nested_positions_list)
     database.insert_into_athlete_status(conn, nested_status_list)
     database.insert_into_athletes(conn, nested_athletes_list)
-
-    ## modification
     database.insert_into_playerStatistics(conn, export_athlete_statistics_fk_list)
-    
+    database.insert_into_playerRanks(conn, export_athlete_rank_fk_list)
     conn.close()
 
 ## for testing only ##
@@ -482,14 +485,13 @@ def main():
         for row in inner_lst:
             export_nested_athlete_list.append(row)
   
-   ## task: add functionality to export export_athlete_rank_fk_list
-
     # export the data
-    # insert_into_database(league_list, export_season_type_list, 
-    #                      export_nested_teams_list, export_nested_positions_list,
-    #                      export_nested_status_list, export_nested_athlete_list,
-    #                      export_athlete_statistics_fk_list
-    #                      )
+    insert_into_database(league_list, export_season_type_list, 
+                         export_nested_teams_list, export_nested_positions_list,
+                         export_nested_status_list, export_nested_athlete_list,
+                         export_athlete_statistics_fk_list,
+                         export_athlete_rank_fk_list
+                         )
     ####### END: Export athlete statistics to db #######
 
     ### BEGIN TEST: total counts should match ###
@@ -731,13 +733,13 @@ def main():
 
     ## test ##
     # # only the IDs for athlete, positions, teams, and status are included
-    print("\n=== Testing export_athlete_rank_fk_list ===")
-    count = 0
-    for i, athlete_stats in enumerate(export_athlete_rank_fk_list):
+    # print("\n=== Testing export_athlete_rank_fk_list ===")
+    # count = 0
+    # for i, athlete_stats in enumerate(export_athlete_rank_fk_list):
         # print(f"athlete rank at index {i}: {athlete_stats}")
-        print(athlete_stats)
-        count +=1
-    print(count)
+    #     print(athlete_stats)
+    #     count +=1
+    # print(count)
 
     # Test for duplicate entries 
     # if has_duplicates_nested(export_nested_athlete_list):
