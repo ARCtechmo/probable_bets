@@ -232,6 +232,8 @@ def generate_fantasy_pros_filename(url, season):
     return f"fantasy_pros_{filename_suffix}.json"
 
 # function to handle data from FantasyPros
+# import path library module then use pathlib.Path() is an alternate but less secure approach
+# NOTE: include this in the documentation
 def handle_fantasy_pros_data(season, positions=None, week=None, scoring=None):
     api_key = os.environ.get('api_key')
     if not api_key:
@@ -253,82 +255,107 @@ def handle_fantasy_pros_data(season, positions=None, week=None, scoring=None):
                 with open(json_file_name, "w") as txtfile:
                     json.dump(response, txtfile, indent=4)
 
-## FIXME: add option if user wants to retrieve data from a specific api
-# main loop
-## Explanation of the 'if __name__ == "__main__"': ##
-# -main loop only gets executed when the script is run directly
-
-# -main loop for data fetching and user input prompt only executes when the script is run directly.
-# -main loop will not get executed if import.py file is imported as a module
-if __name__ == "__main__":
-
-    # Prompt the user to enter a year and use the current year if the input is blank
-    # Ensure valid year input
+def get_year():
     try:
-        user_input = input("Enter the year to fetch ESPN data (hit Enter for current year): ")
-        year = user_input if user_input else str(datetime.now().year)
+        user_input = input("Enter the year (hit Enter for current year): ")
+        return user_input if user_input else str(datetime.now().year)
     except ValueError:
         print("Invalid year entered. Using current year instead.")
-        year = datetime.now().year
+        return str(datetime.now().year)
 
-    # FIXME: I want automate weekly input
+def get_week():
+    try:
+        week_input = input("Enter the week: ")
+        return week_input if week_input else None
+    except ValueError:
+        print("Invalid week entered.")
+        return None
+##FIXME: This an optimization issue so fix in a later version. 
+    # I want to automate weekly input
     # make a list of the weeks from espn
     # match the current week to the espn week list
     # format the string to a number
-    try:
-        week_input = input("Enter the week to fetch rotowire odds/lines data: ")
-        week = week_input if week_input else None
-        if week is None:
-            print("Invalid week entered.")
-            exit()
-    except ValueError:
-        print("Invalid week entered.")
-        exit()
-    
-    # Fetch FantasyPros data for the current year
-    season = datetime.now().year
-    # fantasy_pros_urls = handle_fantasy_pros_data(season,week=None, scoring='STD')
+
+# TASK: Test each conditional and ensure it pulls all of the urls (especially the espn urls)
+# -main loop for data fetching and user input prompt only executes when the script is run directly.
+# -main loop will not get executed if import.py file is imported as a module
+if __name__ == "__main__":
+    year = None
+    week = None
     
     # list of URLs
-    urls = [
-            # f"https://www.pff.com/api/betting/best_bets?league=nfl",
-            # f"https://www.rotowire.com/betting/nfl/tables/nfl-games.php?week={week}",
-            ]
-    
-    espn_urls = [
-            f"https://site.web.api.espn.com/apis/common/v3/sports/football/nfl/statistics/byathlete?region=us&lang=en&contentorigin=espn&isqualified=false&page=1&limit=50&category=offense%3Apassing&sort=passing.passingYards%3Adesc&season={year}&seasontype=2",
-            f"https://site.web.api.espn.com/apis/common/v3/sports/football/nfl/statistics/byathlete?region=us&lang=en&contentorigin=espn&isqualified=false&page=1&limit=50&category=offense%3Arushing&sort=rushing.rushingYards%3Adesc&season={year}&seasontype=2",
-            f"https://site.web.api.espn.com/apis/common/v3/sports/football/nfl/statistics/byathlete?region=us&lang=en&contentorigin=espn&isqualified=false&page=1&limit=50&category=offense%3Areceiving&sort=receiving.receivingYards%3Adesc&season={year}&seasontype=2",
-            f"https://site.web.api.espn.com/apis/common/v3/sports/football/nfl/statistics/byathlete?region=us&lang=en&contentorigin=espn&isqualified=false&page=1&limit=50&category=defense&sort=defensive.totalTackles%3Adesc&season={year}&seasontype=2",
-            f"https://site.web.api.espn.com/apis/common/v3/sports/football/nfl/statistics/byathlete?region=us&lang=en&contentorigin=espn&isqualified=false&page=1&limit=50&category=scoring&sort=scoring.totalPoints%3Adesc&season={year}&seasontype=2",
-            f"https://site.web.api.espn.com/apis/common/v3/sports/football/nfl/statistics/byathlete?region=us&lang=en&contentorigin=espn&isqualified=false&page=1&limit=50&category=specialTeams%3Areturning&sort=returning.kickReturnYards%3Adesc&season={year}&seasontype=2",
-            f"https://site.web.api.espn.com/apis/common/v3/sports/football/nfl/statistics/byathlete?region=us&lang=en&contentorigin=espn&isqualified=false&page=1&limit=50&category=specialTeams%3Akicking&sort=kicking.fieldGoalsMade%3Adesc&season={year}&seasontype=2",
-            f"https://site.web.api.espn.com/apis/common/v3/sports/football/nfl/statistics/byathlete?region=us&lang=en&contentorigin=espn&isqualified=true&page=1&limit=50&category=specialTeams%3Apunting&sort=punting.grossAvgPuntYards%3Adesc&season={year}&seasontype=2"
-        ]
-    
-    # Loop through all the ESPN URLs 
-    for initial_espn_url in espn_urls:
-        handle_espn_pagination(initial_espn_url)
+    pro_football_focus_url = f"https://www.pff.com/api/betting/best_bets?league=nfl"
+    fantasy_pros_template_url = []
+    rotowire_template_url = f"https://www.rotowire.com/betting/nfl/tables/nfl-games.php?week={week}",
+    espn_template_urls = [
+                f"https://site.web.api.espn.com/apis/common/v3/sports/football/nfl/statistics/byathlete?region=us&lang=en&contentorigin=espn&isqualified=false&page=1&limit=50&category=offense%3Apassing&sort=passing.passingYards%3Adesc&season={year}&seasontype=2",
+                f"https://site.web.api.espn.com/apis/common/v3/sports/football/nfl/statistics/byathlete?region=us&lang=en&contentorigin=espn&isqualified=false&page=1&limit=50&category=offense%3Arushing&sort=rushing.rushingYards%3Adesc&season={year}&seasontype=2",
+                f"https://site.web.api.espn.com/apis/common/v3/sports/football/nfl/statistics/byathlete?region=us&lang=en&contentorigin=espn&isqualified=false&page=1&limit=50&category=offense%3Areceiving&sort=receiving.receivingYards%3Adesc&season={year}&seasontype=2",
+                f"https://site.web.api.espn.com/apis/common/v3/sports/football/nfl/statistics/byathlete?region=us&lang=en&contentorigin=espn&isqualified=false&page=1&limit=50&category=defense&sort=defensive.totalTackles%3Adesc&season={year}&seasontype=2",
+                f"https://site.web.api.espn.com/apis/common/v3/sports/football/nfl/statistics/byathlete?region=us&lang=en&contentorigin=espn&isqualified=false&page=1&limit=50&category=scoring&sort=scoring.totalPoints%3Adesc&season={year}&seasontype=2",
+                f"https://site.web.api.espn.com/apis/common/v3/sports/football/nfl/statistics/byathlete?region=us&lang=en&contentorigin=espn&isqualified=false&page=1&limit=50&category=specialTeams%3Areturning&sort=returning.kickReturnYards%3Adesc&season={year}&seasontype=2",
+                f"https://site.web.api.espn.com/apis/common/v3/sports/football/nfl/statistics/byathlete?region=us&lang=en&contentorigin=espn&isqualified=false&page=1&limit=50&category=specialTeams%3Akicking&sort=kicking.fieldGoalsMade%3Adesc&season={year}&seasontype=2",
+                f"https://site.web.api.espn.com/apis/common/v3/sports/football/nfl/statistics/byathlete?region=us&lang=en&contentorigin=espn&isqualified=true&page=1&limit=50&category=specialTeams%3Apunting&sort=punting.grossAvgPuntYards%3Adesc&season={year}&seasontype=2"
+                ]
 
-        # Verify the data
-        verify_data_fetched(sort_data)
+    while True:
+        user_choice = input("Would you like to download data or quit: press 1 to download data  or 'q' or 'quit' to exit the program. ")
+        if user_choice.lower() in ['q' or 'Q']:
+            print("Exiting the program")
+            break
         
-    # Append FantasyPros URLs to the urls list
-    # if fantasy_pros_urls is not None:
-    #     urls.extend(fantasy_pros_urls)
-    # else:
-    #     print("No FantasyPros URLs.")
+        elif user_choice == '1':
+            print("Make a selection:")
+            print("(1) ESPN")
+            print("(2) Pro Football Focus")
+            print("(3) Fantasy Pros")
+            print("(4) Rotowire")
+            print("Press 'q' or 'Q' to quit.")
 
-    # loop through the urls and fetch the data
-    for url in urls:
+            api_choice = input("Enter your choice: ")
+            if api_choice.lower() in ['q' or 'Q']:
+                print("Exiting the program")
+                break
+            
+            elif api_choice == '1':
+                year = get_year()
+                espn_urls = [url_template.format(year=year) for url_template in espn_template_urls]                
+                print("Fetching data from ESPN...")
 
-        # execute time delay
-        handle_random_delay()
+                # Loop through all the ESPN URLs 
+                for initial_espn_url in espn_urls:
+                    handle_espn_pagination(initial_espn_url)
 
-        if 'pff' in url:
-            # handle_pff_data(url)
-            pass
-        
-        elif 'rotowire' in url:
-            # handle_rotowire_data(url)
-            pass
+                    # Verify the data
+                    verify_data_fetched(sort_data)
+            
+            elif api_choice =='2':
+                handle_pff_data(pro_football_focus_url)
+                print("Fetching data from Pro Football Focus...")
+            
+            elif api_choice =='3':
+
+                # Fetch FantasyPros data for the current year
+                season = datetime.now().year
+                fantasy_pros_urls = handle_fantasy_pros_data(season,week=None, scoring='STD')
+                print("Fetching data from Fantasy Pros...")
+
+                # Append FantasyPros URLs to the urls list
+                if fantasy_pros_urls is not None:
+                    fantasy_pros_template_url.extend(fantasy_pros_urls)
+                else:
+                    print("No FantasyPros URLs.")
+            
+            elif api_choice == '4':
+                week = get_week()
+                rotowire_url = rotowire_template_url.format(week=week)
+                handle_rotowire_data(rotowire_url)
+                print("Fetching data from Rotowire...")
+            else:
+                print("Invalid choice. Please try again.")
+                break
+        else:
+            print("Invalid choice. Please try again.")
+            break     
+
+  
