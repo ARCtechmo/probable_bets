@@ -284,18 +284,19 @@ if __name__ == "__main__":
     week = None
     
     # list of URLs
+    ## NOTE: do not use placeholders with f-strings if you set year = None or week = None.
     pro_football_focus_url = f"https://www.pff.com/api/betting/best_bets?league=nfl"
     fantasy_pros_template_url = []
-    rotowire_template_url = f"https://www.rotowire.com/betting/nfl/tables/nfl-games.php?week={week}",
+    rotowire_template_url = "https://www.rotowire.com/betting/nfl/tables/nfl-games.php?week={week}"
     espn_template_urls = [
-                f"https://site.web.api.espn.com/apis/common/v3/sports/football/nfl/statistics/byathlete?region=us&lang=en&contentorigin=espn&isqualified=false&page=1&limit=50&category=offense%3Apassing&sort=passing.passingYards%3Adesc&season={year}&seasontype=2",
-                f"https://site.web.api.espn.com/apis/common/v3/sports/football/nfl/statistics/byathlete?region=us&lang=en&contentorigin=espn&isqualified=false&page=1&limit=50&category=offense%3Arushing&sort=rushing.rushingYards%3Adesc&season={year}&seasontype=2",
-                f"https://site.web.api.espn.com/apis/common/v3/sports/football/nfl/statistics/byathlete?region=us&lang=en&contentorigin=espn&isqualified=false&page=1&limit=50&category=offense%3Areceiving&sort=receiving.receivingYards%3Adesc&season={year}&seasontype=2",
-                f"https://site.web.api.espn.com/apis/common/v3/sports/football/nfl/statistics/byathlete?region=us&lang=en&contentorigin=espn&isqualified=false&page=1&limit=50&category=defense&sort=defensive.totalTackles%3Adesc&season={year}&seasontype=2",
-                f"https://site.web.api.espn.com/apis/common/v3/sports/football/nfl/statistics/byathlete?region=us&lang=en&contentorigin=espn&isqualified=false&page=1&limit=50&category=scoring&sort=scoring.totalPoints%3Adesc&season={year}&seasontype=2",
-                f"https://site.web.api.espn.com/apis/common/v3/sports/football/nfl/statistics/byathlete?region=us&lang=en&contentorigin=espn&isqualified=false&page=1&limit=50&category=specialTeams%3Areturning&sort=returning.kickReturnYards%3Adesc&season={year}&seasontype=2",
-                f"https://site.web.api.espn.com/apis/common/v3/sports/football/nfl/statistics/byathlete?region=us&lang=en&contentorigin=espn&isqualified=false&page=1&limit=50&category=specialTeams%3Akicking&sort=kicking.fieldGoalsMade%3Adesc&season={year}&seasontype=2",
-                f"https://site.web.api.espn.com/apis/common/v3/sports/football/nfl/statistics/byathlete?region=us&lang=en&contentorigin=espn&isqualified=true&page=1&limit=50&category=specialTeams%3Apunting&sort=punting.grossAvgPuntYards%3Adesc&season={year}&seasontype=2"
+                "https://site.web.api.espn.com/apis/common/v3/sports/football/nfl/statistics/byathlete?region=us&lang=en&contentorigin=espn&isqualified=false&page=1&limit=50&category=offense%3Apassing&sort=passing.passingYards%3Adesc&season={year}&seasontype=2",
+                "https://site.web.api.espn.com/apis/common/v3/sports/football/nfl/statistics/byathlete?region=us&lang=en&contentorigin=espn&isqualified=false&page=1&limit=50&category=offense%3Arushing&sort=rushing.rushingYards%3Adesc&season={year}&seasontype=2",
+                "https://site.web.api.espn.com/apis/common/v3/sports/football/nfl/statistics/byathlete?region=us&lang=en&contentorigin=espn&isqualified=false&page=1&limit=50&category=offense%3Areceiving&sort=receiving.receivingYards%3Adesc&season={year}&seasontype=2",
+                "https://site.web.api.espn.com/apis/common/v3/sports/football/nfl/statistics/byathlete?region=us&lang=en&contentorigin=espn&isqualified=false&page=1&limit=50&category=defense&sort=defensive.totalTackles%3Adesc&season={year}&seasontype=2",
+                "https://site.web.api.espn.com/apis/common/v3/sports/football/nfl/statistics/byathlete?region=us&lang=en&contentorigin=espn&isqualified=false&page=1&limit=50&category=scoring&sort=scoring.totalPoints%3Adesc&season={year}&seasontype=2",
+                "https://site.web.api.espn.com/apis/common/v3/sports/football/nfl/statistics/byathlete?region=us&lang=en&contentorigin=espn&isqualified=false&page=1&limit=50&category=specialTeams%3Areturning&sort=returning.kickReturnYards%3Adesc&season={year}&seasontype=2",
+                "https://site.web.api.espn.com/apis/common/v3/sports/football/nfl/statistics/byathlete?region=us&lang=en&contentorigin=espn&isqualified=false&page=1&limit=50&category=specialTeams%3Akicking&sort=kicking.fieldGoalsMade%3Adesc&season={year}&seasontype=2",
+                "https://site.web.api.espn.com/apis/common/v3/sports/football/nfl/statistics/byathlete?region=us&lang=en&contentorigin=espn&isqualified=true&page=1&limit=50&category=specialTeams%3Apunting&sort=punting.grossAvgPuntYards%3Adesc&season={year}&seasontype=2"
                 ]
 
     while True:
@@ -316,9 +317,10 @@ if __name__ == "__main__":
             if api_choice.lower() in ['q' or 'Q']:
                 print("Exiting the program")
                 break
-            
+
             elif api_choice == '1':
                 year = get_year()
+                handle_random_delay()
                 espn_urls = [url_template.format(year=year) for url_template in espn_template_urls]                
                 print("Fetching data from ESPN...")
 
@@ -328,8 +330,9 @@ if __name__ == "__main__":
 
                     # Verify the data
                     verify_data_fetched(sort_data)
-            
+        
             elif api_choice =='2':
+                handle_random_delay()
                 handle_pff_data(pro_football_focus_url)
                 print("Fetching data from Pro Football Focus...")
             
@@ -337,6 +340,7 @@ if __name__ == "__main__":
 
                 # Fetch FantasyPros data for the current year
                 season = datetime.now().year
+                handle_random_delay()
                 fantasy_pros_urls = handle_fantasy_pros_data(season,week=None, scoring='STD')
                 print("Fetching data from Fantasy Pros...")
 
@@ -349,8 +353,9 @@ if __name__ == "__main__":
             elif api_choice == '4':
                 week = get_week()
                 rotowire_url = rotowire_template_url.format(week=week)
-                handle_rotowire_data(rotowire_url)
                 print("Fetching data from Rotowire...")
+                handle_random_delay()
+                handle_rotowire_data(rotowire_url)
             else:
                 print("Invalid choice. Please try again.")
                 break
