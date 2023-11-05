@@ -4,16 +4,6 @@
 # NOTE: Store API keys in your OS as an environment variable
 ### NOTE: DO NOT PUT YOUR API KEY INTO THE CODE!!!! ###
 
-## rotowire API ##
-# https://www.rotowire.com/betting/nfl/tables/nfl-games.php?week={week}
-# has unique id for each game: "game_id
-
-
-
-# task: go through the fp api and organize the information into lists
-
-# outline your database design / tables
-
 # import the libraries
 import requests
 import os
@@ -87,8 +77,12 @@ def handle_espn_data(url, remaining_athletes=None):
 
     if data:
 
+        ## NOTE: NEW CODE
+        # Extract the week number from the JSON content
+        week_number = data.get("requestedSeason", {}).get("type", {}).get("week", {}).get("number")
+
         # Debug: print out what the data looks like
-        print(f"Debug: Data keys available: {data.keys()}")
+        # print(f"Debug: Data keys available: {data.keys()}")
 
         # Extract count, limit, and sort from the data for pagination
         # count = data.get('count', 0)
@@ -97,7 +91,7 @@ def handle_espn_data(url, remaining_athletes=None):
         limit = data.get('pagination', {}).get('limit', 0)
 
         # Debug: Print extracted values
-        print(f"Debug: Extracted count: {count}, limit: {limit}")
+        # print(f"Debug: Extracted count: {count}, limit: {limit}")
 
         # assuming you can get the sort parameter from the data; otherwise, parse from URL
         sort_param = data.get('sort', '')  
@@ -114,7 +108,13 @@ def handle_espn_data(url, remaining_athletes=None):
         athletes_fetched = len(athletes)
 
         json_file_name = parse_espn_url(url)
-        if json_file_name:
+
+        if json_file_name and week_number: ## NOTE: CODE MODIFICATION
+
+            ## NOTE: CODE MODIFICATION
+            # Insert '_wk{week_number}' before '.json'
+            json_file_name = json_file_name.replace(".json", f"_wk{week_number}.json")
+
             with open(json_file_name, "w") as txtfile:
                 json.dump(data, txtfile, indent=4)
 
@@ -125,7 +125,7 @@ def handle_espn_pagination(initial_espn_url):
     count,limit, athletes_fetched, sort_param = handle_espn_data(initial_espn_url)
     
     # Debug: Print fetched values
-    print(f"Debug: In handle_espn_pagination, count: {count}, limit: {limit}")
+    # print(f"Debug: In handle_espn_pagination, count: {count}, limit: {limit}")
     
     if limit == 0:
         print(f"Limit is zero for URL: {initial_espn_url}. Skipping pagination.")
@@ -270,13 +270,7 @@ def get_week():
     except ValueError:
         print("Invalid week entered.")
         return None
-##FIXME: This an optimization issue so fix in a later version. 
-    # I want to automate weekly input
-    # make a list of the weeks from espn
-    # match the current week to the espn week list
-    # format the string to a number
 
-# TASK: Test each conditional and ensure it pulls all of the urls (especially the espn urls)
 # -main loop for data fetching and user input prompt only executes when the script is run directly.
 # -main loop will not get executed if import.py file is imported as a module
 if __name__ == "__main__":
