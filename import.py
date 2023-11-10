@@ -81,23 +81,15 @@ def handle_espn_data(url, remaining_athletes=None):
         # Extract the week number from the JSON content
         week_number = data.get("requestedSeason", {}).get("type", {}).get("week", {}).get("number")
 
-        # Debug: print out what the data looks like
-        # print(f"Debug: Data keys available: {data.keys()}")
-
         # Extract count, limit, and sort from the data for pagination
         # count = data.get('count', 0)
         # limit = data.get('limit', 0)
         count = data.get('pagination', {}).get('count', 0)
         limit = data.get('pagination', {}).get('limit', 0)
 
-        # Debug: Print extracted values
-        # print(f"Debug: Extracted count: {count}, limit: {limit}")
-
-        # assuming you can get the sort parameter from the data; otherwise, parse from URL
+        # get the sort parameter from the data and parse from URL
         sort_param = data.get('sort', '')  
-
         athletes = data.get('athletes', [])
-
 
         # If remaining_athletes is specified, trim the list to that size
         if remaining_athletes is not None:
@@ -106,7 +98,6 @@ def handle_espn_data(url, remaining_athletes=None):
         # get the number of athletes fetched in this page
         # athletes_fetched = len(data.get('athletes', []))
         athletes_fetched = len(athletes)
-
         json_file_name = parse_espn_url(url)
 
         if json_file_name and week_number: ## NOTE: CODE MODIFICATION
@@ -122,11 +113,7 @@ def handle_espn_data(url, remaining_athletes=None):
 
 # implement pagination in the if __name__ == "__main__" block
 def handle_espn_pagination(initial_espn_url):
-    count,limit, athletes_fetched, sort_param = handle_espn_data(initial_espn_url)
-    
-    # Debug: Print fetched values
-    # print(f"Debug: In handle_espn_pagination, count: {count}, limit: {limit}")
-    
+    count,limit, athletes_fetched, sort_param = handle_espn_data(initial_espn_url)    
     if limit == 0:
         print(f"Limit is zero for URL: {initial_espn_url}. Skipping pagination.")
         return
@@ -170,7 +157,14 @@ def verify_data_fetched(sort_data):
 def handle_pff_data(url):
     data = fetch_data(url)
     if data:
-        with open('pff_prop_bets.json', "w") as txtfile:
+        # extract the 'props_last_updated_at' value
+        last_updated_at = data.get("props_last_updated_at", "")
+
+        # modify the filename to include 'props_last_updated_at'
+        filename = f"pff_prop_bets_{last_updated_at}.json"
+
+        # write data to the new filename
+        with open(filename, "w") as txtfile:
             json.dump(data, txtfile, indent=4)
         return data
 
@@ -208,6 +202,10 @@ def generate_fantasy_pros_urls(season, positions=None, week=None, scoring=None):
 
     for position in positions_list:
         params = {'position': position}
+
+        if season: # new line
+            params['season'] = season # new line
+            
         if week:
             params['week'] = week
         if scoring:
@@ -218,18 +216,27 @@ def generate_fantasy_pros_urls(season, positions=None, week=None, scoring=None):
 
     return generated_urls
 
+## FIXME: QB json filename not correct (fix later)
+# the error starts here are prior to this function
 # function to generate the JSON filename based on the FantasyPros URL
-def generate_fantasy_pros_filename(url, season):
-    query_string = urlparse(url).query
-    params = parse_qs(query_string)
-    position_param = params.get('position', [''])[0]
-    scoring_param = params.get('scoring', [''])[0]
-    
-    filename_suffix = f"{position_param}_projections_{season}"
-    if scoring_param:
-        filename_suffix += f"_{scoring_param}"
-    
-    return f"fantasy_pros_{filename_suffix}.json"
+def generate_fantasy_pros_filename(url, season, week):
+    if season is None and week is None:
+        season=str(datetime.now().year)
+        week=str(datetime.now().date())
+        query_string = urlparse(url).query
+        params = parse_qs(query_string)
+        position_param = params.get('position', [''])[0]
+        filename_suffix = f"{position_param}_projections_{season}_week{week}"
+        # print(f"Position: {position_param}, Season: {season}, Week: {week}")
+        return f"fantasy_pros_{filename_suffix}.json"
+        
+    else:
+        query_string = urlparse(url).query
+        params = parse_qs(query_string)
+        position_param = params.get('position', [''])[0]
+        filename_suffix = f"{position_param}_projections_{season}_week{week}"
+        # print(f"Position: {position_param}, Season: {season}, Week: {week}")
+        return f"fantasy_pros_{filename_suffix}.json"
 
 # function to handle data from FantasyPros
 # import path library module then use pathlib.Path() is an alternate but less secure approach
@@ -250,10 +257,16 @@ def handle_fantasy_pros_data(season, positions=None, week=None, scoring=None):
         print(f"Fetching data for URL: {full_url}")
         response = fetch_data(full_url, headers)
         if response:
-            json_file_name = generate_fantasy_pros_filename(full_url, season)
+            json_file_name = generate_fantasy_pros_filename(full_url, season, week)
             if json_file_name:
                 with open(json_file_name, "w") as txtfile:
                     json.dump(response, txtfile, indent=4)
+
+                ## append the season and week to the json filenames
+                with open(json_file_name, "r") as txtfile: # new line
+                    data = json.load(txtfile) # new line
+                    season = data.get("season","") # new line
+                    week = data.get("week", "") # new line
 
 def get_year():
     try:
@@ -275,6 +288,7 @@ def get_week():
 # -main loop will not get executed if import.py file is imported as a module
 if __name__ == "__main__":
     year = None
+    season = None # new line
     week = None
     
     # list of URLs
@@ -331,18 +345,15 @@ if __name__ == "__main__":
                 print("Fetching data from Pro Football Focus...")
             
             elif api_choice =='3':
-
-                # Fetch FantasyPros data for the current year
-                season = datetime.now().year
                 handle_random_delay()
-                fantasy_pros_urls = handle_fantasy_pros_data(season,week=None, scoring='STD')
+                fantasy_pros_urls = handle_fantasy_pros_data(season, week)
                 print("Fetching data from Fantasy Pros...")
 
                 # Append FantasyPros URLs to the urls list
                 if fantasy_pros_urls is not None:
                     fantasy_pros_template_url.extend(fantasy_pros_urls)
                 else:
-                    print("No FantasyPros URLs.")
+                    print("No remaining FantasyPros URLs.")
             
             elif api_choice == '4':
                 week = get_week()
