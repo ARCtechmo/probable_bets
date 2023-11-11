@@ -216,7 +216,7 @@ def generate_fantasy_pros_urls(season, positions=None, week=None, scoring=None):
 
     return generated_urls
 
-## FIXME: QB json filename not correct (fix later)
+## FIXME: NOTE **Optimization issue** QB json filename not ideal
 # the error starts here are prior to this function
 # function to generate the JSON filename based on the FantasyPros URL
 def generate_fantasy_pros_filename(url, season, week):
@@ -268,27 +268,35 @@ def handle_fantasy_pros_data(season, positions=None, week=None, scoring=None):
                     season = data.get("season","") # new line
                     week = data.get("week", "") # new line
 
+# keep this function for the ESPN because the api allows you to select the year
 def get_year():
-    try:
-        user_input = input("Enter the year (hit Enter for current year): ")
+    user_input = input("Enter the year (hit Enter for current year): ")
+
+    # Check if the input is empty (use current year) or starts with '20' (valid year)
+    if not user_input or (user_input.startswith("20") and user_input.isdigit() and len(user_input) == 4):
         return user_input if user_input else str(datetime.now().year)
-    except ValueError:
+    else:
         print("Invalid year entered. Using current year instead.")
         return str(datetime.now().year)
 
 def get_week():
-    try:
-        week_input = input("Enter the week: ")
-        return week_input if week_input else None
-    except ValueError:
-        print("Invalid week entered.")
+    user_input = input("Enter the week (1,2,3...18): ")
+    if user_input.isdigit():
+        week_number = int(user_input)
+        if 1 <= week_number <= 18:
+            return user_input
+        else:
+            print("Invalid week number entered. Please enter a number between 1 and 18.")
+            return None
+    else:
+        print("Invalid input. Please enter a number.")
         return None
 
 # -main loop for data fetching and user input prompt only executes when the script is run directly.
 # -main loop will not get executed if import.py file is imported as a module
 if __name__ == "__main__":
     year = None
-    season = None # new line
+    season = None 
     week = None
     
     # list of URLs
@@ -327,7 +335,7 @@ if __name__ == "__main__":
                 break
 
             elif api_choice == '1':
-                year = get_year()
+                year = get_year() # keep this; api pulls by year
                 handle_random_delay()
                 espn_urls = [url_template.format(year=year) for url_template in espn_template_urls]                
                 print("Fetching data from ESPN...")
@@ -346,9 +354,9 @@ if __name__ == "__main__":
             
             elif api_choice =='3':
                 handle_random_delay()
-                fantasy_pros_urls = handle_fantasy_pros_data(season, week)
                 print("Fetching data from Fantasy Pros...")
-
+                fantasy_pros_urls = handle_fantasy_pros_data(season, week)
+                
                 # Append FantasyPros URLs to the urls list
                 if fantasy_pros_urls is not None:
                     fantasy_pros_template_url.extend(fantasy_pros_urls)
@@ -357,10 +365,13 @@ if __name__ == "__main__":
             
             elif api_choice == '4':
                 week = get_week()
-                rotowire_url = rotowire_template_url.format(week=week)
-                print("Fetching data from Rotowire...")
-                handle_random_delay()
-                handle_rotowire_data(rotowire_url)
+                if week is None:
+                    print("No data retrieved.")
+                else:
+                    rotowire_url = rotowire_template_url.format(week=week)
+                    print("Fetching data from Rotowire...")
+                    handle_random_delay()
+                    handle_rotowire_data(rotowire_url)
             else:
                 print("Invalid choice. Please try again.")
                 break
