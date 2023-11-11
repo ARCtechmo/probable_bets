@@ -328,7 +328,9 @@ def main():
     all_files = glob('*.json')
     
     # filter files using regular expression
-    regex_pattern = r'espn_(defensive_totalTackles|kicking_fieldGoalsMade|passing_passingYards|punting_grossAvgPuntYards|receiving_receivingYards|returning_kickReturnYards|rushing_rushingYards|scoring_totalPoints)_page\d+_\d+.json'
+    # regex_pattern = r'espn_(defensive_totalTackles|kicking_fieldGoalsMade|passing_passingYards|punting_grossAvgPuntYards|receiving_receivingYards|returning_kickReturnYards|rushing_rushingYards|scoring_totalPoints)_page\d+_\d+.json'
+    regex_pattern = '^espn_([a-z]+)_([a-zA-Z]+)_page\d+_\d+(?:_wk\d+)?\.json$'
+
     files = [f for f in all_files if re.match(regex_pattern, f)]
     
     # test print: length of files list
@@ -589,8 +591,8 @@ def main():
     # ## NOTE: no changes required
     # print("\n=== Season Type List ===")
     # print(season_keys)
-    # print(season_type_list)
-    # print(season_type_list[0][1])
+    print(season_type_list)
+    print(season_type_list[0][1])
 
     # ## NOTE: no changes required
     # print("\n=== Week List ===")
