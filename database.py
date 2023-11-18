@@ -365,6 +365,7 @@ def insert_into_athletes(conn, athletes_data):
             print(f"Skipping invalid data: {athlete_row}")
     conn.commit()
 
+## FIXME:  
 def insert_into_playerStatistics(conn, statistics_data):
     cur = conn.cursor()
 
@@ -382,17 +383,19 @@ def insert_into_playerStatistics(conn, statistics_data):
             cur.execute("SELECT * FROM playerStatistics WHERE weekStart = ? AND weekEnd = ? AND week = ? AND playerFK = ?", 
                         (weekStart, weekEnd, week, playerFK))
             
+            ## FIXME this section is causing some atheltes to not popualte data for certain weeks
             # dynamically generate the placeholders for the values
             if cur.fetchone() is None:
                 placeholders = ", ".join("?" * len(stat_row))
                 sql_query = f"INSERT INTO playerStatistics ({column_names}) VALUES ({placeholders})"
                 cur.execute(sql_query, stat_row)
-            else:
+            else: 
                 print(f"Skipping duplicate data for playerFK={playerFK}, weekStart={weekStart}, weekEnd={weekEnd}, week={week}")
         else:    
             print(f"Skipping invalid data: {stat_row}")
     conn.commit()
 
+## task: Check to ensure the same issue of certain weeks returning null data for certain players (see the above function)
 def insert_into_playerRanks(conn, ranks_data):
     cur = conn.cursor()
 
