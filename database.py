@@ -1,5 +1,6 @@
 # build a simple database for demo
 import sqlite3
+import hashlib
 
 def create_connection():
     """Create a database connection and return the connection object."""
@@ -47,7 +48,7 @@ def create_tables(conn):
         status TEXT NOT NULL
         );
 
-        CREATE TABLE playerStatistics(
+        CREATE TABLE IF NOT EXISTS playerStatistics(
         leagueFK INTEGER NOT NULL,
         seasonFK INTEGER NOT NULL,
         weekStart TEXT,
@@ -157,6 +158,7 @@ def create_tables(conn):
         PuntReturns_duplicate INTEGER,
         PuntReturnYards_duplicate INTEGER,
         AveragePuntReturnYards INTEGER,
+        row_hash TEXT,
         FOREIGN KEY(leagueFK) REFERENCES league (id) ON UPDATE CASCADE,
         FOREIGN KEY(seasonFK) REFERENCES season (id) ON UPDATE CASCADE,
         FOREIGN KEY(playerFK) REFERENCES athletes (id) ON UPDATE CASCADE,
@@ -165,7 +167,7 @@ def create_tables(conn):
         FOREIGN KEY(playerStatusFK) REFERENCES athleteStatus (id) ON UPDATE CASCADE
         );
 
-        CREATE TABLE playerRanks(
+        CREATE TABLE IF NOT EXISTS playerRanks(
         leagueFK INTEGER NOT NULL,
         seasonFK INTEGER NOT NULL,
         weekStart TEXT,
@@ -365,35 +367,78 @@ def insert_into_athletes(conn, athletes_data):
             print(f"Skipping invalid data: {athlete_row}")
     conn.commit()
 
-## FIXME:  
-def insert_into_playerStatistics(conn, statistics_data):
+
+### new function to create a hash of each row ##
+def generate_row_hash(row_data):
+    # Create a string representation of the row data
+    row_str = ''.join(map(str, row_data))
+
+    # Generate a hash (MD5 used here for simplicity)
+    return hashlib.md5(row_str.encode()).hexdigest()
+
+## FIXME continue to work on this
+## newly modified function with has tables ##
+def insert_into_playerStatistics(conn, stats_data):
     cur = conn.cursor()
 
     # fetch column names
     cur.execute("PRAGMA table_info(playerStatistics)")
     columns = cur.fetchall()
-    column_names = ", ".join([column[1] for column in columns])
-    for stat_row in statistics_data:
-        if isinstance(stat_row, (list, tuple)) and len(stat_row) == 109: 
 
-            # extract the specific columns from the stat_row for duplicate checking
-            weekStart, weekEnd, week, playerFK = stat_row[2], stat_row[3], stat_row[4], stat_row[5]
+    # Assuming the last column is 'row_hash'
+    column_names = ", ".join([column[1] for column in columns if column[1] != 'row_hash'])
 
-            # check for duplicate row based on 'weekStart', 'weekEnd', 'week', 'playerFK'
-            cur.execute("SELECT * FROM playerStatistics WHERE weekStart = ? AND weekEnd = ? AND week = ? AND playerFK = ?", 
-                        (weekStart, weekEnd, week, playerFK))
-            
-            ## FIXME this section is causing some atheltes to not popualte data for certain weeks
-            # dynamically generate the placeholders for the values
-            if cur.fetchone() is None:
-                placeholders = ", ".join("?" * len(stat_row))
-                sql_query = f"INSERT INTO playerStatistics ({column_names}) VALUES ({placeholders})"
-                cur.execute(sql_query, stat_row)
-            else: 
-                print(f"Skipping duplicate data for playerFK={playerFK}, weekStart={weekStart}, weekEnd={weekEnd}, week={week}")
-        else:    
-            print(f"Skipping invalid data: {stat_row}")
+    for stat_row in stats_data:
+        # Generate a hash for the row
+        row_hash = generate_row_hash(stat_row)
+
+        # Check if this hash already exists in the table
+        cur.execute("SELECT 1 FROM playerStatistics WHERE row_hash = ?", (row_hash,))
+        
+        if cur.fetchone() is None:
+            # If not, insert the new row with the hash
+            # Note: 'stat_row' should not include the hash yet
+            stat_row_with_hash = stat_row + (row_hash,)
+
+            # Prepare your SQL INSERT statement here with the modified data
+            # Replace 'col1, col2, ..., colN' with your table's actual column names,
+            # ending with the 'row_hash' column
+            sql_query = "INSERT INTO playerStatistics (col1, col2, ..., colN, row_hash) VALUES (?, ?, ..., ?, ?)"
+            cur.execute(sql_query, stat_row_with_hash)
+        else:
+            print(f"Skipping duplicate row with hash: {row_hash}")
+
     conn.commit()
+
+## FIXME:  ** DO NOT DELETE **
+# def insert_into_playerStatistics(conn, statistics_data):
+#     cur = conn.cursor()
+
+#     # fetch column names
+#     cur.execute("PRAGMA table_info(playerStatistics)")
+#     columns = cur.fetchall()
+#     column_names = ", ".join([column[1] for column in columns])
+#     for stat_row in statistics_data:
+#         if isinstance(stat_row, (list, tuple)) and len(stat_row) == 109: 
+
+#             # extract the specific columns from the stat_row for duplicate checking
+#             weekStart, weekEnd, week, playerFK = stat_row[2], stat_row[3], stat_row[4], stat_row[5]
+
+#             # check for duplicate row based on 'weekStart', 'weekEnd', 'week', 'playerFK'
+#             cur.execute("SELECT * FROM playerStatistics WHERE weekStart = ? AND weekEnd = ? AND week = ? AND playerFK = ?", 
+#                         (weekStart, weekEnd, week, playerFK))
+            
+#             ## FIXME this section is causing some atheltes to not popualte data for certain weeks
+#             # dynamically generate the placeholders for the values
+#             if cur.fetchone() is None:
+#                 placeholders = ", ".join("?" * len(stat_row))
+#                 sql_query = f"INSERT INTO playerStatistics ({column_names}) VALUES ({placeholders})"
+#                 cur.execute(sql_query, stat_row)
+#             else: 
+#                 print(f"Skipping duplicate data for playerFK={playerFK}, weekStart={weekStart}, weekEnd={weekEnd}, week={week}")
+#         else:    
+#             print(f"Invalid data (length mismatch), skipping: {stat_row}")
+#     conn.commit()
 
 ## task: Check to ensure the same issue of certain weeks returning null data for certain players (see the above function)
 def insert_into_playerRanks(conn, ranks_data):
