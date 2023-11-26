@@ -158,7 +158,7 @@ def create_tables(conn):
         PuntReturns_duplicate INTEGER,
         PuntReturnYards_duplicate INTEGER,
         AveragePuntReturnYards INTEGER,
-        row_hash TEXT,
+        row_hash TEXT NOT NULL UNIQUE,
         FOREIGN KEY(leagueFK) REFERENCES league (id) ON UPDATE CASCADE,
         FOREIGN KEY(seasonFK) REFERENCES season (id) ON UPDATE CASCADE,
         FOREIGN KEY(playerFK) REFERENCES athletes (id) ON UPDATE CASCADE,
@@ -376,8 +376,15 @@ def generate_row_hash(row_data):
     # Generate a hash (MD5 used here for simplicity)
     return hashlib.md5(row_str.encode()).hexdigest()
 
-## FIXME continue to work on this
-## newly modified function with has tables ##
+
+## START HERE NEXT ###
+# The functoin appears to return accurate information on QBs and RBs despite having duplicate row with all null values.
+# 
+# Do a full test
+# 
+# 1) run the sql queries in the database and compare to the ESPN website
+# 2) delete all rows from the playerStatstics table before you run the tests
+## function without filters ##
 def insert_into_playerStatistics(conn, stats_data):
     cur = conn.cursor()
 
@@ -392,23 +399,22 @@ def insert_into_playerStatistics(conn, stats_data):
         # Generate a hash for the row
         row_hash = generate_row_hash(stat_row)
 
-        # Check if this hash already exists in the table
-        cur.execute("SELECT 1 FROM playerStatistics WHERE row_hash = ?", (row_hash,))
-        
-        if cur.fetchone() is None:
-            # If not, insert the new row with the hash
-            # Note: 'stat_row' should not include the hash yet
-            stat_row_with_hash = stat_row + (row_hash,)
+        # Append the row_hash to the stat_row list
+        stat_row_with_hash = list(stat_row) + [row_hash]
+        print("TEST insert_into_playerStatistics FUNCTION:", stat_row, row_hash)
 
-            # Prepare your SQL INSERT statement here with the modified data
-            # Replace 'col1, col2, ..., colN' with your table's actual column names,
-            # ending with the 'row_hash' column
-            sql_query = "INSERT INTO playerStatistics (col1, col2, ..., colN, row_hash) VALUES (?, ?, ..., ?, ?)"
+        # Prepare your SQL INSERT statement here with the modified data
+        sql_query = f"INSERT INTO playerStatistics ({column_names}, row_hash) VALUES ({', '.join(['?' for _ in range(len(stat_row_with_hash))])})"
+        # cur.execute(sql_query, stat_row_with_hash)
+
+        try:
             cur.execute(sql_query, stat_row_with_hash)
-        else:
-            print(f"Skipping duplicate row with hash: {row_hash}")
+        except sqlite3.IntegrityError:
+            # This catches the exception thrown by the UNIQUE constraint violation
+            print(f"TEST insert_into_playerStatistics FUNCTION: Skipping duplicate row with hash: {row_hash}")
 
     conn.commit()
+
 
 ## FIXME:  ** DO NOT DELETE **
 # def insert_into_playerStatistics(conn, statistics_data):
@@ -435,9 +441,9 @@ def insert_into_playerStatistics(conn, stats_data):
 #                 sql_query = f"INSERT INTO playerStatistics ({column_names}) VALUES ({placeholders})"
 #                 cur.execute(sql_query, stat_row)
 #             else: 
-#                 print(f"Skipping duplicate data for playerFK={playerFK}, weekStart={weekStart}, weekEnd={weekEnd}, week={week}")
+#                 print(f"TEST insert_into_playerStatistics FUNCTION: Skipping duplicate data for playerFK={playerFK}, weekStart={weekStart}, weekEnd={weekEnd}, week={week}")
 #         else:    
-#             print(f"Invalid data (length mismatch), skipping: {stat_row}")
+#             print(f"TEST insert_into_playerStatistics FUNCTION: Invalid data (length mismatch), skipping: {stat_row}")
 #     conn.commit()
 
 ## task: Check to ensure the same issue of certain weeks returning null data for certain players (see the above function)
@@ -465,9 +471,9 @@ def insert_into_playerRanks(conn, ranks_data):
                 sql_query = f"INSERT INTO playerRanks ({column_names}) VALUES ({placeholders})"
                 cur.execute(sql_query, rank_row)
             else:
-                print(f"Skipping duplicate data for playerFK={playerFK}, weekStart={weekStart}, weekEnd={weekEnd}, week={week}")
+                print(f"TEST insert_into_playerRanks FUNCTION: Skipping duplicate data for playerFK={playerFK}, weekStart={weekStart}, weekEnd={weekEnd}, week={week}")
         else:    
-            print(f"Skipping invalid data: {rank_row}")
+            print(f"TEST insert_into_playerRanks FUNCTION: Skipping invalid data: {rank_row}")
     conn.commit()
 
 
