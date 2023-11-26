@@ -20,7 +20,6 @@ JOIN
     athletes a ON ps.playerFK = a.id
 WHERE 
     ps.PlayerPositionFK = 8 AND
-    LOWER(ps.week) = 'week 11'
+    LOWER(ps.week) = 'week 12'
 ORDER BY 
-	ps.PassingYards DESC
-LIMIT 10;
+	a.id

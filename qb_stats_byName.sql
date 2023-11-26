@@ -1,6 +1,7 @@
 SELECT 
 	ps.week,
     a.firstName || ' ' || a.lastName AS QuarterbackName,
+	ps.GamesPlayed,
     ps.Completions,
     ps.PassingAttempts,
     ps.CompletionPercentage,
@@ -19,7 +20,7 @@ FROM
 JOIN 
     athletes a ON ps.playerFK = a.id
 WHERE 
-    LOWER(a.firstName) = 'sam' AND 
-    LOWER(a.lastName) = 'howell'
+    LOWER(a.firstName) = 'jalen' AND 
+    LOWER(a.lastName) = 'hurts'
 	
     
