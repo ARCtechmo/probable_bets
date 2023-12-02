@@ -106,7 +106,7 @@ def create_tables(conn):
         TacklesForLoss INTEGER,
         PassesDefended INTEGER,
         LongInterception INTEGER,
-        Interceptions_duplicate INTEGER,
+        InterceptionsDefense INTEGER,
         InterceptionYards INTEGER,
         InterceptionTouchdowns INTEGER,
         RushingTouchdowns_duplicate INTEGER,
@@ -225,7 +225,7 @@ def create_tables(conn):
         TacklesForLoss INTEGER,
         PassesDefended INTEGER,
         LongInterception INTEGER,
-        Interceptions_duplicate INTEGER,
+        InterceptionsDefense INTEGER,
         InterceptionYards INTEGER,
         InterceptionTouchdowns INTEGER,
         RushingTouchdowns_duplicate INTEGER,
@@ -376,12 +376,8 @@ def generate_row_hash(row_data):
     # Generate a hash (MD5 used here for simplicity)
     return hashlib.md5(row_str.encode()).hexdigest()
 
-
 ## START HERE NEXT ###
-# The functoin appears to return accurate information on QBs and RBs despite having duplicate row with all null values.
-# 
 # Do a full test
-# 
 # 1) run the sql queries in the database and compare to the ESPN website
 # 2) delete all rows from the playerStatstics table before you run the tests
 ## function without filters ##
@@ -415,8 +411,41 @@ def insert_into_playerStatistics(conn, stats_data):
 
     conn.commit()
 
+## START HERE NEXT ###
+# Do a full test
+# 1) run the sql queries in the database and compare to the ESPN website
+# 2) delete all rows from the playerStatstics table before you run the tests
+## function without filters ##
+def insert_into_playerRanks(conn, ranks_data):
+    cur = conn.cursor()
 
-## FIXME:  ** DO NOT DELETE **
+    # Fetch column names from the 'playerRanks' table
+    cur.execute("PRAGMA table_info(playerRanks)")
+    columns = cur.fetchall()
+
+    # Assuming the last column is 'row_hash'
+    column_names = ", ".join([column[1] for column in columns if column[1] != 'row_hash'])
+
+    for rank_row in ranks_data:
+        # Generate a hash for the row
+        row_hash = generate_row_hash(rank_row)
+
+        # Append the row_hash to the rank_row list
+        rank_row_with_hash = list(rank_row) + [row_hash]
+        print("TEST insert_into_playerRanks FUNCTION:", rank_row, row_hash)
+
+        # Prepare your SQL INSERT statement here with the modified data
+        sql_query = f"INSERT INTO playerRanks ({column_names}, row_hash) VALUES ({', '.join(['?' for _ in range(len(rank_row_with_hash))])})"
+        
+        try:
+            cur.execute(sql_query, rank_row_with_hash)
+        except sqlite3.IntegrityError:
+            # This catches the exception thrown by the UNIQUE constraint violation
+            print(f"TEST insert_into_playerRanks FUNCTION: Skipping duplicate row with hash: {row_hash}")
+
+    conn.commit()
+
+## NOTE:  ** DO NOT DELETE UNITL TESTING IS COMPLETE **
 # def insert_into_playerStatistics(conn, statistics_data):
 #     cur = conn.cursor()
 
@@ -446,37 +475,36 @@ def insert_into_playerStatistics(conn, stats_data):
 #             print(f"TEST insert_into_playerStatistics FUNCTION: Invalid data (length mismatch), skipping: {stat_row}")
 #     conn.commit()
 
+## NOTE:  ** DO NOT DELETE UNITL TESTING IS COMPLETE **
 ## task: Check to ensure the same issue of certain weeks returning null data for certain players (see the above function)
-def insert_into_playerRanks(conn, ranks_data):
-    cur = conn.cursor()
+# def insert_into_playerRanks(conn, ranks_data):
+#     cur = conn.cursor()
 
-    # Fetch column names from the 'playerRanks' table
-    cur.execute("PRAGMA table_info(playerRanks)")
-    columns = cur.fetchall()
-    column_names = ", ".join([column[1] for column in columns])
+#     # Fetch column names from the 'playerRanks' table
+#     cur.execute("PRAGMA table_info(playerRanks)")
+#     columns = cur.fetchall()
+#     column_names = ", ".join([column[1] for column in columns])
 
-    for rank_row in ranks_data:
-        if isinstance(rank_row, (list, tuple)) and len(rank_row) == 109:  
+#     for rank_row in ranks_data:
+#         if isinstance(rank_row, (list, tuple)) and len(rank_row) == 109:  
 
-            # Extract the specific columns from the rank_row for duplicate checking
-            weekStart, weekEnd, week, playerFK = rank_row[2], rank_row[3], rank_row[4], rank_row[5]
+#             # Extract the specific columns from the rank_row for duplicate checking
+#             weekStart, weekEnd, week, playerFK = rank_row[2], rank_row[3], rank_row[4], rank_row[5]
 
-            # Check for duplicate row based on 'weekStart', 'weekEnd', 'week', 'playerFK'
-            cur.execute("SELECT * FROM playerRanks WHERE weekStart = ? AND weekEnd = ? AND week = ? AND playerFK = ?", 
-                        (weekStart, weekEnd, week, playerFK))
+#             # Check for duplicate row based on 'weekStart', 'weekEnd', 'week', 'playerFK'
+#             cur.execute("SELECT * FROM playerRanks WHERE weekStart = ? AND weekEnd = ? AND week = ? AND playerFK = ?", 
+#                         (weekStart, weekEnd, week, playerFK))
 
-            # Dynamically generate the placeholders for the values
-            if cur.fetchone() is None:
-                placeholders = ", ".join("?" * len(rank_row))
-                sql_query = f"INSERT INTO playerRanks ({column_names}) VALUES ({placeholders})"
-                cur.execute(sql_query, rank_row)
-            else:
-                print(f"TEST insert_into_playerRanks FUNCTION: Skipping duplicate data for playerFK={playerFK}, weekStart={weekStart}, weekEnd={weekEnd}, week={week}")
-        else:    
-            print(f"TEST insert_into_playerRanks FUNCTION: Skipping invalid data: {rank_row}")
-    conn.commit()
-
-
+#             # Dynamically generate the placeholders for the values
+#             if cur.fetchone() is None:
+#                 placeholders = ", ".join("?" * len(rank_row))
+#                 sql_query = f"INSERT INTO playerRanks ({column_names}) VALUES ({placeholders})"
+#                 cur.execute(sql_query, rank_row)
+#             else:
+#                 print(f"TEST insert_into_playerRanks FUNCTION: Skipping duplicate data for playerFK={playerFK}, weekStart={weekStart}, weekEnd={weekEnd}, week={week}")
+#         else:    
+#             print(f"TEST insert_into_playerRanks FUNCTION: Skipping invalid data: {rank_row}")
+#     conn.commit()
 if __name__ == '__main__':
     # Create a connection to the database
     conn = create_connection()
