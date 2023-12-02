@@ -20,5 +20,5 @@ JOIN
     athletes a ON ps.playerFK = a.id
 WHERE 
     ps.PlayerPositionFK = 8 AND
-    LOWER(ps.week) = 'week 12'
+    LOWER(ps.week) = 'week 13'
 ORDER BY PassingYards DESC /* PassingYards is the default for ESPN*/
