@@ -133,15 +133,15 @@ def create_tables(conn):
         FieldGoalAttempts INTEGER,
         FieldGoalPercentage INTEGER,
         LongFieldGoalMade INTEGER,
-        FieldGoalsMade119 INTEGER,
-        FieldGoalsMade2029 INTEGER,
-        FieldGoalsMade3039 INTEGER,
-        FieldGoalsMade4049 INTEGER,
+        FieldGoalsMade1_19 INTEGER,
+        FieldGoalsMade20_29 INTEGER,
+        FieldGoalsMade30_39 INTEGER,
+        FieldGoalsMade40_49 INTEGER,
         FieldGoalsMade50Plus INTEGER,
-        FieldGoalAttempts119 INTEGER,
-        FieldGoalAttempts2029 INTEGER,
-        FieldGoalAttempts3039 INTEGER,
-        FieldGoalAttempts4049 INTEGER,
+        FieldGoalAttempts1_19 INTEGER,
+        FieldGoalAttempts20_29 INTEGER,
+        FieldGoalAttempts30_39 INTEGER,
+        FieldGoalAttempts40_49 INTEGER,
         FieldGoalAttempts50Plus INTEGER,
         ExtraPointsMade INTEGER,
         ExtraPointAttempts INTEGER,
@@ -155,8 +155,8 @@ def create_tables(conn):
         PuntsInside20 INTEGER,
         Touchbacks INTEGER,
         FairCatches INTEGER,
-        PuntReturns_duplicate INTEGER,
-        PuntReturnYards_duplicate INTEGER,
+        PuntsReturned INTEGER,
+        PuntsReturnedYards INTEGER,
         AveragePuntReturnYards INTEGER,
         row_hash TEXT NOT NULL UNIQUE,
         FOREIGN KEY(leagueFK) REFERENCES league (id) ON UPDATE CASCADE,
@@ -252,15 +252,15 @@ def create_tables(conn):
         FieldGoalAttempts INTEGER,
         FieldGoalPercentage INTEGER,
         LongFieldGoalMade INTEGER,
-        FieldGoalsMade119 INTEGER,
-        FieldGoalsMade2029 INTEGER,
-        FieldGoalsMade3039 INTEGER,
-        FieldGoalsMade4049 INTEGER,
+        FieldGoalsMade1_19 INTEGER,
+        FieldGoalsMade20_29 INTEGER,
+        FieldGoalsMade30_39 INTEGER,
+        FieldGoalsMade40_49 INTEGER,
         FieldGoalsMade50Plus INTEGER,
-        FieldGoalAttempts119 INTEGER,
-        FieldGoalAttempts2029 INTEGER,
-        FieldGoalAttempts3039 INTEGER,
-        FieldGoalAttempts4049 INTEGER,
+        FieldGoalAttempts1_19 INTEGER,
+        FieldGoalAttempts20_29 INTEGER,
+        FieldGoalAttempts30_39 INTEGER,
+        FieldGoalAttempts40_49 INTEGER,
         FieldGoalAttempts50Plus INTEGER,
         ExtraPointsMade INTEGER,
         ExtraPointAttempts INTEGER,
@@ -274,9 +274,10 @@ def create_tables(conn):
         PuntsInside20 INTEGER,
         Touchbacks INTEGER,
         FairCatches INTEGER,
-        PuntReturns_duplicate INTEGER,
-        PuntReturnYards_duplicate INTEGER,
+        PuntsReturned INTEGER,
+        PuntsReturnedYards_duplicate INTEGER,
         AveragePuntReturnYards INTEGER,
+        row_hash TEXT NOT NULL UNIQUE,
         FOREIGN KEY(leagueFK) REFERENCES league (id) ON UPDATE CASCADE,
         FOREIGN KEY(seasonFK) REFERENCES season (id) ON UPDATE CASCADE,
         FOREIGN KEY(playerFK) REFERENCES athletes (id) ON UPDATE CASCADE,
@@ -376,10 +377,7 @@ def generate_row_hash(row_data):
     # Generate a hash (MD5 used here for simplicity)
     return hashlib.md5(row_str.encode()).hexdigest()
 
-## START HERE NEXT ###
-# Do a full test
-# 1) run the sql queries in the database and compare to the ESPN website
-# 2) delete all rows from the playerStatstics table before you run the tests
+# NOTE: initial testing matched results on ESPN website
 ## function without filters ##
 def insert_into_playerStatistics(conn, stats_data):
     cur = conn.cursor()
