@@ -409,10 +409,6 @@ def insert_into_playerStatistics(conn, stats_data):
 
     conn.commit()
 
-## START HERE NEXT ###
-# Do a full test
-# 1) run the sql queries in the database and compare to the ESPN website
-# 2) delete all rows from the playerStatstics table before you run the tests
 ## function without filters ##
 def insert_into_playerRanks(conn, ranks_data):
     cur = conn.cursor()
