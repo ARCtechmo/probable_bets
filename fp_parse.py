@@ -5,6 +5,7 @@
 # loop over the dictionary and pull the keys and values
 import json
 import os
+import glob
 from datetime import datetime
 
 def read_json(file):
@@ -54,14 +55,11 @@ def main():
     # Get the current year in YYYY format
     year = datetime.now().strftime('%Y') 
 
-    files = [
-    f'fantasy_pros_DST_projections_{year}_STD.json',
-    f'fantasy_pros_K_projections_{year}_STD.json',
-    f'fantasy_pros_QB_projections_{year}_STD.json',
-    f'fantasy_pros_RB_projections_{year}_STD.json',
-    f'fantasy_pros_TE_projections_{year}_STD.json',
-    f'fantasy_pros_WR_projections_{year}_STD.json'
-    ]
+    # Pattern to match files
+    pattern = f'fantasy_pros_*_projections_{year}_week*.json'
+
+    # List all matching files
+    files = glob.glob(pattern)
 
     for file in files:
 
@@ -117,8 +115,8 @@ def main():
             else:
                 print(f"\nKey lengths do NOT match value lengths for {position}.")
 
-            # print(f"Key Values for {position}:", QB_key_values)  
-            # print(f"Extracted Data for {position}:", QB_extracted_data[:1])
+            print(f"Key Values for {position}:", QB_key_values)  
+            print(f"Extracted Data for {position}:", QB_extracted_data[:1])
 
         elif position == 'RB':
             RB_key_values = get_key_values(data['players'][0])
