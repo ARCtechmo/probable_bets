@@ -9,6 +9,39 @@ def read_json(file):
     with open(file, 'r') as f:
         return json.load(f)
 
+
+# fixme - "none" values for the player id
+## NOTE: edge cases when extracting names
+    
+# 1) players with the same attributes:
+# first and / or last name and same position and same team (no solution)
+# first or last name and same position and same team (solved)
+
+# TASK find a solution
+# 2) hyphenated last names 
+
+# TASK find a solution
+# 3) players with Sr., Jr., II, III last name 
+    
+### for task 2 and 3: use key 'filename' name-name.php instead of 'name'
+# NOTE: 'filename' formats: 
+    # fname-lname.php
+    # fname-lastname-rb.php, fname-lastname-te.php, fname-lastname-qb.php
+    # fname-lastname-jr.php
+    # fname-lastname-lname.php
+    # fname-lastname-ii.php
+    
+# TASK find a solution - determine if modifications are necessary
+# 4) players with O'... O'Connell
+
+# TASK find a solution
+# 5) different team abbreviations 
+# e.g. JAX vs JAC, WSH vs WAS, 
+# trevor lawrence, sam howell, jacoby brissett
+    
+# 6) roster changes or 'FA' former athletes (no need for a solution)
+
+
 # Helper function to get athlete ID based on name
 # def get_athlete_id(conn, name):
 #     first_name, last_name = name.split(" ", 1)
