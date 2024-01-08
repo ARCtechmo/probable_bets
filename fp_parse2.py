@@ -9,63 +9,13 @@ def read_json(file):
     with open(file, 'r') as f:
         return json.load(f)
 
-
-# fixme - "none" values for the player id
-## NOTE: edge cases when extracting names
-    
-# 1) players with the same attributes:
-# first and / or last name and same position and same team (no solution)
-# first or last name and same position and same team (solved)
-
-# TASK find a solution
-# 2) hyphenated last names 
-
-# TASK find a solution
-# 3) players with Sr., Jr., II, III last name 
-    
-### for task 2 and 3: use key 'filename' name-name.php instead of 'name'
-# NOTE: 'filename' formats: 
-    # fname-lname.php
-    # fname-lastname-rb.php, fname-lastname-te.php, fname-lastname-qb.php
-    # fname-lastname-jr.php
-    # fname-lastname-lname.php
-    # fname-lastname-ii.php
-    
-# TASK find a solution - determine if modifications are necessary
-# 4) players with O'... O'Connell
-
-# TASK find a solution
-# 5) different team abbreviations 
-# e.g. JAX vs JAC, WSH vs WAS, 
-# trevor lawrence, sam howell, jacoby brissett
-    
-# 6) roster changes or 'FA' former athletes (no need for a solution)
-
-
 # Helper function to get athlete ID based on name
-# def get_athlete_id(conn, name):
-#     first_name, last_name = name.split(" ", 1)
-#     cur = conn.cursor()
-#     cur.execute("SELECT id FROM athletes WHERE firstName = ? AND lastName = ?", (first_name, last_name))
-#     result = cur.fetchone()
-#     return result[0] if result else None
-
-def get_athlete_id(conn, name, position_abbr, team_short_name):
+def get_athlete_id(conn, name):
     first_name, last_name = name.split(" ", 1)
     cur = conn.cursor()
-    query = '''
-        SELECT a.id 
-        FROM athletes a
-        JOIN playerStatistics ps ON a.id = ps.playerFK
-        JOIN positions p ON ps.PlayerPositionFK = p.id
-        JOIN teams t ON ps.playerTeamFK = t.id
-        WHERE a.firstName = ? AND a.lastName = ? 
-        AND p.abbr = ? AND t.teamShortName = ?
-    '''
-    cur.execute(query, (first_name, last_name, position_abbr, team_short_name))
+    cur.execute("SELECT id FROM athletes WHERE firstName = ? AND lastName = ?", (first_name, last_name))
     result = cur.fetchone()
     return result[0] if result else None
-
 
 # Helper function to get position ID based on position abbreviation
 def get_position_id(conn, position_abbr):
@@ -83,69 +33,43 @@ def get_team_id(conn, team_short_name):
 
 # extract required player data into a list of lists.
 # each inner list contains details for a unique player based on fpid.
-# def extract_player_data(conn, season, week, players):
-#     extracted_data = []
-#     unique_fpids = set()
-#     unique_rows = set()
-    
-#     for player in players:
-#         fpid = player['fpid']
-        
-#         # skip duplicate players
-#         if fpid in unique_fpids:
-#             continue
-#         unique_fpids.add(fpid)
-
-#         # Extract required data and replace with corresponding IDs
-#         athlete_id = get_athlete_id(conn, player['name'])
-#         position_id = get_position_id(conn, player['position_id'])
-#         team_id = get_team_id(conn, player['team_id'])
-#         stats = player['stats']
-
-#         # Compile the player data with the IDs
-#         player_data = [season, week, athlete_id, position_id, team_id] + [stats[key] for key in stats.keys()]
-                
-#         # Skip duplicate rows based on player_data
-#         player_data_tuple = tuple(player_data)
-#         if player_data_tuple in unique_rows:
-#             continue
-#         unique_rows.add(player_data_tuple)
-#         extracted_data.append(player_data)
-    
-#     return extracted_data
-
 def extract_player_data(conn, season, week, players):
     extracted_data = []
     unique_fpids = set()
-
+    unique_rows = set()
+    
     for player in players:
         fpid = player['fpid']
+        
+        # skip duplicate players
         if fpid in unique_fpids:
             continue
         unique_fpids.add(fpid)
 
-        name = player['name']
-        position_abbr = player['position_id']
-        team_short_name = player['team_id']
-        athlete_id = get_athlete_id(conn, name, position_abbr, team_short_name)
-
-        # Assuming get_position_id and get_team_id functions are unchanged
-        position_id = get_position_id(conn, position_abbr)
-        team_id = get_team_id(conn, team_short_name)
-
+        # Extract required data and replace with corresponding IDs
+        athlete_id = get_athlete_id(conn, player['name'])
+        position_id = get_position_id(conn, player['position_id'])
+        team_id = get_team_id(conn, player['team_id'])
         stats = player['stats']
+
+        # Compile the player data with the IDs
         player_data = [season, week, athlete_id, position_id, team_id] + [stats[key] for key in stats.keys()]
+                
+        # Skip duplicate rows based on player_data
+        player_data_tuple = tuple(player_data)
+        if player_data_tuple in unique_rows:
+            continue
+        unique_rows.add(player_data_tuple)
         extracted_data.append(player_data)
-
+    
     return extracted_data
-
 
 # gets the key values based on a sample player dictionary.
 def get_key_values(sample_player):
     return ['season', 'week', 'name', 'position_id', 'team_id'] + list(sample_player['stats'].keys())
 
 # start here next: 
-# continue TESTING: the 'name', 'position_id', and 'team_id' in the lists should matches the corresponding foreign key values in the db
+# CONDUCT TESTING: the 'name', 'position_id', and 'team_id' in the lists should matches the corresponding foreign key values in the db
 # create the tables for each position (NOTE:  the stat categories vary by position)
 
 def main():
