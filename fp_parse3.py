@@ -9,55 +9,122 @@ def read_json(file):
     with open(file, 'r') as f:
         return json.load(f)
 
-# fixme - "none" values for the player id
-## NOTE: edge cases when extracting names
-    
+## NOTE: the functions that implement exception handling: extract_player_data(), get_athlete_id(), enhanced_parse_name()
+## NOTE: The edge cases for name variations appear to be solved BUT TEST TO CONFIRM RESULTS
+## NOTE: there are still 'none' values but this is expected for obscure atheltes
+
+## NOTE: edge cases captured are the following:     
 # 1) players with the same attributes:
 # first and / or last name and same position and same team (no solution)
 # first or last name and same position and same team (solved)
-
-# TASK find a solution
-# 2) hyphenated last names 
-
-# TASK find a solution
+# 2) hyphenated last names fname-lname
 # 3) players with Sr., Jr., II, III last name 
-    
-### for task 2 and 3: use key 'filename' name-name.php instead of 'name'
-# NOTE: 'filename' formats: 
-    # fname-lname.php
-    # fname-lastname-rb.php, fname-lastname-te.php, fname-lastname-qb.php
-    # fname-lastname-jr.php
-    # fname-lastname-lname.php
-    # fname-lastname-ii.php
-    
-# TASK find a solution - determine if modifications are necessary
-# 4) players with O'... O'Connell
+# 4) other name variations: O'Connell, St. John, etc...
 
-# TASK find a solution
-# 5) different team abbreviations 
+# start here next
+    
+# TASK - conduct more TESTING to ensure athelete id matches the players in the json file
+# manually review the output for each positon (e.g. QB, WR, TE, etc...) and compare it to the data in the json file
+
+
+# TASK find a solution to different team abbreviations 
 # e.g. JAX vs JAC, WSH vs WAS, 
-# trevor lawrence, sam howell, jacoby brissett
+# trevor lawrence, sam howell, jacoby brissett are examples
     
-# 6) roster changes or 'FA' former athletes (no need for a solution)
+# TASK
+# create the tables for each position in database.py
+# NOTE:  the stat categories vary by position so they require separate tables
+    
+# function handles name variations
+# function integrates with extract_player_data() to handle name variations
+def enhanced_parse_name(name, filename=None):
+   
+    # Helper function to remove special characters
+    def remove_special_chars(s):
+        return s.replace("'", "").replace("-", "").replace(".", "")
 
+    # Lowercase the name for standardization
+    name = name.lower()
+    if filename:
+        # Extract name from filename if available, usually in a more standardized format
+        name_from_file = filename.split('.')[0].replace('-', ' ').lower()
+    else:
+        name_from_file = name
 
+    # Split names into parts
+    original_parts = name.split()
+    file_parts = name_from_file.split()
+
+    # Suffixes to check
+    suffixes = ['jr', 'sr', 'ii', 'iii','iv']
+
+    # Identify suffix and remove special characters
+    original_suffix = original_parts[-1] if original_parts[-1] in suffixes else None
+    file_suffix = file_parts[-1] if file_parts[-1] in suffixes else None
+
+    # Create name variations
+    original_name = [remove_special_chars(part) for part in original_parts if part not in suffixes]
+    file_name = [remove_special_chars(part) for part in file_parts if part not in suffixes]
+
+    return {
+        'original_name': original_name,
+        'original_suffix': original_suffix,
+        'file_name': file_name,
+        'file_suffix': file_suffix
+    }
+
+# NOTE: DO NOT DELETE UNTIL TESTING IS COMPLETE
+# NOTE: function is partially correct but does not handle edge cases
 # Helper function to get athlete ID based on name
+# def get_athlete_id(conn, name, position_abbr, team_short_name):
+#     first_name, last_name = name.split(" ", 1)
+#     cur = conn.cursor()
+#     query = '''
+#         SELECT a.id 
+#         FROM athletes a
+#         JOIN playerStatistics ps ON a.id = ps.playerFK
+#         JOIN positions p ON ps.PlayerPositionFK = p.id
+#         JOIN teams t ON ps.playerTeamFK = t.id
+#         WHERE a.firstName = ? AND a.lastName = ? 
+#         AND p.abbr = ? AND t.teamShortName = ?
+#     '''
+#     cur.execute(query, (first_name, last_name, position_abbr, team_short_name))
+#     result = cur.fetchone()
+#     return result[0] if result else None
+
+# function finds the athlete in the database
+# function integrates with extract_player_data() to handle name variations
 def get_athlete_id(conn, name, position_abbr, team_short_name):
-    first_name, last_name = name.split(" ", 1)
+    first_name, last_name = name[0], ' '.join(name[1:]) if len(name) > 1 else ''
+    
+    ## TEST ##
+    # print(f"Debug: First Name: {first_name}, Last Name: {last_name}, Position: {position_abbr}, Team: {team_short_name}")
+    ## TEST ##
+
+    # Expecting 'name' to be a list of name parts (first name and last name)
     cur = conn.cursor()
-    query = '''
+    query = """
         SELECT a.id 
         FROM athletes a
         JOIN playerStatistics ps ON a.id = ps.playerFK
         JOIN positions p ON ps.PlayerPositionFK = p.id
         JOIN teams t ON ps.playerTeamFK = t.id
-        WHERE a.firstName = ? AND a.lastName = ? 
+        WHERE LOWER(a.firstName) = LOWER(?) AND LOWER(a.lastName) = LOWER(?) 
         AND p.abbr = ? AND t.teamShortName = ?
-    '''
+    """
+    ## TEST ##
+    # print("Debug: Executing query:", query)
+    ## TEST ##
+
     cur.execute(query, (first_name, last_name, position_abbr, team_short_name))
     result = cur.fetchone()
-    return result[0] if result else None
 
+    ## TEST ##
+    # print("Debug: Executing query:", query)
+    ## TEST ##
+
+
+    return result[0] if result else None
 
 # Helper function to get position ID based on position abbreviation
 def get_position_id(conn, position_abbr):
@@ -73,6 +140,9 @@ def get_team_id(conn, team_short_name):
     result = cur.fetchone()
     return result[0] if result else None
 
+
+# function matches 'players' from the json file using the 'name' key to the 'athlete' id in the database
+# function integrates the get_athlete_id() and enhanced_parse_name() functions to handle name variations
 def extract_player_data(conn, season, week, players):
     extracted_data = []
     unique_fpids = set()
@@ -83,12 +153,39 @@ def extract_player_data(conn, season, week, players):
             continue
         unique_fpids.add(fpid)
 
-        name = player['name']
+        ## test ##
+        # print(f"Debug: Processing player {player['name']}")
+        ## test ##
+
+        # Using enhanced_parse_name() to process player names
+        name_variations = enhanced_parse_name(player['name'], player.get('filename'))
+        
+        ## test ##
+        # print(f"Debug: Name variations for {player['name']}: {name_variations}")
+        ## test ##
+        
         position_abbr = player['position_id']
         team_short_name = player['team_id']
-        athlete_id = get_athlete_id(conn, name, position_abbr, team_short_name)
+        
+        # use name variations in get_athlete_id()
+        athlete_id = None
+        for variation in [name_variations['original_name'], name_variations['file_name']]:
+            ## test ##
+            # print(f"Debug: Trying variation {variation}")
+            ## test ##
+                        
+            athlete_id = get_athlete_id(conn, variation, position_abbr, team_short_name)
+            if athlete_id:
+                ## test ##
+                # print(f"Debug: Found athlete ID {athlete_id} for variation {variation}")
+                ## test ##
+                break
 
-        # Assuming get_position_id and get_team_id functions are unchanged
+            ## test ##
+            # else:
+            #     print(f"Debug: No athlete ID found for variation {variation}")
+            ## test ##
+        
         position_id = get_position_id(conn, position_abbr)
         team_id = get_team_id(conn, team_short_name)
 
@@ -99,13 +196,39 @@ def extract_player_data(conn, season, week, players):
     return extracted_data
 
 
+# NOTE: do not delete until testing is complete
+# NOTE: function is partially correct but does not handle edge cases
+# def extract_player_data(conn, season, week, players):
+#     extracted_data = []
+#     unique_fpids = set()
+
+#     for player in players:
+#         fpid = player['fpid']
+#         if fpid in unique_fpids:
+#             continue
+#         unique_fpids.add(fpid)
+
+#         name = player['name']
+#         position_abbr = player['position_id']
+#         team_short_name = player['team_id']
+#         athlete_id = get_athlete_id(conn, name, position_abbr, team_short_name)
+
+#         # Assuming get_position_id and get_team_id functions are unchanged
+#         position_id = get_position_id(conn, position_abbr)
+#         team_id = get_team_id(conn, team_short_name)
+
+#         stats = player['stats']
+#         player_data = [season, week, athlete_id, position_id, team_id] + [stats[key] for key in stats.keys()]
+#         extracted_data.append(player_data)
+
+#     return extracted_data
+
+
 # gets the key values based on a sample player dictionary.
 def get_key_values(sample_player):
     return ['season', 'week', 'name', 'position_id', 'team_id'] + list(sample_player['stats'].keys())
 
-# start here next: 
-# continue TESTING: the 'name', 'position_id', and 'team_id' in the lists should matches the corresponding foreign key values in the db
-# create the tables for each position (NOTE:  the stat categories vary by position)
+
 def main():
     
     # Create a database connection
