@@ -10,9 +10,6 @@ def read_json(file):
         return json.load(f)
 
 ## NOTE: the functions that implement exception handling: extract_player_data(), get_athlete_id(), enhanced_parse_name()
-## NOTE: The edge cases for name variations appear to be solved BUT TEST TO CONFIRM RESULTS
-## NOTE: there are still 'none' values but this is expected for obscure atheltes
-
 ## NOTE: edge cases captured are the following:     
 # 1) players with the same attributes:
 # first and / or last name and same position and same team (no solution)
@@ -22,14 +19,29 @@ def read_json(file):
 # 4) other name variations: O'Connell, St. John, etc...
 
 # start here next
-    
-# TASK - conduct more TESTING to ensure athelete id matches the players in the json file
-# manually review the output for each positon (e.g. QB, WR, TE, etc...) and compare it to the data in the json file
+# TEST RESULTS: additional modifications needed
+#####  TEST RESULTS #####
+# QB: Aidan O'Connell
+# K: fixme returned all 'none' values for 'name' and 'position_id'
+# WR: Amon-Ra St. Brown, A.J. Brown, Odell Beckham Jr., Jaxon Smith-Njigba, Wan'Dale Robinson
+# WR: Marquez Valdes-Scantling, Marvin Mims Jr., Allen Robinson II, Cedrick Wilson Jr.
+# WR: Ihmir Smith-Marsette, Lil'Jordan Humphrey, John Metchie III, Donovan Peoples-Jones
+# WR: Calvin Austin III, elus Jones Jr.
+# TE: T.J. Hockenson, Mo Alie-Cox, Travis Etienne Jr., Kenneth Walker III, 
+# RB: D'Andre Swift, De'Von Achane, Chris Rodriguez Jr., Clyde Edwards-Helaire,
+# RB: D'Onta Foreman, D'Ernest Johnson, Melvin Gordon III", Pierre Strong Jr.
+##### TEST RESULTS #####
 
+# TASK: NOTE: possible solution to caputre more name variations
+# need another loop to caputre all of the 'none' values 
+# use the 'filename' key to try to capture additional name variations
+    
 
 # TASK find a solution to different team abbreviations 
-# e.g. JAX vs JAC, WSH vs WAS, 
-# trevor lawrence, sam howell, jacoby brissett are examples
+# e.g. JAX vs JAC, WSH vs WAS, CLE vs CLV
+# Dorian Thompson-Robinson (this is because of team abbr CLV vs CLE)
+# trevor lawrence, sam howell, jacoby brissett, C.J. Beathard, Calvin Ridley, 
+# Terry McLaurin, Jakobi Meyers, Curtis Samuel, Logan Thomas, Andrew Ogletree,
     
 # TASK
 # create the tables for each position in database.py
@@ -291,6 +303,11 @@ def main():
             # print(f"Key Values for {position}:", K_key_values)  
             # print(f"Extracted Data for {position}:", K_extracted_data[:1]) 
 
+            #### testing ####
+            # for list in K_extracted_data:
+            #     print(list)
+            #### testing ####
+
         elif position == 'QB':
             QB_key_values = get_key_values(data['players'][0])
             QB_extracted_data = extract_player_data(conn, season, week, data['players'])
@@ -301,12 +318,12 @@ def main():
             else:
                 print(f"\nKey lengths do NOT match value lengths for {position}.")
 
-            print(f"Key Values for {position}:", QB_key_values)  
+            # print(f"Key Values for {position}:", QB_key_values)  
             # print(f"Extracted Data for {position}:", QB_extracted_data)
 
             #### testing ####
-            for list in QB_extracted_data:
-                print(list)
+            # for list in QB_extracted_data:
+                # print(list)
             #### testing ####
 
         elif position == 'RB':
@@ -321,6 +338,11 @@ def main():
             
             # print(f"Key Values for {position}:", RB_key_values)  
             # print(f"Extracted Data for {position}:", RB_extracted_data[:1])
+                
+            #### testing ####
+            # for list in RB_extracted_data:
+            #     print(list)
+            #### testing ####
 
         elif position == 'TE':
             TE_key_values = get_key_values(data['players'][0])
@@ -334,6 +356,11 @@ def main():
             
             # print(f"Key Values for {position}:", TE_key_values)  
             # print(f"Extracted Data for {position}:", TE_extracted_data[:1])
+                
+            #### testing ####
+            # for list in TE_extracted_data:
+            #     print(list)
+            #### testing ####
 
         elif position == 'WR':
             WR_key_values = get_key_values(data['players'][0])
@@ -346,6 +373,11 @@ def main():
                 print(f"\nKey lengths do NOT match value lengths for {position}.")
             # print(f"Key Values for {position}:", WR_key_values)  
             # print(f"Extracted Data for {position}:", WR_extracted_data[:1])
+
+            #### testing ####
+            # for list in WR_extracted_data:
+            #     print(list)
+            #### testing ####
 
     conn.close()
 if __name__ == "__main__":
