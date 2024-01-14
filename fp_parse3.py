@@ -21,8 +21,7 @@ def read_json(file):
 # start here next
 # TEST RESULTS: additional modifications needed
 #####  TEST RESULTS #####
-# QB: Aidan O'Connell
-# K: fixme returned all 'none' values for 'name' and 'position_id'
+# QB: Aidan O'Connell, C.J. Beathard 
 # WR: Amon-Ra St. Brown, A.J. Brown, Odell Beckham Jr., Jaxon Smith-Njigba, Wan'Dale Robinson
 # WR: Marquez Valdes-Scantling, Marvin Mims Jr., Allen Robinson II, Cedrick Wilson Jr.
 # WR: Ihmir Smith-Marsette, Lil'Jordan Humphrey, John Metchie III, Donovan Peoples-Jones
@@ -35,14 +34,7 @@ def read_json(file):
 # TASK: NOTE: possible solution to caputre more name variations
 # need another loop to caputre all of the 'none' values 
 # use the 'filename' key to try to capture additional name variations
-    
-
-# TASK find a solution to different team abbreviations 
-# e.g. JAX vs JAC, WSH vs WAS, CLE vs CLV
-# Dorian Thompson-Robinson (this is because of team abbr CLV vs CLE)
-# trevor lawrence, sam howell, jacoby brissett, C.J. Beathard, Calvin Ridley, 
-# Terry McLaurin, Jakobi Meyers, Curtis Samuel, Logan Thomas, Andrew Ogletree,
-    
+        
 # TASK
 # create the tables for each position in database.py
 # NOTE:  the stat categories vary by position so they require separate tables
@@ -107,12 +99,23 @@ def enhanced_parse_name(name, filename=None):
 # function finds the athlete in the database
 # function integrates with extract_player_data() to handle name variations
 def get_athlete_id(conn, name, position_abbr, team_short_name):
+
+    # Check if the position_abbr is 'K' and change it to 'PK' for database query
+    if position_abbr == 'K':
+        position_abbr = 'PK'
+    
+    # JAX vs JAC, WSH vs WAS, CLE vs CLV
+    if team_short_name == 'CLV':
+        team_short_name = 'CLE'
+    
+    elif team_short_name == 'JAC':
+        team_short_name = 'JAX'
+    
+    elif team_short_name =='WAS':
+        team_short_name ='WSH'
+
     first_name, last_name = name[0], ' '.join(name[1:]) if len(name) > 1 else ''
     
-    ## TEST ##
-    # print(f"Debug: First Name: {first_name}, Last Name: {last_name}, Position: {position_abbr}, Team: {team_short_name}")
-    ## TEST ##
-
     # Expecting 'name' to be a list of name parts (first name and last name)
     cur = conn.cursor()
     query = """
@@ -124,22 +127,19 @@ def get_athlete_id(conn, name, position_abbr, team_short_name):
         WHERE LOWER(a.firstName) = LOWER(?) AND LOWER(a.lastName) = LOWER(?) 
         AND p.abbr = ? AND t.teamShortName = ?
     """
-    ## TEST ##
-    # print("Debug: Executing query:", query)
-    ## TEST ##
-
+  
     cur.execute(query, (first_name, last_name, position_abbr, team_short_name))
     result = cur.fetchone()
-
-    ## TEST ##
-    # print("Debug: Executing query:", query)
-    ## TEST ##
-
 
     return result[0] if result else None
 
 # Helper function to get position ID based on position abbreviation
 def get_position_id(conn, position_abbr):
+
+    # Check if the position_abbr is 'K' and change it to 'PK' for database query
+    if position_abbr == 'K':
+        position_abbr = 'PK'
+
     cur = conn.cursor()
     cur.execute("SELECT id FROM positions WHERE abbr = ?", (position_abbr,))
     result = cur.fetchone()
@@ -147,11 +147,21 @@ def get_position_id(conn, position_abbr):
 
 # Helper function to get team ID based on team short name
 def get_team_id(conn, team_short_name):
+
+    # JAX vs JAC, WSH vs WAS, CLE vs CLV
+    if team_short_name == 'CLV':
+        team_short_name = 'CLE'
+    
+    elif team_short_name == 'JAC':
+        team_short_name = 'JAX'
+    
+    elif team_short_name =='WAS':
+        team_short_name ='WSH'
+
     cur = conn.cursor()
     cur.execute("SELECT id FROM teams WHERE teamShortName = ?", (team_short_name,))
     result = cur.fetchone()
     return result[0] if result else None
-
 
 # function matches 'players' from the json file using the 'name' key to the 'athlete' id in the database
 # function integrates the get_athlete_id() and enhanced_parse_name() functions to handle name variations
@@ -165,38 +175,18 @@ def extract_player_data(conn, season, week, players):
             continue
         unique_fpids.add(fpid)
 
-        ## test ##
-        # print(f"Debug: Processing player {player['name']}")
-        ## test ##
-
         # Using enhanced_parse_name() to process player names
         name_variations = enhanced_parse_name(player['name'], player.get('filename'))
-        
-        ## test ##
-        # print(f"Debug: Name variations for {player['name']}: {name_variations}")
-        ## test ##
-        
         position_abbr = player['position_id']
         team_short_name = player['team_id']
         
         # use name variations in get_athlete_id()
         athlete_id = None
         for variation in [name_variations['original_name'], name_variations['file_name']]:
-            ## test ##
-            # print(f"Debug: Trying variation {variation}")
-            ## test ##
                         
             athlete_id = get_athlete_id(conn, variation, position_abbr, team_short_name)
             if athlete_id:
-                ## test ##
-                # print(f"Debug: Found athlete ID {athlete_id} for variation {variation}")
-                ## test ##
                 break
-
-            ## test ##
-            # else:
-            #     print(f"Debug: No athlete ID found for variation {variation}")
-            ## test ##
         
         position_id = get_position_id(conn, position_abbr)
         team_id = get_team_id(conn, team_short_name)
@@ -206,7 +196,6 @@ def extract_player_data(conn, season, week, players):
         extracted_data.append(player_data)
 
     return extracted_data
-
 
 # NOTE: do not delete until testing is complete
 # NOTE: function is partially correct but does not handle edge cases
@@ -323,7 +312,7 @@ def main():
 
             #### testing ####
             # for list in QB_extracted_data:
-                # print(list)
+            #     print(list)
             #### testing ####
 
         elif position == 'RB':
