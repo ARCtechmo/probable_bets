@@ -19,6 +19,18 @@ def read_json(file):
 # 4) other name variations: O'Connell, St. John, etc...
 
 # start here next
+### NOTE: approach for next coding session ###
+## I am going to have to use both 'name' and 'filename' keys to get this right
+## Review each exception in the database to see how the actual names resides in the table
+## focus on improving the enhanced_parse_name() function as it is currently implemented
+## 1) do not remove the ".", the "-", or the "'" i.e. caputre the entire 1st and second index of the 'name' key
+## 2) use the indexes to determine first and last names: 1st, 2nd, 3rd indexes of each key
+## 3) the datbase include jr, sr. as part of the last names (e.g beckham jr. )
+## 4) Amon-Ra St. Brown is a good example
+## 5) modification to  the sql query get_athlete_id() may be needed by usings "startswith" or "endswith"
+## provide GPT4 with one or two examples of name variations at a time to fix then test ##
+## also provide it with the specific json snippet of that exception
+
 # TEST RESULTS: additional modifications needed
 #####  TEST RESULTS #####
 # QB: Aidan O'Connell, C.J. Beathard 
