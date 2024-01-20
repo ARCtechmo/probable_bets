@@ -8,11 +8,7 @@ from datetime import datetime
 def read_json(file):
     with open(file, 'r') as f:
         return json.load(f)
-
-# start here next
-# NOTE:  the stat categories vary by position so they require separate tables
-# create the tables for each position in database.py
-    
+  
 # the functions that implement exception handling: extract_player_data(), get_athlete_id(), enhanced_parse_name()
 ## NOTE: function built to handle name variations edge cases   
 def enhanced_parse_name(name, filename=None):
@@ -142,9 +138,29 @@ def extract_player_data(conn, season, week, players):
 
     return extracted_data
 
-# gets the key values based on a sample player dictionary.
+# function extract the key, values for the Defense json files
+# separate function because 'name' and 'position_id' fields are not necessary
+def extract_dst_player_data(conn, season, week, players):
+    extracted_data = []
+    unique_fpids = set()
+
+    for player in players:
+        team_short_name = player['team_id']
+        team_id = get_team_id(conn, team_short_name)
+
+        stats = player['stats']
+        player_data = [season, week, team_id] + [stats[key] for key in stats.keys()]
+        extracted_data.append(player_data)
+
+    return extracted_data
+
+# gets the key values based on players for K, QB, RB, TE, WR 
 def get_key_values(sample_player):
     return ['season', 'week', 'name', 'position_id', 'team_id'] + list(sample_player['stats'].keys())
+
+# gets the key values based on the team defenses 
+def get_def_key_values(sample_player):
+    return ['season', 'week', 'team_id'] + list(sample_player['stats'].keys())
 
 def main():
     
@@ -179,20 +195,28 @@ def main():
 
         # pass season and week to extract_player_data function
         season = data['season']
+        season = int(season)
+
         week = data['week']
+        week = int(week)
 
         if position == 'DST':
-            DST_key_values = get_key_values(data['players'][0])
-            DST_extracted_data = extract_player_data(conn, season, week, data['players'])
+            DST_key_values = get_def_key_values(data['players'][0])
+            DST_extracted_data = extract_dst_player_data(conn, season, week, data['players'])
 
             # Check if key length matches data length for each player
             if all(len(DST_key_values) == len(player_data) for player_data in DST_extracted_data):
-                print(f"Key lengths match value lengths for {position}.")
+                print(f"\nKey lengths match value lengths for {position}.")
             else:
-                print(f"Key lengths do NOT match value lengths for {position}.")
+                print(f"\nKey lengths do NOT match value lengths for {position}.")
 
-            # print(f"Key Values for {position}:", DST_key_values)  
-            # print(f"Extracted Data for {position}:", DST_extracted_data[:1])  
+            print(f"Key Values for {position}:", DST_key_values)  
+            print(f"Extracted Data for {position}:", DST_extracted_data[:1])
+
+            #### testing ####
+            # for list in DST_extracted_data:
+            #     print(list)
+            #### testing ####  
         
         elif position == 'K':
             K_key_values = get_key_values(data['players'][0])
@@ -205,8 +229,8 @@ def main():
             else:
                 print(f"\nKey lengths do NOT match value lengths for {position}.")
 
-            # print(f"Key Values for {position}:", K_key_values)  
-            # print(f"Extracted Data for {position}:", K_extracted_data[:1]) 
+            print(f"Key Values for {position}:", K_key_values)  
+            print(f"Extracted Data for {position}:", K_extracted_data[:1]) 
 
             #### testing ####
             # for list in K_extracted_data:
@@ -223,8 +247,8 @@ def main():
             else:
                 print(f"\nKey lengths do NOT match value lengths for {position}.")
 
-            # print(f"Key Values for {position}:", QB_key_values)  
-            # print(f"Extracted Data for {position}:", QB_extracted_data)
+            print(f"Key Values for {position}:", QB_key_values)  
+            print(f"Extracted Data for {position}:", QB_extracted_data[:1])
 
             #### testing ####
             # for list in QB_extracted_data:
@@ -241,8 +265,8 @@ def main():
             else:
                 print(f"\nKey lengths do NOT match value lengths for {position}.")
             
-            # print(f"Key Values for {position}:", RB_key_values)  
-            # print(f"Extracted Data for {position}:", RB_extracted_data[:1])
+            print(f"Key Values for {position}:", RB_key_values)  
+            print(f"Extracted Data for {position}:", RB_extracted_data[:1])
                 
             #### testing ####
             # for list in RB_extracted_data:
@@ -259,8 +283,8 @@ def main():
             else:
                 print(f"\nKey lengths do NOT match value lengths for {position}.")
             
-            # print(f"Key Values for {position}:", TE_key_values)  
-            # print(f"Extracted Data for {position}:", TE_extracted_data[:1])
+            print(f"Key Values for {position}:", TE_key_values)  
+            print(f"Extracted Data for {position}:", TE_extracted_data[:1])
                 
             #### testing ####
             # for list in TE_extracted_data:
@@ -276,8 +300,9 @@ def main():
                 print(f"\nKey lengths match value lengths for {position}.")
             else:
                 print(f"\nKey lengths do NOT match value lengths for {position}.")
-            # print(f"Key Values for {position}:", WR_key_values)  
-            # print(f"Extracted Data for {position}:", WR_extracted_data[:1])
+
+            print(f"Key Values for {position}:", WR_key_values)  
+            print(f"Extracted Data for {position}:", WR_extracted_data[:1])
 
             #### testing ####
             # for list in WR_extracted_data:
