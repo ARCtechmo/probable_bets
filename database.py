@@ -284,11 +284,143 @@ def create_tables(conn):
         FOREIGN KEY(PlayerPositionFK) REFERENCES positions (id) ON UPDATE CASCADE,
         FOREIGN KEY(playerTeamFK) REFERENCES teams (id) ON UPDATE CASCADE,
         FOREIGN KEY(playerStatusFK) REFERENCES athleteStatus (id) ON UPDATE CASCADE
+    );
+        CREATE TABLE IF NOT EXISTS fantasy_pros_WR (
+        season INT,
+        week INT,
+        name INT,
+        position_id INT,
+        team_id INT,
+        points REAL,
+        points_ppr REAL,
+        points_half REAL,
+        rec_rec REAL,
+        rec_yds REAL,
+        rec_tds REAL,
+        rec_yds_100 REAL,
+        rec_yds_200 REAL,
+        scrimage_yards_100 REAL,
+        scrimage_yards_200 REAL,
+        rush_att REAL,
+        rush_yds REAL,
+        rush_tds REAL,
+        rush_yds_100 REAL,
+        rush_yds_200 REAL,
+        fumbles REAL,
+        ret_tds REAL,
+        two_pt_tds REAL
+    );
+        CREATE TABLE IF NOT EXISTS fantasy_pros_TE (
+        season INT,
+        week INT,
+        name INT,
+        position_id INT,
+        team_id INT,
+        points REAL,
+        points_ppr REAL,
+        points_half REAL,
+        rec_rec REAL,
+        rec_yds REAL,
+        rec_tds REAL,
+        rec_yds_100 REAL,
+        rec_yds_200 REAL,
+        scrimage_yards_100 REAL,
+        scrimage_yards_200 REAL,
+        fumbles REAL,
+        ret_tds REAL,
+        two_pt_tds REAL
+    );
+        CREATE TABLE IF NOT EXISTS fantasy_pros_RB (
+        season INT,
+        week INT,
+        name INT,
+        position_id INT,
+        team_id INT,
+        points REAL,
+        points_ppr REAL,
+        points_half REAL,
+        rush_att REAL,
+        rush_yds REAL,
+        rush_tds REAL,
+        rush_yds_100 REAL,
+        rush_yds_200 REAL,
+        scrimage_yards_100 REAL,
+        scrimage_yards_200 REAL,
+        rec_rec REAL,
+        rec_yds REAL,
+        rec_tds REAL,
+        rec_yds_100 REAL,
+        rec_yds_200 REAL,
+        fumbles REAL,
+        ret_tds REAL,
+        two_pt_tds REAL
+    );
+
+        CREATE TABLE IF NOT EXISTS fantasy_pros_QB (
+        season INT,
+        week INT,
+        name INT,
+        position_id INT,
+        team_id INT,
+        points REAL,
+        points_ppr REAL,
+        points_half REAL,
+        pass_att REAL,
+        pass_cmp REAL,
+        pass_yds REAL,
+        pass_tds REAL,
+        pass_ints REAL,
+        pass_yds_300 REAL,
+        pass_yds_400 REAL,
+        rush_att REAL,
+        rush_yds REAL,
+        rush_tds REAL,
+        rush_yds_100 REAL,
+        rush_yds_200 REAL,
+        scrimage_yards_100 REAL,
+        scrimage_yards_200 REAL,
+        fumbles REAL,
+        ret_tds REAL,
+        two_pt_tds REAL
+    );
+        CREATE TABLE IF NOT EXISTS fantasy_pros_K (
+        season INT,
+        week INT,
+        name INT,
+        position_id INT,
+        team_id INT,
+        points REAL,
+        points_ppr REAL,
+        points_half REAL,
+        fga REAL,
+        fg REAL,
+        xpt REAL
+    );
+
+        CREATE TABLE IF NOT EXISTS fantasy_pros_Def (
+        season INT,
+        week INT,
+        team_id INT,
+        points REAL,
+        points_ppr REAL,
+        points_half REAL,
+        def_sack REAL,
+        def_int REAL,
+        def_td REAL,
+        def_pa REAL,
+        def_tyda REAL,
+        def_safety REAL,
+        def_ff REAL,
+        def_fr REAL,
+        def_retd REAL
     )
         '''
     )
     conn.commit()
     conn.close()
+
+## start here next: ##
+# create the functions to import the fantasy_pros data into the db
 
 def insert_into_league(conn, league_data):
     cur = conn.cursor()
