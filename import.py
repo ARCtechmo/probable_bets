@@ -280,13 +280,13 @@ def get_year():
         return str(datetime.now().year)
 
 def get_week():
-    user_input = input("Enter the week (1,2,3...18): ")
+    user_input = input("Enter the week (1,2,3...22): ")
     if user_input.isdigit():
         week_number = int(user_input)
-        if 1 <= week_number <= 18:
+        if 1 <= week_number <= 22:
             return user_input
         else:
-            print("Invalid week number entered. Please enter a number between 1 and 18.")
+            print("Invalid week number entered. Please enter a number between 1 and 22.")
             return None
     else:
         print("Invalid input. Please enter a number.")
