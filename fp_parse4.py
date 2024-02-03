@@ -1,5 +1,14 @@
 # parse the fantasypros json files #
-from database import create_connection
+
+from database import (
+    create_connection,
+    insert_or_update_fantasy_pros_QB,
+    insert_or_update_fantasy_pros_RB,
+    insert_or_update_fantasy_pros_TE,
+    insert_or_update_fantasy_pros_K,
+    insert_or_update_fantasy_pros_Def,
+    insert_or_update_fantasy_pros_WR,
+)
 import json
 import os
 import glob
@@ -210,13 +219,18 @@ def main():
             else:
                 print(f"\nKey lengths do NOT match value lengths for {position}.")
 
-            print(f"Key Values for {position}:", DST_key_values)  
-            print(f"Extracted Data for {position}:", DST_extracted_data[:1])
+            # print(f"Key Values for {position}:", DST_key_values)  
+            # print(f"Extracted Data for {position}:", DST_extracted_data[:1])
 
             #### testing ####
             # for list in DST_extracted_data:
             #     print(list)
             #### testing ####  
+                
+            ## export the arrays for each position into the database ##
+            ## export functions are from database.py ##
+            insert_or_update_fantasy_pros_Def(conn, DST_extracted_data)
+            
         
         elif position == 'K':
             K_key_values = get_key_values(data['players'][0])
@@ -229,13 +243,17 @@ def main():
             else:
                 print(f"\nKey lengths do NOT match value lengths for {position}.")
 
-            print(f"Key Values for {position}:", K_key_values)  
-            print(f"Extracted Data for {position}:", K_extracted_data[:1]) 
+            # print(f"Key Values for {position}:", K_key_values)  
+            # print(f"Extracted Data for {position}:", K_extracted_data[:1]) 
 
             #### testing ####
             # for list in K_extracted_data:
             #     print(list)
             #### testing ####
+            
+            ## export the arrays for each position into the database ##
+            ## export functions are from database.py ##
+            insert_or_update_fantasy_pros_K(conn, K_extracted_data) 
 
         elif position == 'QB':
             QB_key_values = get_key_values(data['players'][0])
@@ -247,13 +265,17 @@ def main():
             else:
                 print(f"\nKey lengths do NOT match value lengths for {position}.")
 
-            print(f"Key Values for {position}:", QB_key_values)  
-            print(f"Extracted Data for {position}:", QB_extracted_data[:1])
+            # print(f"Key Values for {position}:", QB_key_values)  
+            # print(f"Extracted Data for {position}:", QB_extracted_data[:1])
 
             #### testing ####
             # for list in QB_extracted_data:
             #     print(list)
             #### testing ####
+
+            ## export the arrays for each position into the database ##
+            ## export functions are from database.py ##
+            insert_or_update_fantasy_pros_QB(conn, QB_extracted_data)
 
         elif position == 'RB':
             RB_key_values = get_key_values(data['players'][0])
@@ -265,13 +287,18 @@ def main():
             else:
                 print(f"\nKey lengths do NOT match value lengths for {position}.")
             
-            print(f"Key Values for {position}:", RB_key_values)  
-            print(f"Extracted Data for {position}:", RB_extracted_data[:1])
+            # print(f"Key Values for {position}:", RB_key_values)  
+            # print(f"Extracted Data for {position}:", RB_extracted_data[:1])
                 
             #### testing ####
             # for list in RB_extracted_data:
             #     print(list)
             #### testing ####
+            
+            ## export the arrays for each position into the database ##
+            ## export functions are from database.py ##
+            insert_or_update_fantasy_pros_RB(conn, RB_extracted_data)
+
 
         elif position == 'TE':
             TE_key_values = get_key_values(data['players'][0])
@@ -283,13 +310,17 @@ def main():
             else:
                 print(f"\nKey lengths do NOT match value lengths for {position}.")
             
-            print(f"Key Values for {position}:", TE_key_values)  
-            print(f"Extracted Data for {position}:", TE_extracted_data[:1])
+            # print(f"Key Values for {position}:", TE_key_values)  
+            # print(f"Extracted Data for {position}:", TE_extracted_data[:1])
                 
             #### testing ####
             # for list in TE_extracted_data:
             #     print(list)
             #### testing ####
+            
+            ## export the arrays for each position into the database ##
+            ## export functions are from database.py ##
+            insert_or_update_fantasy_pros_TE(conn, TE_extracted_data) 
 
         elif position == 'WR':
             WR_key_values = get_key_values(data['players'][0])
@@ -301,13 +332,18 @@ def main():
             else:
                 print(f"\nKey lengths do NOT match value lengths for {position}.")
 
-            print(f"Key Values for {position}:", WR_key_values)  
-            print(f"Extracted Data for {position}:", WR_extracted_data[:1])
+            # print(f"Key Values for {position}:", WR_key_values)  
+            # print(f"Extracted Data for {position}:", WR_extracted_data[:1])
 
             #### testing ####
             # for list in WR_extracted_data:
             #     print(list)
             #### testing ####
+            
+            ## export the arrays for each position into the database ##
+            ## export functions are from database.py ##
+            insert_or_update_fantasy_pros_WR(conn, WR_extracted_data)
+
 
     conn.close()
 if __name__ == "__main__":

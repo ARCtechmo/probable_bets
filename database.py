@@ -288,7 +288,7 @@ def create_tables(conn):
         CREATE TABLE IF NOT EXISTS fantasy_pros_WR (
         season INT,
         week INT,
-        name INT,
+        player_id INT,
         position_id INT,
         team_id INT,
         points REAL,
@@ -313,7 +313,7 @@ def create_tables(conn):
         CREATE TABLE IF NOT EXISTS fantasy_pros_TE (
         season INT,
         week INT,
-        name INT,
+        player_id INT,
         position_id INT,
         team_id INT,
         points REAL,
@@ -333,7 +333,7 @@ def create_tables(conn):
         CREATE TABLE IF NOT EXISTS fantasy_pros_RB (
         season INT,
         week INT,
-        name INT,
+        player_id INT,
         position_id INT,
         team_id INT,
         points REAL,
@@ -359,7 +359,7 @@ def create_tables(conn):
         CREATE TABLE IF NOT EXISTS fantasy_pros_QB (
         season INT,
         week INT,
-        name INT,
+        player_id INT,
         position_id INT,
         team_id INT,
         points REAL,
@@ -386,7 +386,7 @@ def create_tables(conn):
         CREATE TABLE IF NOT EXISTS fantasy_pros_K (
         season INT,
         week INT,
-        name INT,
+        player_id INT,
         position_id INT,
         team_id INT,
         points REAL,
@@ -418,9 +418,6 @@ def create_tables(conn):
     )
     conn.commit()
     conn.close()
-
-## start here next: ##
-# create the functions to import the fantasy_pros data into the db
 
 def insert_into_league(conn, league_data):
     cur = conn.cursor()
@@ -499,7 +496,6 @@ def insert_into_athletes(conn, athletes_data):
         else:
             print(f"Skipping invalid data: {athlete_row}")
     conn.commit()
-
 
 ### new function to create a hash of each row ##
 def generate_row_hash(row_data):
@@ -631,6 +627,144 @@ def insert_into_playerRanks(conn, ranks_data):
 #         else:    
 #             print(f"TEST insert_into_playerRanks FUNCTION: Skipping invalid data: {rank_row}")
 #     conn.commit()
+      
+def insert_or_update_fantasy_pros_QB(conn, qb_data):
+    cur = conn.cursor()
+    for row in qb_data:
+        season, week, player_id = row[0], row[1], row[2]
+        
+        # Check if a row exists for the same player_id and week
+        cur.execute("SELECT 1 FROM fantasy_pros_QB WHERE player_id = ? AND week = ?", (player_id, week))
+        exists = cur.fetchone()
+
+        if exists:
+            # Update the existing row if player_id with the same week exists
+            update_columns = [column[1] for column in cur.execute("PRAGMA table_info(fantasy_pros_QB)").fetchall() if column[1] not in ['player_id', 'week', 'rowid', 'season']]
+            update_statement = ", ".join([f"{col} = ?" for col in update_columns])
+            update_values = row[3:]  # Excluding player_id, season, and week from the update values
+            cur.execute(f"UPDATE fantasy_pros_QB SET {update_statement} WHERE player_id = ? AND week = ?", (*update_values, player_id, week))
+        else:
+            # Insert a new row if no matching player_id and week are found
+            column_names = ", ".join([column[1] for column in cur.execute("PRAGMA table_info(fantasy_pros_QB)").fetchall() if column[1] != 'rowid'])
+            placeholders = ', '.join(['?' for _ in row])
+            cur.execute(f"INSERT INTO fantasy_pros_QB ({column_names}) VALUES ({placeholders})", row)
+
+        conn.commit()
+
+def insert_or_update_fantasy_pros_WR(conn, qb_data):
+    cur = conn.cursor()
+    for row in qb_data:
+        season, week, player_id = row[0], row[1], row[2]
+        
+        # Check if a row exists for the same player_id and week
+        cur.execute("SELECT 1 FROM fantasy_pros_WR WHERE player_id = ? AND week = ?", (player_id, week))
+        exists = cur.fetchone()
+
+        if exists:
+            # Update the existing row if player_id with the same week exists
+            update_columns = [column[1] for column in cur.execute("PRAGMA table_info(fantasy_pros_WR)").fetchall() if column[1] not in ['player_id', 'week', 'rowid', 'season']]
+            update_statement = ", ".join([f"{col} = ?" for col in update_columns])
+            update_values = row[3:]  # Excluding player_id, season, and week from the update values
+            cur.execute(f"UPDATE fantasy_pros_WR SET {update_statement} WHERE player_id = ? AND week = ?", (*update_values, player_id, week))
+        else:
+            # Insert a new row if no matching player_id and week are found
+            column_names = ", ".join([column[1] for column in cur.execute("PRAGMA table_info(fantasy_pros_WR)").fetchall() if column[1] != 'rowid'])
+            placeholders = ', '.join(['?' for _ in row])
+            cur.execute(f"INSERT INTO fantasy_pros_WR ({column_names}) VALUES ({placeholders})", row)
+
+        conn.commit()
+
+def insert_or_update_fantasy_pros_RB(conn, qb_data):
+    cur = conn.cursor()
+    for row in qb_data:
+        season, week, player_id = row[0], row[1], row[2]
+        
+        # Check if a row exists for the same player_id and week
+        cur.execute("SELECT 1 FROM fantasy_pros_RB WHERE player_id = ? AND week = ?", (player_id, week))
+        exists = cur.fetchone()
+
+        if exists:
+            # Update the existing row if player_id with the same week exists
+            update_columns = [column[1] for column in cur.execute("PRAGMA table_info(fantasy_pros_RB)").fetchall() if column[1] not in ['player_id', 'week', 'rowid', 'season']]
+            update_statement = ", ".join([f"{col} = ?" for col in update_columns])
+            update_values = row[3:]  # Excluding player_id, season, and week from the update values
+            cur.execute(f"UPDATE fantasy_pros_RB SET {update_statement} WHERE player_id = ? AND week = ?", (*update_values, player_id, week))
+        else:
+            # Insert a new row if no matching player_id and week are found
+            column_names = ", ".join([column[1] for column in cur.execute("PRAGMA table_info(fantasy_pros_RB)").fetchall() if column[1] != 'rowid'])
+            placeholders = ', '.join(['?' for _ in row])
+            cur.execute(f"INSERT INTO fantasy_pros_RB ({column_names}) VALUES ({placeholders})", row)
+
+        conn.commit()
+
+def insert_or_update_fantasy_pros_TE(conn, qb_data):
+    cur = conn.cursor()
+    for row in qb_data:
+        season, week, player_id = row[0], row[1], row[2]
+        
+        # Check if a row exists for the same player_id and week
+        cur.execute("SELECT 1 FROM fantasy_pros_TE WHERE player_id = ? AND week = ?", (player_id, week))
+        exists = cur.fetchone()
+
+        if exists:
+            # Update the existing row if player_id with the same week exists
+            update_columns = [column[1] for column in cur.execute("PRAGMA table_info(fantasy_pros_TE)").fetchall() if column[1] not in ['player_id', 'week', 'rowid', 'season']]
+            update_statement = ", ".join([f"{col} = ?" for col in update_columns])
+            update_values = row[3:]  # Excluding player_id, season, and week from the update values
+            cur.execute(f"UPDATE fantasy_pros_TE SET {update_statement} WHERE player_id = ? AND week = ?", (*update_values, player_id, week))
+        else:
+            # Insert a new row if no matching player_id and week are found
+            column_names = ", ".join([column[1] for column in cur.execute("PRAGMA table_info(fantasy_pros_TE)").fetchall() if column[1] != 'rowid'])
+            placeholders = ', '.join(['?' for _ in row])
+            cur.execute(f"INSERT INTO fantasy_pros_TE ({column_names}) VALUES ({placeholders})", row)
+
+        conn.commit()
+
+def insert_or_update_fantasy_pros_K(conn, qb_data):
+    cur = conn.cursor()
+    for row in qb_data:
+        season, week, player_id = row[0], row[1], row[2]
+        
+        # Check if a row exists for the same player_id and week
+        cur.execute("SELECT 1 FROM fantasy_pros_K WHERE player_id = ? AND week = ?", (player_id, week))
+        exists = cur.fetchone()
+
+        if exists:
+            # Update the existing row if player_id with the same week exists
+            update_columns = [column[1] for column in cur.execute("PRAGMA table_info(fantasy_pros_K)").fetchall() if column[1] not in ['player_id', 'week', 'rowid', 'season']]
+            update_statement = ", ".join([f"{col} = ?" for col in update_columns])
+            update_values = row[3:]  # Excluding player_id, season, and week from the update values
+            cur.execute(f"UPDATE fantasy_pros_K SET {update_statement} WHERE player_id = ? AND week = ?", (*update_values, player_id, week))
+        else:
+            # Insert a new row if no matching player_id and week are found
+            column_names = ", ".join([column[1] for column in cur.execute("PRAGMA table_info(fantasy_pros_K)").fetchall() if column[1] != 'rowid'])
+            placeholders = ', '.join(['?' for _ in row])
+            cur.execute(f"INSERT INTO fantasy_pros_K ({column_names}) VALUES ({placeholders})", row)
+
+        conn.commit()
+
+def insert_or_update_fantasy_pros_Def(conn, qb_data):
+    cur = conn.cursor()
+    for row in qb_data:
+        season, week, team_id = row[0], row[1], row[2]
+        
+        # Check if a row exists for the same team_id and week
+        cur.execute("SELECT 1 FROM fantasy_pros_Def WHERE team_id = ? AND week = ?", (team_id, week))
+        exists = cur.fetchone()
+
+        if exists:
+            # Update the existing row if team_id with the same week exists
+            update_columns = [column[1] for column in cur.execute("PRAGMA table_info(fantasy_pros_Def)").fetchall() if column[1] not in ['team_id', 'week', 'rowid', 'season']]
+            update_statement = ", ".join([f"{col} = ?" for col in update_columns])
+            update_values = row[3:]  # Excluding team_id, season, and week from the update values
+            cur.execute(f"UPDATE fantasy_pros_Def SET {update_statement} WHERE team_id = ? AND week = ?", (*update_values, team_id, week))
+        else:
+            # Insert a new row if no matching team_id and week are found
+            column_names = ", ".join([column[1] for column in cur.execute("PRAGMA table_info(fantasy_pros_Def)").fetchall() if column[1] != 'rowid'])
+            placeholders = ', '.join(['?' for _ in row])
+            cur.execute(f"INSERT INTO fantasy_pros_Def ({column_names}) VALUES ({placeholders})", row)
+
+        conn.commit()
 if __name__ == '__main__':
     # Create a connection to the database
     conn = create_connection()
