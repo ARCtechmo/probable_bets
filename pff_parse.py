@@ -14,8 +14,10 @@
 ## task: create the tables and functions in database.py
 
 # loop over the dictionary and pull the keys and values
+from database import create_connection
 import json
 import os
+import re
 
 def read_json(file):
     with open(file, 'r') as f:
@@ -54,22 +56,98 @@ def extract_player_props(data):
 
     return keys_order, player_props_list
 
-def main():
-    file = 'pff_prop_bets.json'
 
-    # Check if the file exists in the current directory
-    if not os.path.exists(file):  
-        print(f"{file} not in the directory.")  
-        return  
+# fixme: function mostly works but some names with Jr. are left out
+def query_athlete_id(conn, standardized_name, suffix='', team=None, position=None):
+    # Initialize cursor
+    cursor = conn.cursor()
+
+    # Split the standardized name into first and last names
+    name_parts = standardized_name.split()
+    first_name = name_parts[0]
+    last_name = name_parts[-1] if len(name_parts) > 1 else ''
+
+    # Initial query based on name
+    query = """
+    SELECT id FROM athletes
+    WHERE LOWER(firstName) = LOWER(?) AND LOWER(lastName) = LOWER(?)
+    """
+    params = (first_name, last_name)
+    cursor.execute(query, params)
+    results = cursor.fetchall()
+
+    # If one match is found, return the athlete ID
+    if len(results) == 1:
+        return results[0][0]
+
+    # If no direct match, perform enhanced query considering team and position
+    if len(results) > 1 and (team or position):
+        enhanced_query = """
+        SELECT id FROM athletes
+        WHERE LOWER(firstName) = ? AND LOWER(lastName) = ? AND (teamCode = ? OR position = ?)
+        """
+        enhanced_params = (first_name, last_name, team, position)
+        cursor.execute(enhanced_query, enhanced_params)
+        enhanced_results = cursor.fetchall()
+
+        # If one match is found with enhanced criteria, return the athlete ID
+        if len(enhanced_results) == 1:
+            return enhanced_results[0][0]
+
+    # No match found or multiple ambiguous matches
+    return None
+
+def insert_athlete_id(conn, player_props_list):
+    # Iterate over player_props_list and update with athlete IDs
+    updated_player_props_list = []
+    for player_prop in player_props_list:
+        player_name = player_prop[1]  
+
+        # Query for athlete ID using the player name directly
+        athlete_id = query_athlete_id(conn, player_name)
+
+        # Replace player name with athlete ID in the list
+        updated_prop = player_prop.copy()
+        updated_prop[1] = athlete_id if athlete_id else player_prop[1]  # Keep original name if ID not found
+
+        updated_player_props_list.append(updated_prop)
+    return updated_player_props_list
+
+def main():
+    conn = create_connection()
+
+    # Pattern to match files like 
+    file_pattern = re.compile(r'pff_prop_bets.*\.json$')
+
+    matched_files = [f for f in os.listdir('.') if file_pattern.match(f)]
+    if not matched_files:
+        print("No matching 'pff_prop_bets' file found in the directory.")
+        return
+
+    # sort the files to get the most recent one, if needed
+    latest_file = sorted(matched_files, reverse=True)[0]
+
+    # use the first matched file
+    # file = matched_files[0]
     
-    data = read_json(file)
+    data = read_json(latest_file)
     keys_order, player_props_list = extract_player_props(data)
 
-    print("props columns length:", len(keys_order))
-    print(("props values length: "),len(player_props_list[0]))
 
-    print("\nKeys:", keys_order)
-    print("\nValues:", player_props_list[0])
+    # test to make sure key, value lengths match
+    # print("props columns length:", len(keys_order))
+    # print(("props values length: "),len(player_props_list[0]))
+
+    # print("\nKeys:", keys_order)
+    # print("\nValues:", player_props_list[0])
+
+    # updated_player_props_list
+    updated_player_props_list = insert_athlete_id(conn, player_props_list)
+    # print("\nUpdated Values:", updated_player_props_list[0])
+
+    ## test loop ##
+    for player in updated_player_props_list:
+        print(player)
 
 if __name__ == "__main__":
     main()
