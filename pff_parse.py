@@ -57,43 +57,73 @@ def extract_player_props(data):
     return keys_order, player_props_list
 
 
-# fixme: function mostly works but some names with Jr. are left out
+# match the player to the athlete foriegn ke
 def query_athlete_id(conn, standardized_name, suffix='', team=None, position=None):
     # Initialize cursor
     cursor = conn.cursor()
 
+    # Helper function to toggle periods in abbreviations
+    def toggle_periods(name_part):
+        if '.' in name_part:  
+            
+            # Remove periods if present
+            return name_part.replace('.', '')
+        if len(name_part) <= 2:  
+            
+            # Assume it's an abbreviation if 1 or 2 characters long
+            return f"{name_part[0]}.{name_part[1]}." if len(name_part) == 2 else f"{name_part}."  # Add periods
+        return name_part
+
     # Split the standardized name into first and last names
     name_parts = standardized_name.split()
     first_name = name_parts[0]
-    last_name = name_parts[-1] if len(name_parts) > 1 else ''
+    first_name_alternate = toggle_periods(first_name)
+    last_name = " ".join(name_parts[1:])
 
     # Initial query based on name
     query = """
     SELECT id FROM athletes
-    WHERE LOWER(firstName) = LOWER(?) AND LOWER(lastName) = LOWER(?)
+    WHERE (LOWER(firstName) = LOWER(?) OR LOWER(firstName) = LOWER(?)) AND LOWER(lastName) = LOWER(?)
     """
-    params = (first_name, last_name)
+    params = (first_name, first_name_alternate, last_name)
     cursor.execute(query, params)
     results = cursor.fetchall()
 
     # If one match is found, return the athlete ID
     if len(results) == 1:
         return results[0][0]
+    
+    # If no direct match, try stripping common suffixes and querying again
+    if not results:
+        suffixes = ['Jr.', 'Sr.', 'II', 'III', 'IV']
+        for suffix in suffixes:
+            if last_name.endswith(suffix):
+                last_name_without_suffix = last_name.rsplit(' ', 1)[0]
+                cursor.execute(query, (first_name, first_name_alternate, last_name_without_suffix))
+                results = cursor.fetchall()
+                if len(results) == 1:
+                    return results[0][0]
+                
+                # Exit the loop after trying with the first found suffix
+                break  
 
-    # If no direct match, perform enhanced query considering team and position
+    # If still no match, perform enhanced query considering team and position
     if len(results) > 1 and (team or position):
         enhanced_query = """
         SELECT id FROM athletes
-        WHERE LOWER(firstName) = ? AND LOWER(lastName) = ? AND (teamCode = ? OR position = ?)
+        WHERE LOWER(firstName) = (?) AND LOWER(lastName) = (?) AND (teamCode = (?) OR position = (?))
         """
-        enhanced_params = (first_name, last_name, team, position)
+        enhanced_params = (
+            first_name, last_name, team.lower() 
+            if team else None, position.lower() if position else None
+            )
         cursor.execute(enhanced_query, enhanced_params)
         enhanced_results = cursor.fetchall()
 
         # If one match is found with enhanced criteria, return the athlete ID
         if len(enhanced_results) == 1:
             return enhanced_results[0][0]
-
+    
     # No match found or multiple ambiguous matches
     return None
 
