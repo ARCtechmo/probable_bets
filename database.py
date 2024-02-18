@@ -7,6 +7,8 @@ def create_connection():
     conn = sqlite3.connect('database.db')
     return conn
 
+## task: create the pro_football_focus table and the function to export the data
+## NOTE: you will need to allow NULL values for the athlete
 def create_tables(conn):
     cur = conn.cursor()
     cur.executescript(
