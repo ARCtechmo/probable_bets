@@ -5,13 +5,11 @@
 # NOTE: the json file has two sections: game props and player props 
 # NOTE: some player "projections" props missing becuase odds are available 24 to 36 hours prior to kickoff.
 
-
-## task: test to ensure all of the foreign keys match the players, teams, positions with multiple json files
-## task: create the tables and functions in database.py
-## NOTE: you will need to allow NULL values for the athlete
-
 # loop over the dictionary and pull the keys and values
-from database import create_connection
+from database import (
+create_connection,
+insert_or_update_pro_football_focus
+) 
 import json
 import os
 import re
@@ -257,31 +255,17 @@ def main():
     data = read_json(latest_file)
     keys_order, player_props_list = extract_player_props(data)
 
-
     # test to make sure key, value lengths match
     # print("props columns length:", len(keys_order))
     # print(("props values length: "),len(player_props_list[0]))
 
-    # print("\nKeys:", keys_order)
-    # print("\nValues:", player_props_list[0])
-
-    ## test loop ##
-    # updated_player_props_list
-    # updated_player_props_list_athlete_id = insert_athlete_id(conn, player_props_list)
-    # for player in updated_player_props_list_athlete_id:
-    #     print(player)
-    
-    ## test loop ##
-    # updated_player_props_list
-    # updated_player_props_list_athlete_team_id = match_and_replace_team_abbreviations(conn, player_props_list)
-    # for player in updated_player_props_list_athlete_team_id:
-    #     print(player)
-
-    ## test loop ##
+    ## export function is from database.py ##
     # final_updated_player_props_list
+    ## export the array into the database ##
     final_updated_player_props_list_athlete_team_position_id = match_and_replace_position_abbreviations(conn, player_props_list)
     for player in final_updated_player_props_list_athlete_team_position_id:
         print(player)
+        insert_or_update_pro_football_focus(conn, player)
 
 if __name__ == "__main__":
     main()
