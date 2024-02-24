@@ -1,4 +1,4 @@
-# build a simple database for demo
+# construct the database
 import sqlite3
 import hashlib
 
@@ -7,8 +7,6 @@ def create_connection():
     conn = sqlite3.connect('database.db')
     return conn
 
-## task: create the pro_football_focus table and the function to export the data
-## NOTE: you will need to allow NULL values for the athlete
 def create_tables(conn):
     cur = conn.cursor()
     cur.executescript(
@@ -415,7 +413,25 @@ def create_tables(conn):
         def_ff REAL,
         def_fr REAL,
         def_retd REAL
+    );
+
+        CREATE TABLE IF NOT EXISTS pro_football_focus(
+        props_last_updated_at DATE,
+        player_id INTEGER,
+        position_id INTEGER,
+        team_id INTEGER,
+        opponent_team_id INTEGER,
+        prop_type TEXT,
+        projection TEXT,
+        line REAL,
+        over INTEGER,
+        under INTEGER,
+        FOREIGN KEY (player_id) REFERENCES athletes(id),
+        FOREIGN KEY (position_id) REFERENCES positions(id),
+        FOREIGN KEY (team_id) REFERENCES teams(id),
+        FOREIGN KEY (opponent_team_id) REFERENCES teams(id)
     )
+
         '''
     )
     conn.commit()
@@ -767,6 +783,63 @@ def insert_or_update_fantasy_pros_Def(conn, qb_data):
             cur.execute(f"INSERT INTO fantasy_pros_Def ({column_names}) VALUES ({placeholders})", row)
 
         conn.commit()
+
+def insert_or_update_pro_football_focus(conn, pff_data):
+    # Extract data from pff_data
+    (props_last_updated_at, 
+     player_id, position_id, team_id, opponent_team_id, 
+     prop_type, projection, 
+     line, over, under) = pff_data
+
+    # Create a cursor object
+    cur = conn.cursor()
+
+    # Determine if we should check for a row with a NULL player_id
+    player_id_check = "player_id IS NULL" if player_id is None else "player_id = ?"
+
+    # Prepare the SQL query to check for an existing entry
+    query = f"""
+        SELECT * FROM pro_football_focus 
+        WHERE {player_id_check} AND position_id = ? AND team_id = ? 
+        AND opponent_team_id = ? AND prop_type = ? AND projection = ? AND line = ? 
+        AND over = ? AND under = ?
+    """
+
+    # Prepare the parameters for the SQL query, excluding the player_id if it is NULL
+    params = [position_id, team_id, opponent_team_id, prop_type, 
+              projection, line, over, under]
+    if player_id is not None:
+        params.insert(0, player_id)
+
+    # Execute the query to check for an existing entry
+    cur.execute(query, params)
+    existing_entry = cur.fetchone()
+
+    # Update or insert the entry based on the existence check
+    if existing_entry:
+        # Only update if player_id is not NULL
+        if player_id is not None:
+            update_query = """
+                UPDATE pro_football_focus 
+                SET props_last_updated_at = ?, projection = ?, line = ?, over = ?, under = ? 
+                WHERE player_id = ? AND position_id = ? AND team_id = ? 
+                AND opponent_team_id = ? AND prop_type = ?
+            """
+            cur.execute(update_query, (props_last_updated_at, projection, line, over, under, 
+                                       player_id, position_id, team_id, opponent_team_id, prop_type))
+    else:
+        # Insert a new entry
+        insert_query = """
+            INSERT INTO pro_football_focus (props_last_updated_at, player_id, position_id, team_id, opponent_team_id, prop_type, projection, line, over, under) 
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        """
+        cur.execute(insert_query, (props_last_updated_at, player_id, position_id, team_id, opponent_team_id, 
+                                   prop_type, projection, line, over, under))
+
+    # Commit the transaction
+    conn.commit()
+
+
 if __name__ == '__main__':
     # Create a connection to the database
     conn = create_connection()
