@@ -430,6 +430,85 @@ def create_tables(conn):
         FOREIGN KEY (position_id) REFERENCES positions(id),
         FOREIGN KEY (team_id) REFERENCES teams(id),
         FOREIGN KEY (opponent_team_id) REFERENCES teams(id)
+    );
+
+        CREATE TABLE IF NOT EXISTS draft_kings_lines(
+        gameID INT,
+        gameDate DATE,
+        homeTeam INT,
+        awayTeam INT,
+        moneyline INT,
+        moneylineWinPct INT,
+        spread INT,
+        spreadML INT,
+        spreadWinPct INT,
+        overUnder INT,
+        overUnderMoneyline INT,
+        overUnderWinPercentage INT,
+        predictedHomeTeamScore INT,
+        predictedOpponentTeamScore INT,
+        FOREIGN KEY (homeTeam) REFERENCES teams(id),
+        FOREIGN KEY (awayTeam) REFERENCES teams(id)
+
+    );
+
+        CREATE TABLE IF NOT EXISTS fanduel_lines(
+        gameID INT,
+        gameDate DATE,
+        homeTeam INT,
+        awayTeam INT,
+        moneyline INT,
+        moneylineWinPct INT,
+        spread INT,
+        spreadML INT,
+        spreadWinPct INT,
+        overUnder INT,
+        overUnderMoneyline INT,
+        overUnderWinPercentage INT,
+        predictedHomeTeamScore INT,
+        predictedOpponentTeamScore INT,
+        FOREIGN KEY (homeTeam) REFERENCES teams(id),
+        FOREIGN KEY (awayTeam) REFERENCES teams(id)
+
+    );
+
+        CREATE TABLE IF NOT EXISTS mgm_lines(
+        gameID INT,
+        gameDate DATE,
+        homeTeam INT,
+        awayTeam INT,
+        moneyline INT,
+        moneylineWinPct INT,
+        spread INT,
+        spreadML INT,
+        spreadWinPct INT,
+        overUnder INT,
+        overUnderMoneyline INT,
+        overUnderWinPercentage INT,
+        predictedHomeTeamScore INT,
+        predictedOpponentTeamScore INT,
+        FOREIGN KEY (homeTeam) REFERENCES teams(id),
+        FOREIGN KEY (awayTeam) REFERENCES teams(id)
+
+    );
+
+        CREATE TABLE IF NOT EXISTS pointsbet_lines(
+        gameID INT,
+        gameDate DATE,
+        homeTeam INT,
+        awayTeam INT,
+        moneyline INT,
+        moneylineWinPct INT,
+        spread INT,
+        spreadML INT,
+        spreadWinPct INT,
+        overUnder INT,
+        overUnderMoneyline INT,
+        overUnderWinPercentage INT,
+        predictedHomeTeamScore INT,
+        predictedOpponentTeamScore INT,
+        FOREIGN KEY (homeTeam) REFERENCES teams(id),
+        FOREIGN KEY (awayTeam) REFERENCES teams(id)
     )
 
         '''
@@ -839,7 +918,250 @@ def insert_or_update_pro_football_focus(conn, pff_data):
     # Commit the transaction
     conn.commit()
 
+def insert_or_update_draft_kings(conn, dk_data):
 
+    # extract data from draftKings array
+    (gameID, gameDate, homeTeam, awayTeam, 
+     moneyline, moneylineWinPct, spread,
+     spreadML, spreadWinPct, overUnder, 
+     overUnderMoneyline, overUnderWinPercentage, predictedHomeTeamScore,
+     predictedOpponentTeamScore
+     ) = dk_data
+
+    # create the cursor object
+    cur = conn.cursor()
+
+    # Prepare the SQL query to check for an existing entry
+    query = f""" 
+        SELECT * FROM draft_kings_lines 
+        WHERE gameID = ? AND gameDate = ? AND homeTeam = ? AND awayTeam = ? AND
+        moneyline = ? AND moneylineWinPct = ? AND spread = ? AND
+        spreadML = ? AND spreadWinPct = ? AND overUnder = ? AND overUnderMoneyline = ? AND 
+        overUnderWinPercentage = ? AND predictedHomeTeamScore = ? AND
+        predictedOpponentTeamScore = ?
+        """
+
+    # prepare the parameters for the sql query
+    params = [gameID, gameDate, homeTeam, awayTeam,
+        moneyline, moneylineWinPct, spread,
+        spreadML, spreadWinPct, overUnder, overUnderMoneyline, 
+        overUnderWinPercentage, predictedHomeTeamScore,
+        predictedOpponentTeamScore
+        ]
+    
+    # Execute the query to check for an existing entry
+    cur.execute(query, params)
+    existing_entry = cur.fetchone()
+
+    # Update or insert the entry based on the existence check
+    if existing_entry:
+        pass
+    else:
+        # Insert a new entry
+       insert_query = """INSERT INTO draft_kings_lines
+       (
+        gameID, gameDate, homeTeam, awayTeam,
+        moneyline, moneylineWinPct, spread,
+        spreadML, spreadWinPct, overUnder, overUnderMoneyline, 
+        overUnderWinPercentage, predictedHomeTeamScore,
+        predictedOpponentTeamScore
+       ) 
+       VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+       """
+       cur.execute(insert_query,(
+            gameID, gameDate, homeTeam, awayTeam,
+            moneyline, moneylineWinPct, spread,
+            spreadML, spreadWinPct, overUnder, overUnderMoneyline, 
+            overUnderWinPercentage, predictedHomeTeamScore,
+            predictedOpponentTeamScore
+        ))
+    
+    # commit the transaction
+    conn.commit()
+
+def insert_or_update_fanduels(conn, fd_data):
+
+    # extract data from draftKings array
+    (gameID, gameDate, homeTeam, awayTeam, 
+     moneyline, moneylineWinPct, spread,
+     spreadML, spreadWinPct, overUnder, 
+     overUnderMoneyline, overUnderWinPercentage, predictedHomeTeamScore,
+     predictedOpponentTeamScore
+     ) = fd_data
+
+    # create the cursor object
+    cur = conn.cursor()
+
+    # Prepare the SQL query to check for an existing entry
+    query = f""" 
+        SELECT * FROM fanduel_lines 
+        WHERE gameID = ? AND gameDate = ? AND homeTeam = ? AND awayTeam = ? AND
+        moneyline = ? AND moneylineWinPct = ? AND spread = ? AND
+        spreadML = ? AND spreadWinPct = ? AND overUnder = ? AND overUnderMoneyline = ? AND 
+        overUnderWinPercentage = ? AND predictedHomeTeamScore = ? AND
+        predictedOpponentTeamScore = ?
+        """
+
+    # prepare the parameters for the sql query
+    params = [gameID, gameDate, homeTeam, awayTeam,
+        moneyline, moneylineWinPct, spread,
+        spreadML, spreadWinPct, overUnder, overUnderMoneyline, 
+        overUnderWinPercentage, predictedHomeTeamScore,
+        predictedOpponentTeamScore
+        ]
+    
+    # Execute the query to check for an existing entry
+    cur.execute(query, params)
+    existing_entry = cur.fetchone()
+
+    # Update or insert the entry based on the existence check
+    if existing_entry:
+        pass
+    else:
+        # Insert a new entry
+       insert_query = """INSERT INTO fanduel_lines
+       (
+        gameID, gameDate, homeTeam, awayTeam,
+        moneyline, moneylineWinPct, spread,
+        spreadML, spreadWinPct, overUnder, overUnderMoneyline, 
+        overUnderWinPercentage, predictedHomeTeamScore,
+        predictedOpponentTeamScore
+       ) 
+       VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+       """
+       cur.execute(insert_query,(
+            gameID, gameDate, homeTeam, awayTeam,
+            moneyline, moneylineWinPct, spread,
+            spreadML, spreadWinPct, overUnder, overUnderMoneyline, 
+            overUnderWinPercentage, predictedHomeTeamScore,
+            predictedOpponentTeamScore
+        ))
+    
+    # commit the transaction
+    conn.commit()
+
+def insert_or_update_mgm(conn, mgm_data):
+
+    # extract data from draftKings array
+    (gameID, gameDate, homeTeam, awayTeam, 
+     moneyline, moneylineWinPct, spread,
+     spreadML, spreadWinPct, overUnder, 
+     overUnderMoneyline, overUnderWinPercentage, predictedHomeTeamScore,
+     predictedOpponentTeamScore
+     ) = mgm_data
+
+    # create the cursor object
+    cur = conn.cursor()
+
+    # Prepare the SQL query to check for an existing entry
+    query = f""" 
+        SELECT * FROM mgm_lines 
+        WHERE gameID = ? AND gameDate = ? AND homeTeam = ? AND awayTeam = ? AND
+        moneyline = ? AND moneylineWinPct = ? AND spread = ? AND
+        spreadML = ? AND spreadWinPct = ? AND overUnder = ? AND overUnderMoneyline = ? AND 
+        overUnderWinPercentage = ? AND predictedHomeTeamScore = ? AND
+        predictedOpponentTeamScore = ?
+        """
+
+    # prepare the parameters for the sql query
+    params = [gameID, gameDate, homeTeam, awayTeam,
+        moneyline, moneylineWinPct, spread,
+        spreadML, spreadWinPct, overUnder, overUnderMoneyline, 
+        overUnderWinPercentage, predictedHomeTeamScore,
+        predictedOpponentTeamScore
+        ]
+    
+    # Execute the query to check for an existing entry
+    cur.execute(query, params)
+    existing_entry = cur.fetchone()
+
+    # Update or insert the entry based on the existence check
+    if existing_entry:
+        pass
+    else:
+        # Insert a new entry
+       insert_query = """INSERT INTO mgm_lines
+       (
+        gameID, gameDate, homeTeam, awayTeam,
+        moneyline, moneylineWinPct, spread,
+        spreadML, spreadWinPct, overUnder, overUnderMoneyline, 
+        overUnderWinPercentage, predictedHomeTeamScore,
+        predictedOpponentTeamScore
+       ) 
+       VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+       """
+       cur.execute(insert_query,(
+            gameID, gameDate, homeTeam, awayTeam,
+            moneyline, moneylineWinPct, spread,
+            spreadML, spreadWinPct, overUnder, overUnderMoneyline, 
+            overUnderWinPercentage, predictedHomeTeamScore,
+            predictedOpponentTeamScore
+        ))
+    
+    # commit the transaction
+    conn.commit()
+
+def insert_or_update_pointsbet(conn, pb_data):
+
+    # extract data from draftKings array
+    (gameID, gameDate, homeTeam, awayTeam, 
+     moneyline, moneylineWinPct, spread,
+     spreadML, spreadWinPct, overUnder, 
+     overUnderMoneyline, overUnderWinPercentage, predictedHomeTeamScore,
+     predictedOpponentTeamScore
+     ) = pb_data
+
+    # create the cursor object
+    cur = conn.cursor()
+
+    # Prepare the SQL query to check for an existing entry
+    query = f""" 
+        SELECT * FROM pointsbet_lines 
+        WHERE gameID = ? AND gameDate = ? AND homeTeam = ? AND awayTeam = ? AND
+        moneyline = ? AND moneylineWinPct = ? AND spread = ? AND
+        spreadML = ? AND spreadWinPct = ? AND overUnder = ? AND overUnderMoneyline = ? AND 
+        overUnderWinPercentage = ? AND predictedHomeTeamScore = ? AND
+        predictedOpponentTeamScore = ?
+        """
+
+    # prepare the parameters for the sql query
+    params = [gameID, gameDate, homeTeam, awayTeam,
+        moneyline, moneylineWinPct, spread,
+        spreadML, spreadWinPct, overUnder, overUnderMoneyline, 
+        overUnderWinPercentage, predictedHomeTeamScore,
+        predictedOpponentTeamScore
+        ]
+    
+    # Execute the query to check for an existing entry
+    cur.execute(query, params)
+    existing_entry = cur.fetchone()
+
+    # Update or insert the entry based on the existence check
+    if existing_entry:
+        pass
+    else:
+        # Insert a new entry
+       insert_query = """INSERT INTO pointsbet_lines
+       (
+        gameID, gameDate, homeTeam, awayTeam,
+        moneyline, moneylineWinPct, spread,
+        spreadML, spreadWinPct, overUnder, overUnderMoneyline, 
+        overUnderWinPercentage, predictedHomeTeamScore,
+        predictedOpponentTeamScore
+       ) 
+       VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+       """
+       cur.execute(insert_query,(
+            gameID, gameDate, homeTeam, awayTeam,
+            moneyline, moneylineWinPct, spread,
+            spreadML, spreadWinPct, overUnder, overUnderMoneyline, 
+            overUnderWinPercentage, predictedHomeTeamScore,
+            predictedOpponentTeamScore
+        ))
+    
+    # commit the transaction
+    conn.commit()
+    
 if __name__ == '__main__':
     # Create a connection to the database
     conn = create_connection()
