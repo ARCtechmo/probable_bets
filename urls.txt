@@ -22,16 +22,41 @@ https://slatedocs.github.io/slate/?python#authentication
 rotowire
 https://www.rotowire.com/betting/nfl/tables/nfl-games.php?week=2
 
-airyards.com
+
+nfl_data-py - a Python library for interacting with NFL data 
+sourced from nflfastR, nfldata, dynastyprocess, and Draft Scout
+has airyards
+https://pypi.org/project/nfl-data-py/
+https://github.com/cooperdff/nfl_data_py
+
+
+---------------- has an app via Github ---------------
+The TheScout - arjunmenon10 - app written in R availabe 
+based on other public data (e.g. nflreader)
+explosive lays given up by defenses
+https://github.com/arjunmenon10/TheScout
+
+
+-------------------- Either No Data or manual downloads of csv files --------------
+Pro-football Reference - no API but csv available
+airyards and Fantasy Points Against
+https://www.pro-football-reference.com/years/2023/fantasy-points-against-WR.htm#fantasy_def
+
+
+NFL Fantasy Points Against no API and no csv
+https://fantasy.nfl.com/research/pointsagainst
+
+airyards.com - no API but csv available
 https://apps.airyards.com
 
-rotocurve
+rotocurve - no API
 https://rotocurve.com/nfl/weekly-betting-lines-odds/
 
-thelines.com game totals and implied team totals (No API and blocks scraping)
+thelines.com  - No API and blocks scraping
+game totals and implied team totals 
 https://www.thelines.com/betting/nfl/implied-team-totals/
 
-4for4 Air Yards
+4for4 Air Yards - no API
 https://nfl-air-yards.uc.r.appspot.com/query?weeks=1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18&min-targets=0&sort-col=7&sort-asc=F&page=0
 
 
