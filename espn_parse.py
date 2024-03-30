@@ -332,9 +332,12 @@ def main():
     regex_pattern = '^espn_([a-z]+)_([a-zA-Z]+)_page\d+_\d+(?:_wk\d+)?\.json$'
 
     files = [f for f in all_files if re.match(regex_pattern, f)]
+
+    # test print: files
+    # print(files)
     
     # test print: length of files list
-    print(f"Number of espn json files: {len(files)}")
+    # print(f"Number of espn json files: {len(files)}")
 
     # initialize empty lists
     week_list = []
@@ -362,13 +365,25 @@ def main():
     nested_positions_list = []  
     nested_athletes_list = []  
     
+
+    #task
+    ## WORK IN NEW BRANCH fix_espn_parse ###
+    ## does not upload multiple files
+    ## only uploaded week 6
+    ## too many prompts when not current year so get rid of that
     for file in files:
 
-        # check if the file contains the current year
-        if year not in file:
-            proceed = input(f"The file {file} is not from the current year {year}. Do you want to proceed? (y/n): ")
-            if proceed.lower() != 'y':
-                continue  # skip to the next file if user says no
+        ## TEST Results: 
+
+        ## 1) successful imports for the following files:
+        # -espn_defensive, espn_kicking, espn_passing, and espn_punting
+        
+        ## 2) success imports combining multiple files
+        # -espn_defensive,  espn_kicking, espn_passing, espn_punting
+
+        #fixme - This is the problem
+        ## 3) error messages on espn_receiving
+
 
         # Reset the lists for each JSON file
         status_list = []
