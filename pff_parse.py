@@ -1,9 +1,8 @@
 ## parse the pff json file ##
 
-# Notes on the json file
-# NOTE: you will need two tables: pff_player_props, pff_team_props
-# NOTE: the json file has two sections: game props and player props 
-# NOTE: some player "projections" props missing becuase odds are available 24 to 36 hours prior to kickoff.
+## task: complete testing for all json files input / output 
+#(look in the file_dump)
+
 
 # loop over the dictionary and pull the keys and values
 from database import (

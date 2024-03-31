@@ -1,7 +1,6 @@
 
-## Task: Test output
-# Download a new set of espn json files
-# run SQL queries and compare the output with the actual stats on the site
+#TASK
+# run SQL queries and compare the output with the actual stats on ESPN
 
 # parse the json data
 import database
@@ -365,23 +364,7 @@ def main():
     nested_positions_list = []  
     nested_athletes_list = []  
     
-    #task
-    ## WORK IN NEW BRANCH fix_espn_parse ###
     for file in files:
-
-        ## TEST Results: corrupt json files caused the issue
-        # 1) successful imports for the following files when corrupted files removed:        
-        # -espn_defensive
-        # -espn_kicking
-        # -espn_passing
-        # -espn_punting
-        # -espn_receiving
-        # -espn_returning
-        # -espn_rushing
-        # -espn_scoring
-
-        #This problem is resolved 
-        ## 2) 3 corrupt espn_receiving* files caused error messages 
 
         # Reset the lists for each JSON file
         status_list = []
