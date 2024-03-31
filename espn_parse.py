@@ -365,25 +365,23 @@ def main():
     nested_positions_list = []  
     nested_athletes_list = []  
     
-
     #task
     ## WORK IN NEW BRANCH fix_espn_parse ###
-    ## does not upload multiple files
-    ## only uploaded week 6
-    ## too many prompts when not current year so get rid of that
     for file in files:
 
-        ## TEST Results: 
+        ## TEST Results: corrupt json files caused the issue
+        # 1) successful imports for the following files when corrupted files removed:        
+        # -espn_defensive
+        # -espn_kicking
+        # -espn_passing
+        # -espn_punting
+        # -espn_receiving
+        # -espn_returning
+        # -espn_rushing
+        # -espn_scoring
 
-        ## 1) successful imports for the following files:
-        # -espn_defensive, espn_kicking, espn_passing, and espn_punting
-        
-        ## 2) success imports combining multiple files
-        # -espn_defensive,  espn_kicking, espn_passing, espn_punting
-
-        #fixme - This is the problem
-        ## 3) error messages on espn_receiving
-
+        #This problem is resolved 
+        ## 2) 3 corrupt espn_receiving* files caused error messages 
 
         # Reset the lists for each JSON file
         status_list = []

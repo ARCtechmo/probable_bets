@@ -1,0 +1,3171 @@
+{
+    "pagination": {
+        "count": 104,
+        "limit": 50,
+        "page": 3,
+        "pages": 3,
+        "first": "http://site.api.espn.com:80/apis/common/v3/sports/football/nfl/statistics/byathlete?category=offense%3Apassing&contentorigin=espn&isqualified=false&lang=en&region=us&season=2023&seasontype=2&sort=passing.passingYards%3Adesc&limit=50",
+        "prev": "http://site.api.espn.com:80/apis/common/v3/sports/football/nfl/statistics/byathlete?category=offense%3Apassing&contentorigin=espn&isqualified=false&lang=en&region=us&season=2023&seasontype=2&sort=passing.passingYards%3Adesc&limit=50&page=2",
+        "last": "http://site.api.espn.com:80/apis/common/v3/sports/football/nfl/statistics/byathlete?category=offense%3Apassing&contentorigin=espn&isqualified=false&lang=en&region=us&season=2023&seasontype=2&sort=passing.passingYards%3Adesc&limit=50&page=3"
+    },
+    "league": {
+        "id": "28",
+        "uid": "s:20~l:28",
+        "name": "National Football League",
+        "abbreviation": "NFL",
+        "slug": "nfl",
+        "shortName": "NFL"
+    },
+    "athletes": [
+        {
+            "athlete": {
+                "id": "4569618",
+                "uid": "s:20~l:28~a:4569618",
+                "guid": "da106063-995d-eaf0-54e4-ccecd5e90767",
+                "type": "football",
+                "firstName": "Garrett",
+                "lastName": "Wilson",
+                "displayName": "Garrett Wilson",
+                "shortName": "G. Wilson",
+                "links": [
+                    {
+                        "language": "en-US",
+                        "rel": [
+                            "playercard",
+                            "desktop",
+                            "athlete"
+                        ],
+                        "href": "http://www.espn.com/nfl/player/_/id/4569618/garrett-wilson",
+                        "text": "Player Card",
+                        "shortText": "Player Card",
+                        "isExternal": false,
+                        "isPremium": false
+                    },
+                    {
+                        "language": "en-US",
+                        "rel": [
+                            "stats",
+                            "desktop",
+                            "athlete"
+                        ],
+                        "href": "http://www.espn.com/nfl/player/stats/_/id/4569618/garrett-wilson",
+                        "text": "Stats",
+                        "shortText": "Stats",
+                        "isExternal": false,
+                        "isPremium": false
+                    },
+                    {
+                        "language": "en-US",
+                        "rel": [
+                            "splits",
+                            "desktop",
+                            "athlete"
+                        ],
+                        "href": "http://www.espn.com/nfl/player/splits/_/id/4569618/garrett-wilson",
+                        "text": "Splits",
+                        "shortText": "Splits",
+                        "isExternal": false,
+                        "isPremium": false
+                    },
+                    {
+                        "language": "en-US",
+                        "rel": [
+                            "gamelog",
+                            "desktop",
+                            "athlete"
+                        ],
+                        "href": "http://www.espn.com/nfl/player/gamelog/_/id/4569618/garrett-wilson",
+                        "text": "Game Log",
+                        "shortText": "Game Log",
+                        "isExternal": false,
+                        "isPremium": false
+                    },
+                    {
+                        "language": "en-US",
+                        "rel": [
+                            "news",
+                            "desktop",
+                            "athlete"
+                        ],
+                        "href": "http://www.espn.com/nfl/player/news/_/id/4569618/garrett-wilson",
+                        "text": "News",
+                        "shortText": "News",
+                        "isExternal": false,
+                        "isPremium": false
+                    },
+                    {
+                        "language": "en-US",
+                        "rel": [
+                            "bio",
+                            "desktop",
+                            "athlete"
+                        ],
+                        "href": "http://www.espn.com/nfl/player/bio/_/id/4569618/garrett-wilson",
+                        "text": "Bio",
+                        "shortText": "Bio",
+                        "isExternal": false,
+                        "isPremium": false
+                    },
+                    {
+                        "language": "en-US",
+                        "rel": [
+                            "overview",
+                            "desktop",
+                            "athlete"
+                        ],
+                        "href": "http://www.espn.com/nfl/player/_/id/4569618/garrett-wilson",
+                        "text": "Overview",
+                        "shortText": "Overview",
+                        "isExternal": false,
+                        "isPremium": false
+                    }
+                ],
+                "headshot": {
+                    "href": "https://a.espncdn.com/i/headshots/nfl/players/full/4569618.png",
+                    "alt": "Garrett Wilson"
+                },
+                "position": {
+                    "id": "1",
+                    "name": "Wide Receiver",
+                    "displayName": "Wide Receiver",
+                    "abbreviation": "WR",
+                    "leaf": true,
+                    "parent": {
+                        "leaf": false
+                    },
+                    "slug": "wide-receiver"
+                },
+                "status": {
+                    "id": "1",
+                    "name": "Active",
+                    "type": "active",
+                    "abbreviation": "Active"
+                },
+                "age": 23,
+                "teamName": "Jets",
+                "teamShortName": "NYJ",
+                "teams": [
+                    {
+                        "name": "Jets",
+                        "abbreviation": "NYJ"
+                    }
+                ],
+                "slug": "garrett-wilson",
+                "teamId": "20",
+                "teamUId": "s:20~l:28~t:20",
+                "teamLogos": [
+                    {
+                        "href": "https://a.espncdn.com/i/teamlogos/nfl/500/nyj.png",
+                        "width": 500,
+                        "height": 500,
+                        "rel": [
+                            "full",
+                            "default"
+                        ]
+                    },
+                    {
+                        "href": "https://a.espncdn.com/i/teamlogos/nfl/500-dark/nyj.png",
+                        "width": 500,
+                        "height": 500,
+                        "rel": [
+                            "full",
+                            "dark"
+                        ]
+                    },
+                    {
+                        "href": "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/nyj.png",
+                        "width": 500,
+                        "height": 500,
+                        "rel": [
+                            "full",
+                            "scoreboard"
+                        ]
+                    },
+                    {
+                        "href": "https://a.espncdn.com/i/teamlogos/nfl/500-dark/scoreboard/nyj.png",
+                        "width": 500,
+                        "height": 500,
+                        "rel": [
+                            "full",
+                            "scoreboard",
+                            "dark"
+                        ]
+                    }
+                ]
+            },
+            "categories": [
+                {
+                    "name": "general",
+                    "displayName": "Own General",
+                    "totals": [
+                        "14",
+                        "-",
+                        "-",
+                        "0"
+                    ],
+                    "values": [
+                        14.0,
+                        null,
+                        null,
+                        0.0
+                    ],
+                    "ranks": [
+                        "2",
+                        "-",
+                        "-",
+                        "-"
+                    ]
+                },
+                {
+                    "name": "passing",
+                    "displayName": "Own Passing",
+                    "totals": [
+                        "0",
+                        "1",
+                        "0.0",
+                        "0",
+                        "0.0",
+                        "0.0",
+                        "0",
+                        "0",
+                        "0",
+                        "0",
+                        "0",
+                        "4.7",
+                        "39.6",
+                        "5.3"
+                    ],
+                    "values": [
+                        0.0,
+                        1.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        4.69,
+                        39.58300018310547,
+                        5.33
+                    ],
+                    "ranks": [
+                        "85",
+                        "75",
+                        "85",
+                        "82",
+                        "82",
+                        "41",
+                        "82",
+                        "63",
+                        "1",
+                        "76",
+                        "1",
+                        "-",
+                        "84",
+                        "-"
+                    ]
+                },
+                {
+                    "name": "rushing",
+                    "displayName": "Own Rushing",
+                    "totals": [
+                        "2",
+                        "9",
+                        "4.5",
+                        "6",
+                        "0",
+                        "0",
+                        "0.6",
+                        "0",
+                        "0",
+                        "1"
+                    ],
+                    "values": [
+                        2.0,
+                        9.0,
+                        4.5,
+                        6.0,
+                        0.0,
+                        0.0,
+                        0.6428571343421936,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "ranks": [
+                        "75",
+                        "69",
+                        "30",
+                        "68",
+                        "28",
+                        "41",
+                        "34",
+                        "50",
+                        "29",
+                        "62"
+                    ]
+                },
+                {
+                    "name": "receiving",
+                    "displayName": "Own Receiving",
+                    "totals": [
+                        "79",
+                        "138",
+                        "882",
+                        "11.2",
+                        "3",
+                        "68",
+                        "9",
+                        "63.0",
+                        "2",
+                        "2",
+                        "253",
+                        "39"
+                    ],
+                    "values": [
+                        79.0,
+                        138.0,
+                        882.0,
+                        11.164999961853027,
+                        3.0,
+                        68.0,
+                        9.0,
+                        63.0,
+                        2.0,
+                        2.0,
+                        253.0,
+                        39.0
+                    ],
+                    "ranks": [
+                        "4",
+                        "2",
+                        "4",
+                        "13",
+                        "8",
+                        "2",
+                        "11",
+                        "2",
+                        "2",
+                        "1",
+                        "8",
+                        "6"
+                    ]
+                },
+                {
+                    "name": "defensive",
+                    "displayName": "Own Defensive",
+                    "totals": [
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-"
+                    ],
+                    "values": [
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null
+                    ],
+                    "ranks": [
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-"
+                    ]
+                },
+                {
+                    "name": "defensiveinterceptions",
+                    "displayName": "Own Defensive Interceptions",
+                    "totals": [
+                        "-",
+                        "-",
+                        "-"
+                    ],
+                    "values": [
+                        null,
+                        null,
+                        null
+                    ],
+                    "ranks": [
+                        "-",
+                        "-",
+                        "-"
+                    ]
+                },
+                {
+                    "name": "scoring",
+                    "displayName": "Own Scoring",
+                    "totals": [
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-"
+                    ],
+                    "values": [
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null
+                    ],
+                    "ranks": [
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-"
+                    ]
+                },
+                {
+                    "name": "returning",
+                    "displayName": "Own Returning",
+                    "totals": [
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-"
+                    ],
+                    "values": [
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null
+                    ],
+                    "ranks": [
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-"
+                    ]
+                },
+                {
+                    "name": "kicking",
+                    "displayName": "Own Kicking",
+                    "totals": [
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-"
+                    ],
+                    "values": [
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null
+                    ],
+                    "ranks": [
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-"
+                    ]
+                },
+                {
+                    "name": "punting",
+                    "displayName": "Own Punting",
+                    "totals": [
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-"
+                    ],
+                    "values": [
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null
+                    ],
+                    "ranks": [
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-"
+                    ]
+                }
+            ]
+        },
+        {
+            "athlete": {
+                "id": "16810",
+                "uid": "s:20~l:28~a:16810",
+                "guid": "d06f3109-b034-d70b-fe8a-34cb5f1aea73",
+                "type": "football",
+                "firstName": "AJ",
+                "lastName": "McCarron",
+                "displayName": "AJ McCarron",
+                "shortName": "A. McCarron",
+                "debutYear": 2014,
+                "links": [
+                    {
+                        "language": "en-US",
+                        "rel": [
+                            "playercard",
+                            "desktop",
+                            "athlete"
+                        ],
+                        "href": "http://www.espn.com/nfl/player/_/id/16810/aj-mccarron",
+                        "text": "Player Card",
+                        "shortText": "Player Card",
+                        "isExternal": false,
+                        "isPremium": false
+                    },
+                    {
+                        "language": "en-US",
+                        "rel": [
+                            "stats",
+                            "desktop",
+                            "athlete"
+                        ],
+                        "href": "http://www.espn.com/nfl/player/stats/_/id/16810/aj-mccarron",
+                        "text": "Stats",
+                        "shortText": "Stats",
+                        "isExternal": false,
+                        "isPremium": false
+                    },
+                    {
+                        "language": "en-US",
+                        "rel": [
+                            "splits",
+                            "desktop",
+                            "athlete"
+                        ],
+                        "href": "http://www.espn.com/nfl/player/splits/_/id/16810/aj-mccarron",
+                        "text": "Splits",
+                        "shortText": "Splits",
+                        "isExternal": false,
+                        "isPremium": false
+                    },
+                    {
+                        "language": "en-US",
+                        "rel": [
+                            "gamelog",
+                            "desktop",
+                            "athlete"
+                        ],
+                        "href": "http://www.espn.com/nfl/player/gamelog/_/id/16810/aj-mccarron",
+                        "text": "Game Log",
+                        "shortText": "Game Log",
+                        "isExternal": false,
+                        "isPremium": false
+                    },
+                    {
+                        "language": "en-US",
+                        "rel": [
+                            "news",
+                            "desktop",
+                            "athlete"
+                        ],
+                        "href": "http://www.espn.com/nfl/player/news/_/id/16810/aj-mccarron",
+                        "text": "News",
+                        "shortText": "News",
+                        "isExternal": false,
+                        "isPremium": false
+                    },
+                    {
+                        "language": "en-US",
+                        "rel": [
+                            "bio",
+                            "desktop",
+                            "athlete"
+                        ],
+                        "href": "http://www.espn.com/nfl/player/bio/_/id/16810/aj-mccarron",
+                        "text": "Bio",
+                        "shortText": "Bio",
+                        "isExternal": false,
+                        "isPremium": false
+                    },
+                    {
+                        "language": "en-US",
+                        "rel": [
+                            "overview",
+                            "desktop",
+                            "athlete"
+                        ],
+                        "href": "http://www.espn.com/nfl/player/_/id/16810/aj-mccarron",
+                        "text": "Overview",
+                        "shortText": "Overview",
+                        "isExternal": false,
+                        "isPremium": false
+                    }
+                ],
+                "headshot": {
+                    "href": "https://a.espncdn.com/i/headshots/nfl/players/full/16810.png",
+                    "alt": "AJ McCarron"
+                },
+                "position": {
+                    "id": "8",
+                    "name": "Quarterback",
+                    "displayName": "Quarterback",
+                    "abbreviation": "QB",
+                    "leaf": true,
+                    "parent": {
+                        "leaf": false
+                    },
+                    "slug": "quarterback"
+                },
+                "status": {
+                    "id": "1",
+                    "name": "Active",
+                    "type": "active",
+                    "abbreviation": "Active"
+                },
+                "age": 33,
+                "teamName": "Bengals",
+                "teamShortName": "CIN",
+                "teams": [
+                    {
+                        "name": "Bengals",
+                        "abbreviation": "CIN"
+                    }
+                ],
+                "slug": "aj-mccarron",
+                "teamId": "4",
+                "teamUId": "s:20~l:28~t:4",
+                "teamLogos": [
+                    {
+                        "href": "https://a.espncdn.com/i/teamlogos/nfl/500/cin.png",
+                        "width": 500,
+                        "height": 500,
+                        "rel": [
+                            "full",
+                            "default"
+                        ]
+                    },
+                    {
+                        "href": "https://a.espncdn.com/i/teamlogos/nfl/500-dark/cin.png",
+                        "width": 500,
+                        "height": 500,
+                        "rel": [
+                            "full",
+                            "dark"
+                        ]
+                    },
+                    {
+                        "href": "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/cin.png",
+                        "width": 500,
+                        "height": 500,
+                        "rel": [
+                            "full",
+                            "scoreboard"
+                        ]
+                    },
+                    {
+                        "href": "https://a.espncdn.com/i/teamlogos/nfl/500-dark/scoreboard/cin.png",
+                        "width": 500,
+                        "height": 500,
+                        "rel": [
+                            "full",
+                            "scoreboard",
+                            "dark"
+                        ]
+                    }
+                ]
+            },
+            "categories": [
+                {
+                    "name": "general",
+                    "displayName": "Own General",
+                    "splitId": "0",
+                    "totals": [
+                        "1",
+                        "-",
+                        "-",
+                        "0"
+                    ],
+                    "values": [
+                        1.0,
+                        null,
+                        null,
+                        0.0
+                    ],
+                    "ranks": [
+                        "98",
+                        "-",
+                        "-",
+                        "-"
+                    ]
+                },
+                {
+                    "name": "passing",
+                    "displayName": "Own Passing",
+                    "splitId": "0",
+                    "totals": [
+                        "1",
+                        "1",
+                        "100.0",
+                        "-1",
+                        "-1.0",
+                        "-1.0",
+                        "-1",
+                        "0",
+                        "0",
+                        "0",
+                        "0",
+                        "0.2",
+                        "79.2",
+                        "0.2"
+                    ],
+                    "values": [
+                        1.0,
+                        1.0,
+                        100.0,
+                        -1.0,
+                        -1.0,
+                        -1.0,
+                        -1.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.2,
+                        79.16699981689453,
+                        0.19
+                    ],
+                    "ranks": [
+                        "72",
+                        "75",
+                        "1",
+                        "102",
+                        "103",
+                        "1",
+                        "103",
+                        "63",
+                        "1",
+                        "76",
+                        "1",
+                        "-",
+                        "54",
+                        "-"
+                    ]
+                },
+                {
+                    "name": "rushing",
+                    "displayName": "Own Rushing",
+                    "splitId": "0",
+                    "totals": [
+                        "0",
+                        "0",
+                        "0.0",
+                        "0",
+                        "0",
+                        "0",
+                        "0.0",
+                        "0",
+                        "0",
+                        "0"
+                    ],
+                    "values": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "ranks": [
+                        "92",
+                        "79",
+                        "79",
+                        "82",
+                        "28",
+                        "41",
+                        "0",
+                        "50",
+                        "29",
+                        "74"
+                    ]
+                },
+                {
+                    "name": "receiving",
+                    "displayName": "Own Receiving",
+                    "splitId": "0",
+                    "totals": [
+                        "0",
+                        "0",
+                        "0",
+                        "0.0",
+                        "0",
+                        "0",
+                        "0",
+                        "0.0",
+                        "0",
+                        "0",
+                        "0",
+                        "0"
+                    ],
+                    "values": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "ranks": [
+                        "32",
+                        "32",
+                        "28",
+                        "28",
+                        "20",
+                        "28",
+                        "23",
+                        "0",
+                        "12",
+                        "8",
+                        "30",
+                        "28"
+                    ]
+                },
+                {
+                    "name": "defensive",
+                    "displayName": "Own Defensive",
+                    "splitId": "0",
+                    "totals": [
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-"
+                    ],
+                    "values": [
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null
+                    ],
+                    "ranks": [
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-"
+                    ]
+                },
+                {
+                    "name": "defensiveinterceptions",
+                    "displayName": "Own Defensive Interceptions",
+                    "splitId": "0",
+                    "totals": [
+                        "-",
+                        "-",
+                        "-"
+                    ],
+                    "values": [
+                        null,
+                        null,
+                        null
+                    ],
+                    "ranks": [
+                        "-",
+                        "-",
+                        "-"
+                    ]
+                },
+                {
+                    "name": "scoring",
+                    "displayName": "Own Scoring",
+                    "splitId": "0",
+                    "totals": [
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-"
+                    ],
+                    "values": [
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null
+                    ],
+                    "ranks": [
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-"
+                    ]
+                },
+                {
+                    "name": "returning",
+                    "displayName": "Own Returning",
+                    "splitId": "0",
+                    "totals": [
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-"
+                    ],
+                    "values": [
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null
+                    ],
+                    "ranks": [
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-"
+                    ]
+                },
+                {
+                    "name": "kicking",
+                    "displayName": "Own Kicking",
+                    "splitId": "0",
+                    "totals": [
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-"
+                    ],
+                    "values": [
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null
+                    ],
+                    "ranks": [
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-"
+                    ]
+                },
+                {
+                    "name": "punting",
+                    "displayName": "Own Punting",
+                    "splitId": "0",
+                    "totals": [
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-"
+                    ],
+                    "values": [
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null
+                    ],
+                    "ranks": [
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-"
+                    ]
+                }
+            ]
+        },
+        {
+            "athlete": {
+                "id": "3895856",
+                "uid": "s:20~l:28~a:3895856",
+                "guid": "0c22d637-c0d7-6bac-7333-dc3a992bdc0d",
+                "type": "football",
+                "firstName": "Christian",
+                "lastName": "Kirk",
+                "displayName": "Christian Kirk",
+                "shortName": "C. Kirk",
+                "debutYear": 2018,
+                "links": [
+                    {
+                        "language": "en-US",
+                        "rel": [
+                            "playercard",
+                            "desktop",
+                            "athlete"
+                        ],
+                        "href": "http://www.espn.com/nfl/player/_/id/3895856/christian-kirk",
+                        "text": "Player Card",
+                        "shortText": "Player Card",
+                        "isExternal": false,
+                        "isPremium": false
+                    },
+                    {
+                        "language": "en-US",
+                        "rel": [
+                            "stats",
+                            "desktop",
+                            "athlete"
+                        ],
+                        "href": "http://www.espn.com/nfl/player/stats/_/id/3895856/christian-kirk",
+                        "text": "Stats",
+                        "shortText": "Stats",
+                        "isExternal": false,
+                        "isPremium": false
+                    },
+                    {
+                        "language": "en-US",
+                        "rel": [
+                            "splits",
+                            "desktop",
+                            "athlete"
+                        ],
+                        "href": "http://www.espn.com/nfl/player/splits/_/id/3895856/christian-kirk",
+                        "text": "Splits",
+                        "shortText": "Splits",
+                        "isExternal": false,
+                        "isPremium": false
+                    },
+                    {
+                        "language": "en-US",
+                        "rel": [
+                            "gamelog",
+                            "desktop",
+                            "athlete"
+                        ],
+                        "href": "http://www.espn.com/nfl/player/gamelog/_/id/3895856/christian-kirk",
+                        "text": "Game Log",
+                        "shortText": "Game Log",
+                        "isExternal": false,
+                        "isPremium": false
+                    },
+                    {
+                        "language": "en-US",
+                        "rel": [
+                            "news",
+                            "desktop",
+                            "athlete"
+                        ],
+                        "href": "http://www.espn.com/nfl/player/news/_/id/3895856/christian-kirk",
+                        "text": "News",
+                        "shortText": "News",
+                        "isExternal": false,
+                        "isPremium": false
+                    },
+                    {
+                        "language": "en-US",
+                        "rel": [
+                            "bio",
+                            "desktop",
+                            "athlete"
+                        ],
+                        "href": "http://www.espn.com/nfl/player/bio/_/id/3895856/christian-kirk",
+                        "text": "Bio",
+                        "shortText": "Bio",
+                        "isExternal": false,
+                        "isPremium": false
+                    },
+                    {
+                        "language": "en-US",
+                        "rel": [
+                            "overview",
+                            "desktop",
+                            "athlete"
+                        ],
+                        "href": "http://www.espn.com/nfl/player/_/id/3895856/christian-kirk",
+                        "text": "Overview",
+                        "shortText": "Overview",
+                        "isExternal": false,
+                        "isPremium": false
+                    }
+                ],
+                "headshot": {
+                    "href": "https://a.espncdn.com/i/headshots/nfl/players/full/3895856.png",
+                    "alt": "Christian Kirk"
+                },
+                "position": {
+                    "id": "1",
+                    "name": "Wide Receiver",
+                    "displayName": "Wide Receiver",
+                    "abbreviation": "WR",
+                    "leaf": true,
+                    "parent": {
+                        "leaf": false
+                    },
+                    "slug": "wide-receiver"
+                },
+                "status": {
+                    "id": "13",
+                    "name": "Day-To-Day",
+                    "type": "day-to-day",
+                    "abbreviation": "Day-To-Day"
+                },
+                "age": 27,
+                "teamName": "Jaguars",
+                "teamShortName": "JAX",
+                "teams": [
+                    {
+                        "name": "Jaguars",
+                        "abbreviation": "JAX"
+                    }
+                ],
+                "slug": "christian-kirk",
+                "teamId": "30",
+                "teamUId": "s:20~l:28~t:30",
+                "teamLogos": [
+                    {
+                        "href": "https://a.espncdn.com/i/teamlogos/nfl/500/jax.png",
+                        "width": 500,
+                        "height": 500,
+                        "rel": [
+                            "full",
+                            "default"
+                        ]
+                    },
+                    {
+                        "href": "https://a.espncdn.com/i/teamlogos/nfl/500-dark/jax.png",
+                        "width": 500,
+                        "height": 500,
+                        "rel": [
+                            "full",
+                            "dark"
+                        ]
+                    },
+                    {
+                        "href": "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/jax.png",
+                        "width": 500,
+                        "height": 500,
+                        "rel": [
+                            "full",
+                            "scoreboard"
+                        ]
+                    },
+                    {
+                        "href": "https://a.espncdn.com/i/teamlogos/nfl/500-dark/scoreboard/jax.png",
+                        "width": 500,
+                        "height": 500,
+                        "rel": [
+                            "full",
+                            "scoreboard",
+                            "dark"
+                        ]
+                    }
+                ]
+            },
+            "categories": [
+                {
+                    "name": "general",
+                    "displayName": "Own General",
+                    "splitId": "0",
+                    "totals": [
+                        "12",
+                        "-",
+                        "-",
+                        "0"
+                    ],
+                    "values": [
+                        12.0,
+                        null,
+                        null,
+                        0.0
+                    ],
+                    "ranks": [
+                        "42",
+                        "-",
+                        "-",
+                        "-"
+                    ]
+                },
+                {
+                    "name": "passing",
+                    "displayName": "Own Passing",
+                    "splitId": "0",
+                    "totals": [
+                        "1",
+                        "2",
+                        "50.0",
+                        "-1",
+                        "-0.5",
+                        "-0.1",
+                        "0",
+                        "0",
+                        "0",
+                        "0",
+                        "0",
+                        "3.0",
+                        "56.3",
+                        "3.5"
+                    ],
+                    "values": [
+                        1.0,
+                        2.0,
+                        50.0,
+                        -1.0,
+                        -0.5,
+                        -0.0833333358168602,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        2.95,
+                        56.25,
+                        3.45
+                    ],
+                    "ranks": [
+                        "72",
+                        "72",
+                        "78",
+                        "102",
+                        "102",
+                        "2",
+                        "82",
+                        "63",
+                        "1",
+                        "76",
+                        "1",
+                        "-",
+                        "81",
+                        "-"
+                    ]
+                },
+                {
+                    "name": "rushing",
+                    "displayName": "Own Rushing",
+                    "splitId": "0",
+                    "totals": [
+                        "1",
+                        "6",
+                        "6.0",
+                        "6",
+                        "0",
+                        "0",
+                        "0.5",
+                        "0",
+                        "0",
+                        "0"
+                    ],
+                    "values": [
+                        1.0,
+                        6.0,
+                        6.0,
+                        6.0,
+                        0.0,
+                        0.0,
+                        0.5,
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "ranks": [
+                        "85",
+                        "72",
+                        "8",
+                        "68",
+                        "28",
+                        "41",
+                        "1",
+                        "50",
+                        "29",
+                        "74"
+                    ]
+                },
+                {
+                    "name": "receiving",
+                    "displayName": "Own Receiving",
+                    "splitId": "0",
+                    "totals": [
+                        "57",
+                        "85",
+                        "787",
+                        "13.8",
+                        "3",
+                        "57",
+                        "13",
+                        "65.6",
+                        "2",
+                        "2",
+                        "247",
+                        "34"
+                    ],
+                    "values": [
+                        57.0,
+                        85.0,
+                        787.0,
+                        13.807000160217285,
+                        3.0,
+                        57.0,
+                        13.0,
+                        65.58333587646484,
+                        2.0,
+                        2.0,
+                        247.0,
+                        34.0
+                    ],
+                    "ranks": [
+                        "9",
+                        "9",
+                        "6",
+                        "5",
+                        "8",
+                        "6",
+                        "6",
+                        "0",
+                        "2",
+                        "1",
+                        "9",
+                        "9"
+                    ]
+                },
+                {
+                    "name": "defensive",
+                    "displayName": "Own Defensive",
+                    "splitId": "0",
+                    "totals": [
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-"
+                    ],
+                    "values": [
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null
+                    ],
+                    "ranks": [
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-"
+                    ]
+                },
+                {
+                    "name": "defensiveinterceptions",
+                    "displayName": "Own Defensive Interceptions",
+                    "splitId": "0",
+                    "totals": [
+                        "-",
+                        "-",
+                        "-"
+                    ],
+                    "values": [
+                        null,
+                        null,
+                        null
+                    ],
+                    "ranks": [
+                        "-",
+                        "-",
+                        "-"
+                    ]
+                },
+                {
+                    "name": "scoring",
+                    "displayName": "Own Scoring",
+                    "splitId": "0",
+                    "totals": [
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-"
+                    ],
+                    "values": [
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null
+                    ],
+                    "ranks": [
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-"
+                    ]
+                },
+                {
+                    "name": "returning",
+                    "displayName": "Own Returning",
+                    "splitId": "0",
+                    "totals": [
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-"
+                    ],
+                    "values": [
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null
+                    ],
+                    "ranks": [
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-"
+                    ]
+                },
+                {
+                    "name": "kicking",
+                    "displayName": "Own Kicking",
+                    "splitId": "0",
+                    "totals": [
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-"
+                    ],
+                    "values": [
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null
+                    ],
+                    "ranks": [
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-"
+                    ]
+                },
+                {
+                    "name": "punting",
+                    "displayName": "Own Punting",
+                    "splitId": "0",
+                    "totals": [
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-"
+                    ],
+                    "values": [
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null
+                    ],
+                    "ranks": [
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-"
+                    ]
+                }
+            ]
+        },
+        {
+            "athlete": {
+                "id": "4362628",
+                "uid": "s:20~l:28~a:4362628",
+                "guid": "f9be91fa-7d8d-811b-6452-b14d1a1feb2c",
+                "type": "football",
+                "firstName": "Ja'Marr",
+                "lastName": "Chase",
+                "displayName": "Ja'Marr Chase",
+                "shortName": "J. Chase",
+                "links": [
+                    {
+                        "language": "en-US",
+                        "rel": [
+                            "playercard",
+                            "desktop",
+                            "athlete"
+                        ],
+                        "href": "http://www.espn.com/nfl/player/_/id/4362628/jamarr-chase",
+                        "text": "Player Card",
+                        "shortText": "Player Card",
+                        "isExternal": false,
+                        "isPremium": false
+                    },
+                    {
+                        "language": "en-US",
+                        "rel": [
+                            "stats",
+                            "desktop",
+                            "athlete"
+                        ],
+                        "href": "http://www.espn.com/nfl/player/stats/_/id/4362628/jamarr-chase",
+                        "text": "Stats",
+                        "shortText": "Stats",
+                        "isExternal": false,
+                        "isPremium": false
+                    },
+                    {
+                        "language": "en-US",
+                        "rel": [
+                            "splits",
+                            "desktop",
+                            "athlete"
+                        ],
+                        "href": "http://www.espn.com/nfl/player/splits/_/id/4362628/jamarr-chase",
+                        "text": "Splits",
+                        "shortText": "Splits",
+                        "isExternal": false,
+                        "isPremium": false
+                    },
+                    {
+                        "language": "en-US",
+                        "rel": [
+                            "gamelog",
+                            "desktop",
+                            "athlete"
+                        ],
+                        "href": "http://www.espn.com/nfl/player/gamelog/_/id/4362628/jamarr-chase",
+                        "text": "Game Log",
+                        "shortText": "Game Log",
+                        "isExternal": false,
+                        "isPremium": false
+                    },
+                    {
+                        "language": "en-US",
+                        "rel": [
+                            "news",
+                            "desktop",
+                            "athlete"
+                        ],
+                        "href": "http://www.espn.com/nfl/player/news/_/id/4362628/jamarr-chase",
+                        "text": "News",
+                        "shortText": "News",
+                        "isExternal": false,
+                        "isPremium": false
+                    },
+                    {
+                        "language": "en-US",
+                        "rel": [
+                            "bio",
+                            "desktop",
+                            "athlete"
+                        ],
+                        "href": "http://www.espn.com/nfl/player/bio/_/id/4362628/jamarr-chase",
+                        "text": "Bio",
+                        "shortText": "Bio",
+                        "isExternal": false,
+                        "isPremium": false
+                    },
+                    {
+                        "language": "en-US",
+                        "rel": [
+                            "overview",
+                            "desktop",
+                            "athlete"
+                        ],
+                        "href": "http://www.espn.com/nfl/player/_/id/4362628/jamarr-chase",
+                        "text": "Overview",
+                        "shortText": "Overview",
+                        "isExternal": false,
+                        "isPremium": false
+                    }
+                ],
+                "headshot": {
+                    "href": "https://a.espncdn.com/i/headshots/nfl/players/full/4362628.png",
+                    "alt": "Ja'Marr Chase"
+                },
+                "position": {
+                    "id": "1",
+                    "name": "Wide Receiver",
+                    "displayName": "Wide Receiver",
+                    "abbreviation": "WR",
+                    "leaf": true,
+                    "parent": {
+                        "leaf": false
+                    },
+                    "slug": "wide-receiver"
+                },
+                "status": {
+                    "id": "1",
+                    "name": "Active",
+                    "type": "active",
+                    "abbreviation": "Active"
+                },
+                "age": 23,
+                "teamName": "Bengals",
+                "teamShortName": "CIN",
+                "teams": [
+                    {
+                        "name": "Bengals",
+                        "abbreviation": "CIN"
+                    }
+                ],
+                "slug": "jamarr-chase",
+                "teamId": "4",
+                "teamUId": "s:20~l:28~t:4",
+                "teamLogos": [
+                    {
+                        "href": "https://a.espncdn.com/i/teamlogos/nfl/500/cin.png",
+                        "width": 500,
+                        "height": 500,
+                        "rel": [
+                            "full",
+                            "default"
+                        ]
+                    },
+                    {
+                        "href": "https://a.espncdn.com/i/teamlogos/nfl/500-dark/cin.png",
+                        "width": 500,
+                        "height": 500,
+                        "rel": [
+                            "full",
+                            "dark"
+                        ]
+                    },
+                    {
+                        "href": "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/cin.png",
+                        "width": 500,
+                        "height": 500,
+                        "rel": [
+                            "full",
+                            "scoreboard"
+                        ]
+                    },
+                    {
+                        "href": "https://a.espncdn.com/i/teamlogos/nfl/500-dark/scoreboard/cin.png",
+                        "width": 500,
+                        "height": 500,
+                        "rel": [
+                            "full",
+                            "scoreboard",
+                            "dark"
+                        ]
+                    }
+                ]
+            },
+            "categories": [
+                {
+                    "name": "general",
+                    "displayName": "Own General",
+                    "splitId": "0",
+                    "totals": [
+                        "14",
+                        "-",
+                        "-",
+                        "0"
+                    ],
+                    "values": [
+                        14.0,
+                        null,
+                        null,
+                        0.0
+                    ],
+                    "ranks": [
+                        "2",
+                        "-",
+                        "-",
+                        "-"
+                    ]
+                },
+                {
+                    "name": "passing",
+                    "displayName": "Own Passing",
+                    "splitId": "0",
+                    "totals": [
+                        "1",
+                        "1",
+                        "100.0",
+                        "-7",
+                        "-7.0",
+                        "-0.5",
+                        "-7",
+                        "0",
+                        "0",
+                        "0",
+                        "0",
+                        "1.4",
+                        "79.2",
+                        "1.7"
+                    ],
+                    "values": [
+                        1.0,
+                        1.0,
+                        100.0,
+                        -7.0,
+                        -7.0,
+                        -0.5,
+                        -7.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.42,
+                        79.16699981689453,
+                        1.72
+                    ],
+                    "ranks": [
+                        "72",
+                        "75",
+                        "1",
+                        "104",
+                        "104",
+                        "52",
+                        "104",
+                        "63",
+                        "1",
+                        "76",
+                        "1",
+                        "-",
+                        "74",
+                        "-"
+                    ]
+                },
+                {
+                    "name": "rushing",
+                    "displayName": "Own Rushing",
+                    "splitId": "0",
+                    "totals": [
+                        "3",
+                        "-6",
+                        "-2.0",
+                        "2",
+                        "0",
+                        "0",
+                        "-0.4",
+                        "0",
+                        "0",
+                        "0"
+                    ],
+                    "values": [
+                        3.0,
+                        -6.0,
+                        -2.0,
+                        2.0,
+                        0.0,
+                        0.0,
+                        -0.4285714328289032,
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "ranks": [
+                        "69",
+                        "100",
+                        "102",
+                        "77",
+                        "28",
+                        "41",
+                        "50",
+                        "50",
+                        "29",
+                        "74"
+                    ]
+                },
+                {
+                    "name": "receiving",
+                    "displayName": "Own Receiving",
+                    "splitId": "0",
+                    "totals": [
+                        "93",
+                        "132",
+                        "1,156",
+                        "12.4",
+                        "7",
+                        "76",
+                        "13",
+                        "82.6",
+                        "1",
+                        "0",
+                        "521",
+                        "60"
+                    ],
+                    "values": [
+                        93.0,
+                        132.0,
+                        1156.0,
+                        12.430000305175781,
+                        7.0,
+                        76.0,
+                        13.0,
+                        82.57142639160156,
+                        1.0,
+                        0.0,
+                        521.0,
+                        60.0
+                    ],
+                    "ranks": [
+                        "3",
+                        "3",
+                        "3",
+                        "9",
+                        "1",
+                        "1",
+                        "6",
+                        "1",
+                        "5",
+                        "8",
+                        "1",
+                        "1"
+                    ]
+                },
+                {
+                    "name": "defensive",
+                    "displayName": "Own Defensive",
+                    "splitId": "0",
+                    "totals": [
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-"
+                    ],
+                    "values": [
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null
+                    ],
+                    "ranks": [
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-"
+                    ]
+                },
+                {
+                    "name": "defensiveinterceptions",
+                    "displayName": "Own Defensive Interceptions",
+                    "splitId": "0",
+                    "totals": [
+                        "-",
+                        "-",
+                        "-"
+                    ],
+                    "values": [
+                        null,
+                        null,
+                        null
+                    ],
+                    "ranks": [
+                        "-",
+                        "-",
+                        "-"
+                    ]
+                },
+                {
+                    "name": "scoring",
+                    "displayName": "Own Scoring",
+                    "splitId": "0",
+                    "totals": [
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-"
+                    ],
+                    "values": [
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null
+                    ],
+                    "ranks": [
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-"
+                    ]
+                },
+                {
+                    "name": "returning",
+                    "displayName": "Own Returning",
+                    "splitId": "0",
+                    "totals": [
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-"
+                    ],
+                    "values": [
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null
+                    ],
+                    "ranks": [
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-"
+                    ]
+                },
+                {
+                    "name": "kicking",
+                    "displayName": "Own Kicking",
+                    "splitId": "0",
+                    "totals": [
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-"
+                    ],
+                    "values": [
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null
+                    ],
+                    "ranks": [
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-"
+                    ]
+                },
+                {
+                    "name": "punting",
+                    "displayName": "Own Punting",
+                    "splitId": "0",
+                    "totals": [
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-"
+                    ],
+                    "values": [
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null
+                    ],
+                    "ranks": [
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-",
+                        "-"
+                    ]
+                }
+            ]
+        }
+    ],
+    "currentSeason": {
+        "year": 2023,
+        "displayName": "2023",
+        "startDate": "2023-08-01T07:00:00.000+00:00",
+        "endDate": "2024-02-15T07:59:00.000+00:00",
+        "type": {
+            "id": "2",
+            "type": 2,
+            "name": "Regular Season",
+            "startDate": "2023-09-07T07:00:00.000+00:00",
+            "endDate": "2024-01-13T07:59:00.000+00:00",
+            "week": {
+                "number": 16,
+                "startDate": "2023-12-20T08:00:00.000+00:00",
+                "endDate": "2023-12-27T07:59:00.000+00:00",
+                "text": "Week 16"
+            }
+        }
+    },
+    "requestedSeason": {
+        "year": 2023,
+        "displayName": "2023",
+        "startDate": "2023-08-01T07:00:00.000+00:00",
+        "endDate": "2024-02-15T07:59:00.000+00:00",
+        "type": {
+            "id": "2",
+            "type": 2,
+            "name": "Regular Season",
+            "startDate": "2023-09-07T07:00:00.000+00:00",
+            "endDate": "2024-01-13T07:59:00.000+00:00",
+            "week": {
+                "number": 16,
+                "startDate": "2023-12-20T08:00:00.000+00:00",
+                "endDate": "2023-12-27T07:59:00.000+00:00",
+                "text": "Week 16"
+            }
+        }
+    },
+    "glossary": [
+        {
+            "abbreviation": "2PT",
+            "displayName": "Total Two Point Conversions"
+        },
+        {
+            "abbreviation": "50+",
+            "displayName": "Field Goals Made 50+"
+        },
+        {
+            "abbreviation": "AST",
+            "displayName": "Assist Tackles"
+        },
+        {
+            "abbreviation": "ATT",
+            "displayName": "Passing Attempts"
+        },
+        {
+            "abbreviation": "AVG",
+            "displayName": "Yards Per Pass Attempt"
+        },
+        {
+            "abbreviation": "BIG",
+            "displayName": "20+ Yard Rushing Plays"
+        },
+        {
+            "abbreviation": "CAR",
+            "displayName": "Rushing Attempts"
+        },
+        {
+            "abbreviation": "CMP",
+            "displayName": "Completions"
+        },
+        {
+            "abbreviation": "CMP%",
+            "displayName": "Completion Percentage"
+        },
+        {
+            "abbreviation": "FC",
+            "displayName": "Punt Return Fair Catches"
+        },
+        {
+            "abbreviation": "FD",
+            "displayName": "Rushing 1st downs"
+        },
+        {
+            "abbreviation": "FF",
+            "displayName": "Forced Fumbles"
+        },
+        {
+            "abbreviation": "FG",
+            "displayName": "Field Goals"
+        },
+        {
+            "abbreviation": "FG%",
+            "displayName": "Field Goal Percentage"
+        },
+        {
+            "abbreviation": "FGA",
+            "displayName": "Field Goal Attempts"
+        },
+        {
+            "abbreviation": "FGA 1-19",
+            "displayName": "Field Goal Attempts 1-19"
+        },
+        {
+            "abbreviation": "FGA 20-29",
+            "displayName": "Field Goal Attempts 20-29"
+        },
+        {
+            "abbreviation": "FGA 30-39",
+            "displayName": "Field Goal Attempts 30-39"
+        },
+        {
+            "abbreviation": "FGA 40-49",
+            "displayName": "Field Goal Attempts 40-49"
+        },
+        {
+            "abbreviation": "FGA 50+",
+            "displayName": "Field Goal Attempts 50+"
+        },
+        {
+            "abbreviation": "FGM",
+            "displayName": "Field Goal Made"
+        },
+        {
+            "abbreviation": "FGM 1-19",
+            "displayName": "Field Goals Made 1-19"
+        },
+        {
+            "abbreviation": "FGM 20-29",
+            "displayName": "Field Goals Made 20-29"
+        },
+        {
+            "abbreviation": "FGM 30-39",
+            "displayName": "Field Goals Made 30-39"
+        },
+        {
+            "abbreviation": "FGM 40-49",
+            "displayName": "Field Goals Made 40-49"
+        },
+        {
+            "abbreviation": "FR",
+            "displayName": "Fumbles Recovered"
+        },
+        {
+            "abbreviation": "FTD",
+            "displayName": "Fumbles Touchdowns"
+        },
+        {
+            "abbreviation": "FUM",
+            "displayName": "Rushing Fumbles"
+        },
+        {
+            "abbreviation": "GP",
+            "displayName": "Games Played"
+        },
+        {
+            "abbreviation": "IN20",
+            "displayName": "Punts Inside 20"
+        },
+        {
+            "abbreviation": "INT",
+            "displayName": "Interceptions"
+        },
+        {
+            "abbreviation": "LNG",
+            "displayName": "Longest Pass"
+        },
+        {
+            "abbreviation": "LST",
+            "displayName": "Rushing Fumbles Lost"
+        },
+        {
+            "abbreviation": "NET",
+            "displayName": "Net Average Punt Yards"
+        },
+        {
+            "abbreviation": "PAT",
+            "displayName": "Kick Extra Points"
+        },
+        {
+            "abbreviation": "PBLK",
+            "displayName": "Punts Blocked"
+        },
+        {
+            "abbreviation": "PD",
+            "displayName": "Passes Defended"
+        },
+        {
+            "abbreviation": "PTS",
+            "displayName": "Total Points"
+        },
+        {
+            "abbreviation": "PUNTS",
+            "displayName": "Punts"
+        },
+        {
+            "abbreviation": "QBR",
+            "displayName": "Total QBR"
+        },
+        {
+            "abbreviation": "REC",
+            "displayName": "Receptions"
+        },
+        {
+            "abbreviation": "RET",
+            "displayName": "Return Touchdowns"
+        },
+        {
+            "abbreviation": "RTG",
+            "displayName": "Passer Rating"
+        },
+        {
+            "abbreviation": "RUSH",
+            "displayName": "Rushing Touchdowns"
+        },
+        {
+            "abbreviation": "SACK",
+            "displayName": "Total Sacks"
+        },
+        {
+            "abbreviation": "SCKYDS",
+            "displayName": "Sack Yards"
+        },
+        {
+            "abbreviation": "SOLO",
+            "displayName": "Solo Tackles"
+        },
+        {
+            "abbreviation": "SYL",
+            "displayName": "Sack Yards Lost"
+        },
+        {
+            "abbreviation": "TB",
+            "displayName": "Touchbacks"
+        },
+        {
+            "abbreviation": "TD",
+            "displayName": "Passing Touchdowns"
+        },
+        {
+            "abbreviation": "TFL",
+            "displayName": "Tackles For Loss"
+        },
+        {
+            "abbreviation": "TGTS",
+            "displayName": "Receiving Targets"
+        },
+        {
+            "abbreviation": "TOT",
+            "displayName": "Total Tackles"
+        },
+        {
+            "abbreviation": "TP/G",
+            "displayName": "Total Points Per Game"
+        },
+        {
+            "abbreviation": "XP%",
+            "displayName": "Extra Point Percentage"
+        },
+        {
+            "abbreviation": "XPA",
+            "displayName": "Extra Point Attempts"
+        },
+        {
+            "abbreviation": "XPM",
+            "displayName": "Extra Points Made"
+        },
+        {
+            "abbreviation": "YAC",
+            "displayName": "Receiving Yards After Catch"
+        },
+        {
+            "abbreviation": "YDS",
+            "displayName": "Passing Yards"
+        },
+        {
+            "abbreviation": "YDS/G",
+            "displayName": "Passing Yards Per Game"
+        }
+    ],
+    "categories": [
+        {
+            "name": "general",
+            "displayName": "Own General",
+            "labels": [
+                "GP",
+                "FF",
+                "FR",
+                "FTD"
+            ],
+            "names": [
+                "gamesPlayed",
+                "fumblesForced",
+                "fumblesRecovered",
+                "fumblesTouchdowns"
+            ],
+            "displayNames": [
+                "Games Played",
+                "Forced Fumbles",
+                "Fumbles Recovered",
+                "Fumbles Touchdowns"
+            ],
+            "descriptions": [
+                "Games Played",
+                "The total number of forced fumbles.",
+                "The number of fumbles recovered.",
+                "The number of times a fumbles is recovered and returned for a touchdown."
+            ]
+        },
+        {
+            "name": "passing",
+            "displayName": "Own Passing",
+            "labels": [
+                "CMP",
+                "ATT",
+                "CMP%",
+                "YDS",
+                "AVG",
+                "YDS/G",
+                "LNG",
+                "TD",
+                "INT",
+                "SACK",
+                "SYL",
+                "QBR",
+                "RTG",
+                "QBR"
+            ],
+            "names": [
+                "completions",
+                "passingAttempts",
+                "completionPct",
+                "passingYards",
+                "yardsPerPassAttempt",
+                "passingYardsPerGame",
+                "longPassing",
+                "passingTouchdowns",
+                "interceptions",
+                "sacks",
+                "sackYardsLost",
+                "QBR",
+                "QBRating",
+                "adjQBR"
+            ],
+            "displayNames": [
+                "Completions",
+                "Passing Attempts",
+                "Completion Percentage",
+                "Passing Yards",
+                "Yards Per Pass Attempt",
+                "Passing Yards Per Game",
+                "Longest Pass",
+                "Passing Touchdowns",
+                "Interceptions",
+                "Total Sacks",
+                "Sack Yards Lost",
+                "Total QBR",
+                "Passer Rating",
+                "Adjusted QBR"
+            ],
+            "descriptions": [
+                "The times a player completes a pass to another player who is eligible to catch a pass.",
+                "The number of times a pass is attempted.",
+                "The percentage of completed passes.",
+                "The total passing yards.",
+                "The average number yards per pass attempt.",
+                "The number of passing yards per game.",
+                "The longest pass play completed in terms of yards.",
+                "The total number of passing touchdowns.",
+                "The number of passes thrown that were intercepted by the opposing team.",
+                "The total number of sacks.",
+                "The amount of yards lost due to sacks.",
+                "Total Quarterback Rating, which values quarterback on all play types on a 0-to-100 scale.",
+                "Passer Rating",
+                "Adjusted Quarterback Rating."
+            ]
+        },
+        {
+            "name": "rushing",
+            "displayName": "Own Rushing",
+            "labels": [
+                "CAR",
+                "YDS",
+                "AVG",
+                "LNG",
+                "BIG",
+                "TD",
+                "YDS/G",
+                "FUM",
+                "LST",
+                "FD"
+            ],
+            "names": [
+                "rushingAttempts",
+                "rushingYards",
+                "yardsPerRushAttempt",
+                "longRushing",
+                "rushingBigPlays",
+                "rushingTouchdowns",
+                "rushingYardsPerGame",
+                "rushingFumbles",
+                "rushingFumblesLost",
+                "rushingFirstDowns"
+            ],
+            "displayNames": [
+                "Rushing Attempts",
+                "Rushing Yards",
+                "Yards Per Rush Attempt",
+                "Long Rushing",
+                "20+ Yard Rushing Plays",
+                "Rushing Touchdowns",
+                "Rushing Yards Per Game",
+                "Rushing Fumbles",
+                "Rushing Fumbles Lost",
+                "Rushing 1st downs"
+            ],
+            "descriptions": [
+                "The total number of attempted rushes.",
+                "The total rushing yards.",
+                "The average number of yards per rush attempt.",
+                "The amount of yards for the longest run.",
+                "The number of rushing big plays gained.",
+                "The total number of rushing touchdowns.",
+                "The average number of rushing yards per game.",
+                "The number of times there is a run and then the ball is fumbled.",
+                "The number of times there is a run and then the ball is fumbled.",
+                "The number of times a first down is picked up by a run."
+            ]
+        },
+        {
+            "name": "receiving",
+            "displayName": "Own Receiving",
+            "labels": [
+                "REC",
+                "TGTS",
+                "YDS",
+                "AVG",
+                "TD",
+                "LNG",
+                "BIG",
+                "YDS/G",
+                "FUM",
+                "LST",
+                "YAC",
+                "FD"
+            ],
+            "names": [
+                "receptions",
+                "receivingTargets",
+                "receivingYards",
+                "yardsPerReception",
+                "receivingTouchdowns",
+                "longReception",
+                "receivingBigPlays",
+                "receivingYardsPerGame",
+                "receivingFumbles",
+                "receivingFumblesLost",
+                "receivingYardsAfterCatch",
+                "receivingFirstDowns"
+            ],
+            "displayNames": [
+                "Receptions",
+                "Receiving Targets",
+                "Receiving Yards",
+                "Yards Per Reception",
+                "Receiving Touchdowns",
+                "Long Reception",
+                "20+ Yard Receiving Plays",
+                "Receiving Yards Per Game",
+                "Receiving Fumbles",
+                "Receiving Fumbles Lost",
+                "Receiving Yards After Catch",
+                "Receiving First Downs"
+            ],
+            "descriptions": [
+                "The total number of receptions.",
+                "The number of times a receiver is thrown to.",
+                "The total receiving yards.",
+                "The average number of yards per reception.",
+                "The total number of receiving touchdowns.",
+                "The amount of yards for the longest reception.",
+                "The number of receiving big plays gained.",
+                "The average number of receiving yards per game.",
+                "The number of times a reception is made and then the ball is fumbled.",
+                "The number of times a reception is made and the balled is fumbled and recovered by the opposing team.",
+                "The number of yards gained after the catch has been made.",
+                "The number of times a first down is picked up by a reception."
+            ]
+        },
+        {
+            "name": "defensive",
+            "displayName": "Own Defensive",
+            "labels": [
+                "SOLO",
+                "AST",
+                "TOT",
+                "SACK",
+                "SCKYDS",
+                "TFL",
+                "PD",
+                "LNG"
+            ],
+            "names": [
+                "soloTackles",
+                "assistTackles",
+                "totalTackles",
+                "sacks",
+                "sackYards",
+                "tacklesForLoss",
+                "passesDefended",
+                "longInterception"
+            ],
+            "displayNames": [
+                "Solo Tackles",
+                "Assist Tackles",
+                "Total Tackles",
+                "Sacks",
+                "Sack Yards",
+                "Tackles For Loss",
+                "Passes Defended",
+                "Long Interception"
+            ],
+            "descriptions": [
+                "The number of times a tackle was made unassisted.",
+                "The number of assists on tackles.",
+                "The total number of tackles.",
+                "The total number of sacks.",
+                "The number of yards lost from sacks.",
+                "The number of tackles that result in a loss of yardage.",
+                "The total number of passes defended.",
+                "The amount of yards of the longest interception return."
+            ]
+        },
+        {
+            "name": "defensiveinterceptions",
+            "displayName": "Own Defensive Interceptions",
+            "labels": [
+                "INT",
+                "YDS",
+                "TD"
+            ],
+            "names": [
+                "interceptions",
+                "interceptionYards",
+                "interceptionTouchdowns"
+            ],
+            "displayNames": [
+                "Interceptions",
+                "Interception Yards",
+                "Interception Touchdowns"
+            ],
+            "descriptions": [
+                "The total number of interceptions.",
+                "The number of yards gained after an interception.",
+                "The number of times an interception is returned for a touchdown."
+            ]
+        },
+        {
+            "name": "scoring",
+            "displayName": "Own Scoring",
+            "labels": [
+                "RUSH",
+                "REC",
+                "RET",
+                "TD",
+                "FG",
+                "PAT",
+                "2PT",
+                "PTS",
+                "TP/G"
+            ],
+            "names": [
+                "rushingTouchdowns",
+                "receivingTouchdowns",
+                "returnTouchdowns",
+                "totalTouchdowns",
+                "fieldGoals",
+                "kickExtraPoints",
+                "totalTwoPointConvs",
+                "totalPoints",
+                "totalPointsPerGame"
+            ],
+            "displayNames": [
+                "Rushing Touchdowns",
+                "Receiving Touchdowns",
+                "Return Touchdowns",
+                "Total Touchdowns",
+                "Field Goals",
+                "Kick Extra Points",
+                "Total Two Point Conversions",
+                "Total Points",
+                "Total Points Per Game"
+            ],
+            "descriptions": [
+                "The total number of rushing touchdowns.",
+                "The total number of receiving touchdowns.",
+                "The total number of return touchdowns.",
+                "The number of touchdowns scored in total.",
+                "The number of field goals made.",
+                "The number of extra points made.",
+                "The number of times a 2-point conversion is successful.",
+                "The number of total points scored.",
+                "The number of points scored per game."
+            ]
+        },
+        {
+            "name": "returning",
+            "displayName": "Own Returning",
+            "labels": [
+                "ATT",
+                "YDS",
+                "AVG",
+                "LNG",
+                "TD",
+                "ATT",
+                "YDS",
+                "AVG",
+                "LNG",
+                "TD",
+                "FC"
+            ],
+            "names": [
+                "kickReturns",
+                "kickReturnYards",
+                "yardsPerKickReturn",
+                "longKickReturn",
+                "kickReturnTouchdowns",
+                "puntReturns",
+                "puntReturnYards",
+                "yardsPerPuntReturn",
+                "longPuntReturn",
+                "puntReturnTouchdowns",
+                "puntReturnFairCatches"
+            ],
+            "displayNames": [
+                "Kick Returns",
+                "Kick Return Yards",
+                "Yards Per Kick Return",
+                "Long Kick Return",
+                "Kick Return Touchdowns",
+                "Punt Returns",
+                "Punt Return Yards",
+                "Yards Per Punt Return",
+                "Long Punt Return",
+                "Punt Return Touchdowns",
+                "Punt Return Fair Catches"
+            ],
+            "descriptions": [
+                "The number of kick returns.",
+                "The total yardage of kick returns.",
+                "The average number of yards per kick return.",
+                "The longest kick return in yards.",
+                "The number of kick return touchdowns.",
+                "The number of punt returns.",
+                "The total yardage of punt returns.",
+                "The average number of yards per punt return.",
+                "The longest punt return in yards.",
+                "The number of punt return touchdowns.",
+                "The number of punt return fair catches."
+            ]
+        },
+        {
+            "name": "kicking",
+            "displayName": "Own Kicking",
+            "labels": [
+                "FGM",
+                "FGA",
+                "FG%",
+                "LNG",
+                "FGM 1-19",
+                "FGM 20-29",
+                "FGM 30-39",
+                "FGM 40-49",
+                "50+",
+                "FGA 1-19",
+                "FGA 20-29",
+                "FGA 30-39",
+                "FGA 40-49",
+                "FGA 50+",
+                "XPM",
+                "XPA",
+                "XP%"
+            ],
+            "names": [
+                "fieldGoalsMade",
+                "fieldGoalAttempts",
+                "fieldGoalPct",
+                "longFieldGoalMade",
+                "fieldGoalsMade1_19",
+                "fieldGoalsMade20_29",
+                "fieldGoalsMade30_39",
+                "fieldGoalsMade40_49",
+                "fieldGoalsMade50",
+                "fieldGoalAttempts1_19",
+                "fieldGoalAttempts20_29",
+                "fieldGoalAttempts30_39",
+                "fieldGoalAttempts40_49",
+                "fieldGoalAttempts50",
+                "extraPointsMade",
+                "extraPointAttempts",
+                "extraPointPct"
+            ],
+            "displayNames": [
+                "Field Goal Made",
+                "Field Goal Attempts",
+                "Field Goal Percentage",
+                "Long Field Goal Made",
+                "Field Goals Made 1-19",
+                "Field Goals Made 20-29",
+                "Field Goals Made 30-39",
+                "Field Goals Made 40-49",
+                "Field Goals Made 50+",
+                "Field Goal Attempts 1-19",
+                "Field Goal Attempts 20-29",
+                "Field Goal Attempts 30-39",
+                "Field Goal Attempts 40-49",
+                "Field Goal Attempts 50+",
+                "Extra Points Made",
+                "Extra Point Attempts",
+                "Extra Point Percentage"
+            ],
+            "descriptions": [
+                "The number of times a field goal is made.",
+                "The number of times a field goal is attempted.",
+                "The percentage of field goals attempted that are made.",
+                "The distance of the longest field goal made.",
+                "The number of field goals made from 1-19 yards.",
+                "The number of field goals made from 20-29 yards.",
+                "The number of field goals made from 30-39 yards.",
+                "The number of field goals made from 40-49 yards.",
+                "The number of field goals made from 50+ yards.",
+                "The number of field goals attempted from 1-19 yards.",
+                "The number of field goals attempted from 20-29 yards.",
+                "The number of field goals attempted from 30-39 yards.",
+                "The number of field goals attempted from 40-49 yards.",
+                "The number of field goals attempted from 50+ yards.",
+                "The number of extra point attempts made.",
+                "The number of extra point attempts.",
+                "The percentage of extra point attempts that are converted."
+            ]
+        },
+        {
+            "name": "punting",
+            "displayName": "Own Punting",
+            "labels": [
+                "PUNTS",
+                "YDS",
+                "LNG",
+                "AVG",
+                "NET",
+                "PBLK",
+                "IN20",
+                "TB",
+                "FC",
+                "ATT",
+                "YDS",
+                "AVG"
+            ],
+            "names": [
+                "punts",
+                "puntYards",
+                "longPunt",
+                "grossAvgPuntYards",
+                "netAvgPuntYards",
+                "puntsBlocked",
+                "puntsInside20",
+                "touchbacks",
+                "fairCatches",
+                "puntReturns",
+                "puntReturnYards",
+                "avgPuntReturnYards"
+            ],
+            "displayNames": [
+                "Punts",
+                "Punt Yards",
+                "Long Punt",
+                "Gross Average Punt Yards",
+                "Net Average Punt Yards",
+                "Punts Blocked",
+                "Punts Inside 20",
+                "Touchbacks",
+                "Fair Catches",
+                "Punt Returns",
+                "Punt Return Yards",
+                "Average Punt Return Yards"
+            ],
+            "descriptions": [
+                "The number of punts taken.",
+                "The total amount of yardage of punts.",
+                "The distance of the longest punt.",
+                "The average gross number of yards per punt.",
+                "The average net number of yards per punt.",
+                "The number of times a punt was blocked.",
+                "The number of times a punt is downed inside the 20.",
+                "The number of kickoffs that result in touchbacks.",
+                "The number of fair catches.",
+                "The number of times a punt was returned.",
+                "The total amount of yardage of punt returns.",
+                "The average number of yards per punt return."
+            ]
+        }
+    ]
+}

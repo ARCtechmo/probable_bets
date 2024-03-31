@@ -1,0 +1,18 @@
+id,position,abbr
+1,Wide Receiver,WR
+4,Center,C
+7,Tight End,TE
+8,Quarterback,QB
+9,Running Back,RB
+10,Fullback,FB
+22,Place kicker,PK
+23,Punter,P
+29,Cornerback,CB
+30,Linebacker,LB
+31,Defensive End,DE
+32,Defensive Tackle,DT
+36,Safety,S
+37,Defensive Lineman,DL
+46,Offensive Tackle,OT
+73,Guard,G
+78,Long Snapper,LS
