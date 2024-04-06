@@ -1,8 +1,3 @@
-## task: complete testing for all json files input / output 
-#(look in the file_dump)
-
-
-
 # parse the fantasypros json files #
 
 from database import (

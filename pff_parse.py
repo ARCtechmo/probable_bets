@@ -1,8 +1,8 @@
 ## parse the pff json file ##
 
-## task: complete testing for all json files input / output 
-#(look in the file_dump)
-
+## FIXME: Future optimization 
+# 1) will only export the the most recent file
+# 2) update to export multiple files concurrently 
 
 # loop over the dictionary and pull the keys and values
 from database import (
