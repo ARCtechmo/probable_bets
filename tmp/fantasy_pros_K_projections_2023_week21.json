@@ -1,0 +1,73 @@
+{
+    "season": "2023",
+    "week": "21",
+    "count": "4",
+    "positions": "K",
+    "scoring": "STD",
+    "players": [
+        {
+            "fpid": 11465,
+            "mflid": 10976,
+            "name": "Justin Tucker",
+            "position_id": "K",
+            "team_id": "BAL",
+            "filename": "justin-tucker.php",
+            "stats": {
+                "points": 8.95,
+                "points_ppr": 8.95,
+                "points_half": 8.95,
+                "fga": 1.91,
+                "fg": 2.34,
+                "xpt": 1.93
+            }
+        },
+        {
+            "fpid": 24009,
+            "mflid": 16286,
+            "name": "Jake Moody",
+            "position_id": "K",
+            "team_id": "SF",
+            "filename": "jake-moody.php",
+            "stats": {
+                "points": 8.82,
+                "points_ppr": 8.82,
+                "points_half": 8.82,
+                "fga": 2.42,
+                "fg": 1.96,
+                "xpt": 2.95
+            }
+        },
+        {
+            "fpid": 16712,
+            "mflid": 13354,
+            "name": "Harrison Butker",
+            "position_id": "K",
+            "team_id": "KC",
+            "filename": "harrison-butker.php",
+            "stats": {
+                "points": 7.6,
+                "points_ppr": 7.6,
+                "points_half": 7.6,
+                "fga": 1.94,
+                "fg": 1.85,
+                "xpt": 2.05
+            }
+        },
+        {
+            "fpid": 17693,
+            "mflid": 13980,
+            "name": "Michael Badgley",
+            "position_id": "K",
+            "team_id": "DET",
+            "filename": "michael-badgley.php",
+            "stats": {
+                "points": 6.51,
+                "points_ppr": 6.51,
+                "points_half": 6.51,
+                "fga": 1.94,
+                "fg": 1.34,
+                "xpt": 2.49
+            }
+        }
+    ]
+}

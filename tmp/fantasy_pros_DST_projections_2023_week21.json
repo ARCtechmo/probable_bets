@@ -1,0 +1,97 @@
+{
+    "season": "2023",
+    "week": "21",
+    "count": "4",
+    "positions": "DST",
+    "scoring": "STD",
+    "players": [
+        {
+            "fpid": 8150,
+            "mflid": 512,
+            "name": "Kansas City Chiefs",
+            "position_id": "DST",
+            "team_id": "KC",
+            "filename": "kansas-city-defense.php",
+            "stats": {
+                "points": 6.36,
+                "points_ppr": 6.36,
+                "points_half": 6.36,
+                "def_sack": 2.92,
+                "def_int": 0.65,
+                "def_td": 0.14,
+                "def_pa": 24,
+                "def_tyda": 354.24,
+                "def_safety": 0,
+                "def_ff": 0,
+                "def_fr": 0.65,
+                "def_retd": 0
+            }
+        },
+        {
+            "fpid": 8270,
+            "mflid": 530,
+            "name": "San Francisco 49ers",
+            "position_id": "DST",
+            "team_id": "SF",
+            "filename": "san-francisco-defense.php",
+            "stats": {
+                "points": 5.87,
+                "points_ppr": 5.87,
+                "points_half": 5.87,
+                "def_sack": 2.57,
+                "def_int": 0.68,
+                "def_td": 0.17,
+                "def_pa": 22,
+                "def_tyda": 345.73,
+                "def_safety": 0,
+                "def_ff": 0,
+                "def_fr": 0.46,
+                "def_retd": 0
+            }
+        },
+        {
+            "fpid": 8100,
+            "mflid": 522,
+            "name": "Detroit Lions",
+            "position_id": "DST",
+            "team_id": "DET",
+            "filename": "detroit-defense.php",
+            "stats": {
+                "points": 5.81,
+                "points_ppr": 5.81,
+                "points_half": 5.81,
+                "def_sack": 2.57,
+                "def_int": 0.75,
+                "def_td": 0.11,
+                "def_pa": 29.5,
+                "def_tyda": 375.7,
+                "def_safety": 0,
+                "def_ff": 0,
+                "def_fr": 0.54,
+                "def_retd": 0
+            }
+        },
+        {
+            "fpid": 8020,
+            "mflid": 531,
+            "name": "Baltimore Ravens",
+            "position_id": "DST",
+            "team_id": "BAL",
+            "filename": "baltimore-defense.php",
+            "stats": {
+                "points": 5.3,
+                "points_ppr": 5.3,
+                "points_half": 5.3,
+                "def_sack": 2.16,
+                "def_int": 0.65,
+                "def_td": 0.18,
+                "def_pa": 20.5,
+                "def_tyda": 331.05,
+                "def_safety": 0,
+                "def_ff": 0,
+                "def_fr": 0.38,
+                "def_retd": 0
+            }
+        }
+    ]
+}
