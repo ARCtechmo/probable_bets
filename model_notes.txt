@@ -1,0 +1,11 @@
+The goal is to consturct a simple statistical and / or machine learning model
+
+Break this up into two main sections:
+1. Apply traditional statistical methods (
+    e.g. regression, probability distributions, z-cores, hypothesis tests, etc..)
+
+2. Build a deep learning model
+
+tasks
+Everything starts with a question.
+1. List the questions you are trying to answer and this will drive the analysis.

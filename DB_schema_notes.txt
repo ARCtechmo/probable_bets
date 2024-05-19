@@ -1,0 +1,37 @@
+playerStatistics table and the Foreign Key (FK) Relationships
+playerStatistics table is based on the ESPN NFL athlete statstics imported from the ESPN API
+playerStatistics is used to build all of the foreign key relationships in the database
+
+table.fk = table.fk
+athleteStatus.id =  playerStatistics.playerStatusFK
+athletes.id = playerStatistics.playerFK
+league.id = playerStatistics.leagueFK
+positions.id = playerStatistics.PlayerPositionFK
+season.id = playerStatistics.seasonFK
+teams.id = playerStatistics.playerTeamFK
+
+Match 'week' column in playerStatistics and the corresponding week for the betting line tables
+1. Get the available weeks and correct current season (year) from the playerStatistics table.
+/*sqlite3 query*/
+SELECT DISTINCT week
+FROM playerStatistics
+WHERE weekStart LIKE('%2023%')
+ORDER BY week;
+
+2. Choose a week from the playerStatistics table based on the available weeks and the current season (year).
+/*sqlite3 query*/
+SELECT weekStart, weekEnd, week
+FROM playerStatistics
+WHERE week LIKE('week 6') AND
+weekStart LIKE('%2023%')
+
+TASKS
+3. Obtain the available weeks for the FantasyPros tables
+/*sqlite3 query*/
+
+4. Match playerStatistics week to the corresponding week in FantasyPros tables.
+/*sqlite3 query*
+
+
+
+
