@@ -1,16 +1,18 @@
-playerStatistics table and the Foreign Key (FK) Relationships
+Section A: playerStatistics table and the Foreign Key (FK) Relationships
+
+1. Very important schema information
 playerStatistics table is based on the ESPN NFL athlete statstics imported from the ESPN API
 playerStatistics is used to build all of the foreign key relationships in the database
 
-table.fk = table.fk
-athleteStatus.id =  playerStatistics.playerStatusFK
-athletes.id = playerStatistics.playerFK
-league.id = playerStatistics.leagueFK
-positions.id = playerStatistics.PlayerPositionFK
-season.id = playerStatistics.seasonFK
-teams.id = playerStatistics.playerTeamFK
+2. Very Important Foreign Key Relationships
+playerStatistics.playerStatusFK = athleteStatus.id
+playerStatistics.playerFK = athletes.id
+playerStatistics.leagueFK = league.id
+playerStatistics.PlayerPositionFK = positions.id
+playerStatistics.seasonFK = season.id
+playerStatistics.playerTeamFK = teams.id
 
-Match 'week' column in playerStatistics and the corresponding week for the betting line tables
+Section B: Match 'week' column in playerStatistics and the corresponding week for the betting line tables
 1. Get the available weeks and correct current season (year) from the playerStatistics table.
 /*sqlite3 query*/
 SELECT DISTINCT week
@@ -25,12 +27,212 @@ FROM playerStatistics
 WHERE week LIKE('week 6') AND
 weekStart LIKE('%2023%')
 
-TASKS
-3. Obtain the available weeks for the FantasyPros tables
-/*sqlite3 query*/
+Section C: FantasyPros Table foreign key relationships
+1. The FantasyPros tables are as follows:
+fantasy_pros_Def
+fantasy_pros_K
+fantasy_pros_QB
+fantasy_pros_RB
+fantasy_pros_TE
+fantasy_pros_WR
+
+2. FantasyPros Tables Foreign Key Relationships
+fantasy_pros_Def.team_id = teams.id 
+
+fantasy_pros_K.player_id = athletes.id
+fantasy_pros_K.position_id = positions.id
+fantasy_pros_K.team_id = teams.id
+
+fantasy_pros_QB.player_id = athletes.id  
+fantasy_pros_QB.position_id = positions.id  
+fantasy_pros_QB.team_id = teams.id  
+
+fantasy_pros_RB.player_id = athletes.id  
+fantasy_pros_RB.position_id = positions.id  
+fantasy_pros_RB.team_id = teams.id  
+
+fantasy_pros_QB.player_id = athletes.id   
+fantasy_pros_QB.position_id = positions.id   
+fantasy_pros_QB.team_id = teams.id   
+
+fantasy_pros_TE.player_id = athletes.id   
+fantasy_pros_TE.position_id = positions.id   
+fantasy_pros_TE.team_id = teams.id   
+
+fantasy_pros_WR.player_id = athletes.id   
+fantasy_pros_WR.position_id = positions.id   
+fantasy_pros_WR.team_id = teams.id   
+
+1. Obtain the available weeks for the FantasyPros tables
+
+/*sqlite3 query available weeks for FantasyPros Defense (Def) position*/
+SELECT DISTINCT week
+FROM fantasy_pros_Def
+WHERE season LIKE = 2023
+ORDER by week ASC
+
+/*sqlite3 query available weeks for FantasyPros Kicker (K) position*/
+SELECT DISTINCT week
+FROM fantasy_pros_K
+WHERE season LIKE = 2023
+ORDER by week ASC
+
+/*sqlite3 query available weeks for FantasyPros Quarterback (QB) position*/
+SELECT DISTINCT week
+FROM fantasy_pros_QB
+WHERE season LIKE = 2023
+ORDER by week ASC
+
+/*sqlite3 query available weeks for FantasyPros Runningback (RB) position*/
+SELECT DISTINCT week
+FROM fantasy_pros_RB
+WHERE season LIKE = 2023
+ORDER by week ASC
+
+/*sqlite3 query available weeks for FantasyPros Tightend (TE) position*/
+SELECT DISTINCT week
+FROM fantasy_pros_TE
+WHERE season LIKE = 2023
+ORDER by week ASC
+
+/*sqlite3 query available weeks for FantasyPros Widereceiver (WR) position*/
+SELECT DISTINCT week
+FROM fantasy_pros_WR
+WHERE season LIKE = 2023
+ORDER by week ASC
 
 4. Match playerStatistics week to the corresponding week in FantasyPros tables.
-/*sqlite3 query*
+/*sqlite3 query to combine available weeks for playerStatistics and FantasyPros tables*/
+SELECT week, 'playerStatistics' as source
+FROM (
+    SELECT DISTINCT week
+    FROM playerStatistics
+    WHERE weekStart LIKE('%2023%')
+) as ps
+
+UNION ALL
+
+SELECT week, 'fantasy_pros_WR' as source
+FROM (
+    SELECT DISTINCT week
+    FROM fantasy_pros_WR
+    WHERE season = 2023
+) as wr
+
+UNION ALL
+
+SELECT week, 'fantasy_pros_TE' as source
+FROM (
+    SELECT DISTINCT week
+    FROM fantasy_pros_TE
+    WHERE season = 2023
+) as te
+
+UNION ALL
+
+SELECT week, 'fantasy_pros_RB' as source
+FROM (
+    SELECT DISTINCT week
+    FROM fantasy_pros_RB
+    WHERE season = 2023
+) as rb
+
+UNION ALL
+
+SELECT week, 'fantasy_pros_QB' as source
+FROM (
+    SELECT DISTINCT week
+    FROM fantasy_pros_QB
+    WHERE season = 2023
+) as qb
+
+UNION ALL
+
+SELECT week, 'fantasy_pros_K' as source
+FROM (
+    SELECT DISTINCT week
+    FROM fantasy_pros_K
+    WHERE season = 2023
+) as k
+
+UNION ALL
+
+SELECT week, 'fantasy_pros_Def' as source
+FROM (
+    SELECT DISTINCT week
+    FROM fantasy_pros_Def
+    WHERE season = 2023
+) as def
+
+ORDER BY week, source;
+
+# task: we fix this by breaking it  down to more simple queries
+5. Return reults for QB position
+
+
+/*TEST query*/
+SELECT 
+    playerFK,
+    week,
+    weekStart,
+    weekEnd,
+    PassingTouchdowns,
+    PassingYards,
+    PassingAttempts,
+    Completions,
+    Interceptions
+FROM 
+    playerStatistics
+WHERE 
+    week = 'week 10'
+AND 
+    strftime('%Y', weekStart) = '2023';
+
+/*test query*/
+SELECT 
+    player_id,
+    week,
+    season,
+    points,
+    pass_tds,
+    pass_yds,
+    pass_att,
+    pass_cmp,
+    pass_ints
+FROM 
+    fantasy_pros_QB
+WHERE 
+    week = 10
+AND 
+    season = 2023;
+
+
+/*sql query to return qb stats and fp betting line*/
+SELECT 
+    ps.playerFK,
+    ps.week,
+    ps.weekStart,
+    ps.weekEnd,
+    ps.PassingTouchdowns,
+    ps.PassingYards,
+    ps.PassingAttempts,
+    ps.Completions,
+    ps.Interceptions,
+    fp.points AS projected_points,
+    fp.pass_tds AS projected_touchdowns,
+    fp.pass_yds AS projected_pass_yards,
+    fp.pass_att AS projected_pass_attempts,
+    fp.pass_cmp AS projected_completions,
+    fp.pass_ints AS projected_interceptions
+FROM 
+    playerStatistics ps
+JOIN 
+    fantasy_pros_QB fp ON ps.playerFK = fp.player_id AND ps.week = 'week 10' AND fp.week = 10
+WHERE 
+    strftime('%Y', ps.weekStart) = 2023
+AND 
+    fp.season = 2023;
+
 
 
 
