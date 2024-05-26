@@ -167,7 +167,6 @@ FROM (
 ORDER BY week, source;
 
 5. Return reults for individual athletes
-
 /*sql query to return individual athlete stats and fp betting line*/
 SELECT 
     ps.playerFK AS player_id,
