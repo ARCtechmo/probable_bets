@@ -266,5 +266,9 @@ ORDER BY
 /*sql query to return results by WR position and fp betting line by week*/
 
 
+# Tasks
+# section x: airyards
+# this is just deep passes per game so create your own stats
+
 
 
