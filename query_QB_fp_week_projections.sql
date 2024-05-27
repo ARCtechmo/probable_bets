@@ -35,15 +35,15 @@ WHERE
     AND ps.week LIKE 'Week 10'
     AND strftime('%Y', ps.weekStart) = '2023'
     AND fp.week = 10
+	AND fp.pass_tds IS NOT NULL
+	AND fp.pass_yds IS NOT NULL
+	AND fp.pass_att IS NOT NULL
+	AND fp.pass_cmp IS NOT NULL
+	AND fp.pass_ints IS NOT NULL
     AND ps.PassingTouchdowns IS NOT NULL
-    AND fp.pass_tds IS NOT NULL
     AND ps.PassingYards IS NOT NULL
-    AND fp.pass_yds IS NOT NULL
     AND ps.PassingAttempts IS NOT NULL
-    AND fp.pass_att IS NOT NULL
     AND ps.Completions IS NOT NULL
-    AND fp.pass_cmp IS NOT NULL
-    AND ps.Interceptions IS NOT NULL
-    AND fp.pass_ints IS NOT NULL
+  
 ORDER BY 
     fp_projected_points DESC;

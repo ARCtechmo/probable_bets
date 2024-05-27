@@ -245,25 +245,280 @@ WHERE
     AND ps.week LIKE 'Week 10'
     AND strftime('%Y', ps.weekStart) = '2023'
     AND fp.week = 10
+	AND fp.pass_tds IS NOT NULL
+	AND fp.pass_yds IS NOT NULL
+	AND fp.pass_att IS NOT NULL
+	AND fp.pass_cmp IS NOT NULL
+	AND fp.pass_ints IS NOT NULL
     AND ps.PassingTouchdowns IS NOT NULL
-    AND fp.pass_tds IS NOT NULL
     AND ps.PassingYards IS NOT NULL
-    AND fp.pass_yds IS NOT NULL
     AND ps.PassingAttempts IS NOT NULL
-    AND fp.pass_att IS NOT NULL
     AND ps.Completions IS NOT NULL
-    AND fp.pass_cmp IS NOT NULL
-    AND ps.Interceptions IS NOT NULL
-    AND fp.pass_ints IS NOT NULL
+  
 ORDER BY 
     fp_projected_points DESC;
 
-# Tasks
-/*sql query to return results by Def position and fp betting line by week*/
-/*sql query to return results by K position and fp betting line by week*/
-/*sql query to return results by RB position and fp betting line by week*/
-/*sql query to return results by TE position and fp betting line by week*/
 /*sql query to return results by WR position and fp betting line by week*/
+SELECT 
+    ps.playerFK AS player_id,
+    a.firstName,
+    a.lastName,
+    ps.week,
+    ps.weekStart,
+    ps.weekEnd,
+    ps.GamesPlayed,
+    fp.points AS fp_projected_points,
+    fp.points_ppr,
+	fp.rec_rec AS fp_projected_receptions,
+	ROUND((ps.Receptions * 1.0 / ps.GamesPlayed), 2) AS receptions_per_game,
+	fp.rec_yds AS fp_projected_rec_yards,
+	ps.ReceivingYardsPerGame,	
+	ps.YardsPerReception,
+	fp.rec_tds AS fp_projected_rec_tds,
+	ROUND((ps.ReceivingTouchdowns * 1.0 / ps.GamesPlayed), 2) AS receiving_tds_per_game,	
+	ROUND((ps.ReceivingTargets * 1.0 / ps.GamesPlayed), 2) AS targets_per_game,	
+	ROUND((ps.ReceivingYardsAfterCatch  * 1.0 / ps.GamesPlayed),2) AS rec_yds_after_catch_per_game,
+	ROUND((ps.ReceivingFirstDowns  * 1.0 / ps.GamesPlayed),2) AS rec_1st_downs_per_game,
+	ROUND((ps.Yards20PlusReceivingPlays  * 1.0 / ps.GamesPlayed),2) AS rec_yds_20Plus_per_game
+  
+FROM 
+    playerStatistics ps
+JOIN 
+    fantasy_pros_WR fp 
+ON 
+    ps.playerFK = fp.player_id 
+    AND ps.week LIKE 'Week ' || fp.week
+    AND strftime('%Y', ps.weekStart) = fp.season
+JOIN 
+    athletes a 
+ON 
+    ps.playerFK = a.id
+WHERE 
+    ps.PlayerPositionFK = 1
+    AND ps.week LIKE 'Week 10'
+    AND strftime('%Y', ps.weekStart) = '2023'
+    AND fp.week = 10
+	AND fp.points IS NOT NULL
+	AND fp.points_ppr IS NOT NULL
+	AND fp.rec_rec IS NOT NULL
+	AND fp.rec_tds IS NOT NULL
+	AND fp.rec_yds IS NOT NULL
+	AND ps.Receptions IS NOT NULL
+	AND ps.YardsPerReception IS NOT NULL
+	AND ps.ReceivingTargets IS NOT NULL
+	AND ps.ReceivingYards IS NOT NULL 
+	AND ps.ReceivingYardsPerGame IS NOT NULL
+	AND ps. ReceivingYardsAfterCatch IS NOT NULL
+	AND ps.ReceivingFirstDowns IS NOT NULL 
+
+ORDER BY 
+    fp_projected_points DESC;
+
+
+/*sql query to return results by RB position and fp betting line by week*/
+SELECT 
+    ps.playerFK AS player_id,
+    a.firstName,
+    a.lastName,
+    ps.week,
+    ps.weekStart,
+    ps.weekEnd,
+    ps.GamesPlayed,
+    fp.points AS fp_projected_points,
+    fp.points_ppr,
+	fp.rush_att AS fp_projected_rush_attempts,
+	ROUND((ps.RushingAttempts * 1.0 / ps.GamesPlayed), 2) AS rushing_attempts_per_game,	
+	fp.rush_yds AS fp_projected_rushing_yards,
+	ps.RushingYardsPerGame,
+	fp.rush_tds AS fp_projected_rush_tds,
+	ROUND((ps.RushingTouchdowns * 1.0 / ps.GamesPlayed), 2) AS rushing_tds_per_game,	
+	ROUND((ps.Rushing1stDowns * 1.0 / ps.GamesPlayed), 2) AS rushing_1st_Downs_per_game,	
+	fp.rec_rec AS fp_projected_receptions,
+	ROUND((ps.Receptions * 1.0 / ps.GamesPlayed), 2) AS receptions_per_game,
+	fp.rec_yds AS fp_projected_rec_yards,
+	ps.ReceivingYardsPerGame,
+	fp.rec_tds AS fp_projected_rec_tds,
+	ROUND((ps.ReceivingTouchdowns * 1.0 / ps.GamesPlayed), 2) AS receiving_tds_per_game
+	
+FROM 
+    playerStatistics ps
+JOIN 
+    fantasy_pros_RB fp 
+ON 
+    ps.playerFK = fp.player_id 
+    AND ps.week LIKE 'Week ' || fp.week
+    AND strftime('%Y', ps.weekStart) = fp.season
+JOIN 
+    athletes a 
+ON 
+    ps.playerFK = a.id
+WHERE 
+    ps.PlayerPositionFK = 9
+    AND ps.week LIKE 'Week 10'
+    AND strftime('%Y', ps.weekStart) = '2023'
+    AND fp.week = 10
+	AND fp.points IS NOT NULL
+	AND fp.points_ppr IS NOT NULL
+	AND fp.rush_att IS NOT NULL
+	AND fp.rush_yds IS NOT NULL
+	AND fp.rush_tds IS NOT NULL
+	AND ps.RushingAttempts IS NOT NULL 
+	AND ps.RushingTouchdowns IS NOT NULL
+	AND ps.RushingYards IS NOT NULL
+
+ORDER BY 
+    fp_projected_points DESC;
+
+
+/*sql query to return results by TE position and fp betting line by week*/
+SELECT 
+    ps.playerFK AS player_id,
+    a.firstName,
+    a.lastName,
+    ps.week,
+    ps.weekStart,
+    ps.weekEnd,
+    ps.GamesPlayed,
+    fp.points AS fp_projected_points,
+    fp.points_ppr,
+	fp.rec_rec AS fp_projected_receptions,
+	ROUND((ps.Receptions * 1.0 / ps.GamesPlayed), 2) AS receptions_per_game,
+	fp.rec_yds AS fp_projected_rec_yards,
+	ps.ReceivingYardsPerGame,	
+	ps.YardsPerReception,
+	fp.rec_tds AS fp_projected_rec_tds,
+	ROUND((ps.ReceivingTouchdowns * 1.0 / ps.GamesPlayed), 2) AS receiving_tds_per_game,	
+	ROUND((ps.ReceivingTargets * 1.0 / ps.GamesPlayed), 2) AS targets_per_game,	
+	ROUND((ps.ReceivingYardsAfterCatch  * 1.0 / ps.GamesPlayed),2) AS rec_yds_after_catch_per_game,
+	ROUND((ps.ReceivingFirstDowns  * 1.0 / ps.GamesPlayed),2) AS rec_1st_downs_per_game,
+	ROUND((ps.Yards20PlusReceivingPlays  * 1.0 / ps.GamesPlayed),2) AS rec_yds_20Plus_per_game
+  
+FROM 
+    playerStatistics ps
+JOIN 
+    fantasy_pros_TE fp 
+ON 
+    ps.playerFK = fp.player_id 
+    AND ps.week LIKE 'Week ' || fp.week
+    AND strftime('%Y', ps.weekStart) = fp.season
+JOIN 
+    athletes a 
+ON 
+    ps.playerFK = a.id
+WHERE 
+    ps.PlayerPositionFK = 7
+    AND ps.week LIKE 'Week 10'
+    AND strftime('%Y', ps.weekStart) = '2023'
+    AND fp.week = 10
+	AND fp.points IS NOT NULL
+	AND fp.points_ppr IS NOT NULL
+	AND fp.rec_rec IS NOT NULL
+	AND fp.rec_tds IS NOT NULL
+	AND fp.rec_yds IS NOT NULL
+	AND ps.Receptions IS NOT NULL
+	AND ps.YardsPerReception IS NOT NULL
+	AND ps.ReceivingTargets IS NOT NULL
+	AND ps.ReceivingYards IS NOT NULL 
+	AND ps.ReceivingYardsPerGame IS NOT NULL
+	AND ps. ReceivingYardsAfterCatch IS NOT NULL
+	AND ps.ReceivingFirstDowns IS NOT NULL 
+
+ORDER BY 
+    fp_projected_points DESC;
+
+
+/*sql query to return results by K position and fp projected points by week*/
+SELECT 
+    ps.playerFK AS player_id,
+    a.firstName,
+    a.lastName,
+    ps.week,
+    ps.weekStart,
+    ps.weekEnd,
+    ps.GamesPlayed,
+    fp.points AS fp_projected_points,
+    ps.TotalPointsPerGame
+	
+FROM 
+    playerStatistics ps
+JOIN 
+    fantasy_pros_K fp 
+ON 
+    ps.playerFK = fp.player_id 
+    AND ps.week = 'Week ' || fp.week
+    AND strftime('%Y', ps.weekStart) = fp.season
+JOIN 
+    athletes a 
+ON 
+    ps.playerFK = a.id
+WHERE 
+    ps.PlayerPositionFK = 22 
+    AND ps.week = 'Week 10'
+    AND strftime('%Y', ps.weekStart) = '2023'
+    AND fp.week = 10
+    AND fp.points IS NOT NULL
+    AND fp.fga IS NOT NULL
+    AND fp.fg IS NOT NULL
+    AND fp.xpt IS NOT NULL
+    AND ps.TotalPointsPerGame IS NOT NULL
+  
+ORDER BY 
+    fp_projected_points DESC;
+
+
+/*sql query to return results by K position and fp betting line by week*/
+SELECT 
+    ps.playerFK AS player_id,
+    a.firstName,
+    a.lastName,
+    ps.week,
+    ps.weekStart,
+    ps.weekEnd,
+    ps.GamesPlayed,
+    fp.fga AS fp_projected_Field_Goals_attempts,
+    ROUND((ps.FieldGoalAttempts * 1.0 / ps.GamesPlayed), 2) AS Field_Goals_Attempts_per_game,
+    fp.fg AS fp_projected_Field_Goals,
+    ROUND((ps.FieldGoalMade * 1.0 / ps.GamesPlayed), 2) AS Field_Goals_Made_per_game,
+    fp.xpt AS fp_projected_Extra_points,
+    ROUND((ps.ExtraPointsMade * 1.0 / ps.GamesPlayed), 2) AS Extra_Points_per_game
+FROM 
+    playerStatistics ps
+JOIN 
+    fantasy_pros_K fp 
+ON 
+    ps.playerFK = fp.player_id 
+    AND ps.week = 'Week ' || fp.week
+    AND strftime('%Y', ps.weekStart) = fp.season
+JOIN 
+    athletes a 
+ON 
+    ps.playerFK = a.id
+WHERE 
+    ps.PlayerPositionFK = 22 
+    AND ps.week = 'Week 10'
+    AND strftime('%Y', ps.weekStart) = '2023'
+    AND fp.week = 10
+    AND fp.fga IS NOT NULL
+    AND fp.fg IS NOT NULL
+    AND fp.xpt IS NOT NULL
+    AND (
+        ps.FieldGoalAttempts IS NOT NULL
+        OR ps.FieldGoalMade IS NOT NULL
+        OR ps.ExtraPointsMade IS NOT NULL
+    )
+    AND (
+        ROUND((ps.FieldGoalAttempts * 1.0 / ps.GamesPlayed), 2) IS NOT NULL
+        OR ROUND((ps.FieldGoalMade * 1.0 / ps.GamesPlayed), 2) IS NOT NULL
+        OR ROUND((ps.ExtraPointsMade * 1.0 / ps.GamesPlayed), 2) IS NOT NULL
+    )
+ORDER BY 
+    fp.fga DESC;
+
+
+# Tasks
+# sql query for defense 
+# espn defense for players will not match team defenses for fp 
+# we can do individual def positions if that is part of the lineup; if not then not worth doing
 
 
 # Tasks
@@ -274,6 +529,12 @@ ORDER BY
 # Create new fields for totals for the game (not cumulative) for each week
 # ESPN show the cumulative stats up to that week
 # use sql formulas to calculate total per week (ps.PassingTouchdowns - SUM(PassingTouchdowns prior week))
+
+# Tasks
+# draft_kings_lines, fanduel_lines, mgm_lines, pointsbet_lines,
+
+# Tasks
+pro_football_focus
 
 
 
