@@ -270,5 +270,10 @@ ORDER BY
 # section x: airyards
 # this is just deep passes per game so create your own stats
 
+# Tasks
+# Create new fields for totals for the game (not cumulative) for each week
+# ESPN show the cumulative stats up to that week
+# use sql formulas to calculate total per week (ps.PassingTouchdowns - SUM(PassingTouchdowns prior week))
+
 
 
