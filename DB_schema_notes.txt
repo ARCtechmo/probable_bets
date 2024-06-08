@@ -515,11 +515,94 @@ ORDER BY
     fp.fga DESC;
 
 
-# Tasks
-# sql query for defense 
-# espn defense for players will not match team defenses for fp 
-# we can do individual def positions if that is part of the lineup; if not then not worth doing
+# /*sql query to return predicted game scores*/
+# draft_kings_lines, fanduel_lines, mgm_lines, pointsbet_lines
+SELECT 
+    dk.gameID,
+    dk.gameDate,
+    ht.teamShortName AS homeTeam,
+    at.teamShortName AS awayTeam,
+    dk.predictedHomeTeamScore AS dk_HomeScore,
+    fd.predictedHomeTeamScore AS fd_HomeScore,
+    mgm.predictedHomeTeamScore AS mgm_HomeScore,
+    pb.predictedHomeTeamScore AS pb_HomeScore,
+    dk.predictedOpponentTeamScore AS dk_AwayScore,  
+    fd.predictedOpponentTeamScore AS fd_AwayScore, 
+    mgm.predictedOpponentTeamScore AS mgm_AwayScore,
+    pb.predictedOpponentTeamScore AS pb_AwayScore
+FROM 
+    draft_kings_lines dk
+JOIN 
+    fanduel_lines fd ON dk.gameID = fd.gameID AND dk.gameDate = fd.gameDate
+JOIN 
+    mgm_lines mgm ON dk.gameID = mgm.gameID AND dk.gameDate = mgm.gameDate
+JOIN 
+    pointsbet_lines pb ON dk.gameID = pb.gameID AND dk.gameDate = pb.gameDate
+JOIN 
+    teams ht ON dk.homeTeam = ht.id
+JOIN 
+    teams at ON dk.awayTeam = at.id
+GROUP BY 
+    dk.gameID
+ORDER BY 
+    dk.gameID, homeTeam;
 
+
+# /*sql query to return moneylines*/
+# draft_kings_lines, fanduel_lines, mgm_lines, pointsbet_lines
+SELECT DISTINCT
+    dk.gameID,
+    dk.gameDate,
+    ht.teamShortName AS Team,
+    dk.moneyline AS dk_moneyline,
+    fd.moneyline AS fd_moneyline,
+    mgm.moneyline AS mgm_moneyline,
+    pb.moneyline AS pb_moneyline
+FROM 
+    draft_kings_lines dk
+JOIN 
+    fanduel_lines fd ON dk.gameID = fd.gameID AND dk.gameDate = fd.gameDate AND dk.homeTeam = fd.homeTeam AND dk.awayTeam = fd.awayTeam
+JOIN 
+    mgm_lines mgm ON dk.gameID = mgm.gameID AND dk.gameDate = mgm.gameDate AND dk.homeTeam = mgm.homeTeam AND dk.awayTeam = mgm.awayTeam
+JOIN 
+    pointsbet_lines pb ON dk.gameID = pb.gameID AND dk.gameDate = pb.gameDate AND dk.homeTeam = pb.homeTeam AND dk.awayTeam = pb.awayTeam
+JOIN 
+    teams ht ON dk.homeTeam = ht.id
+JOIN 
+    teams at ON dk.awayTeam = at.id
+ORDER BY 
+    dk.gameID, Team;
+
+
+# Tasks - adjust this query to add columns for implied odds and sportsbook edge
+# https://www.gamingtoday.com/tools/implied-probability/
+# /*sql query to return moneylines, implied odds, and sportsbook edge*/
+# draft_kings_lines, fanduel_lines, mgm_lines, pointsbet_lines
+SELECT DISTINCT
+    dk.gameID,
+    dk.gameDate,
+    ht.teamShortName AS Team,
+    dk.moneyline AS dk_moneyline,
+    fd.moneyline AS fd_moneyline,
+    mgm.moneyline AS mgm_moneyline,
+    pb.moneyline AS pb_moneyline
+FROM 
+    draft_kings_lines dk
+JOIN 
+    fanduel_lines fd ON dk.gameID = fd.gameID AND dk.gameDate = fd.gameDate AND dk.homeTeam = fd.homeTeam AND dk.awayTeam = fd.awayTeam
+JOIN 
+    mgm_lines mgm ON dk.gameID = mgm.gameID AND dk.gameDate = mgm.gameDate AND dk.homeTeam = mgm.homeTeam AND dk.awayTeam = mgm.awayTeam
+JOIN 
+    pointsbet_lines pb ON dk.gameID = pb.gameID AND dk.gameDate = pb.gameDate AND dk.homeTeam = pb.homeTeam AND dk.awayTeam = pb.awayTeam
+JOIN 
+    teams ht ON dk.homeTeam = ht.id
+JOIN 
+    teams at ON dk.awayTeam = at.id
+ORDER BY 
+    dk.gameID, Team;
+
+# Tasks
+pro_football_focus
 
 # Tasks
 # section x: airyards
@@ -531,10 +614,8 @@ ORDER BY
 # use sql formulas to calculate total per week (ps.PassingTouchdowns - SUM(PassingTouchdowns prior week))
 
 # Tasks
-# draft_kings_lines, fanduel_lines, mgm_lines, pointsbet_lines,
-
-# Tasks
-pro_football_focus
-
+# sql query for defense 
+# espn defense for players will not match team defenses for fp 
+# we can do individual def positions if that is part of the lineup; if not then not worth doing
 
 
