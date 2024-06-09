@@ -516,7 +516,6 @@ ORDER BY
 
 
 # /*sql query to return predicted game scores*/
-# draft_kings_lines, fanduel_lines, mgm_lines, pointsbet_lines
 SELECT 
     dk.gameID,
     dk.gameDate,
@@ -549,7 +548,6 @@ ORDER BY
 
 
 # /*sql query to return moneylines*/
-# draft_kings_lines, fanduel_lines, mgm_lines, pointsbet_lines
 SELECT DISTINCT
     dk.gameID,
     dk.gameDate,
@@ -574,18 +572,43 @@ ORDER BY
     dk.gameID, Team;
 
 
-# Tasks - adjust this query to add columns for implied odds and sportsbook edge
-# https://www.gamingtoday.com/tools/implied-probability/
-# /*sql query to return moneylines, implied odds, and sportsbook edge*/
-# draft_kings_lines, fanduel_lines, mgm_lines, pointsbet_lines
+# /*sql query to return moneylines and implied odds*/
 SELECT DISTINCT
     dk.gameID,
     dk.gameDate,
     ht.teamShortName AS Team,
     dk.moneyline AS dk_moneyline,
+    ROUND(
+        CASE 
+            WHEN dk.moneyline < 0 THEN (-1 * dk.moneyline) / ((-1 * dk.moneyline) + 100.0)
+            ELSE 100.0 / (dk.moneyline + 100.0)
+        END, 
+        3
+    ) AS dk_odds,
     fd.moneyline AS fd_moneyline,
+    ROUND(
+        CASE 
+            WHEN fd.moneyline < 0 THEN (-1 * fd.moneyline) / ((-1 * fd.moneyline) + 100.0)
+            ELSE 100.0 / (fd.moneyline + 100.0)
+        END, 
+        3
+    ) AS fd_odds,
     mgm.moneyline AS mgm_moneyline,
-    pb.moneyline AS pb_moneyline
+    ROUND(
+        CASE 
+            WHEN mgm.moneyline < 0 THEN (-1 * mgm.moneyline) / ((-1 * mgm.moneyline) + 100.0)
+            ELSE 100.0 / (mgm.moneyline + 100.0)
+        END, 
+        3
+    ) AS mgm_odds,
+    pb.moneyline AS pb_moneyline,
+    ROUND(
+        CASE 
+            WHEN pb.moneyline < 0 THEN (-1 * pb.moneyline) / ((-1 * pb.moneyline) + 100.0)
+            ELSE 100.0 / (pb.moneyline + 100.0)
+        END, 
+        3
+    ) AS pb_odds
 FROM 
     draft_kings_lines dk
 JOIN 
@@ -600,6 +623,7 @@ JOIN
     teams at ON dk.awayTeam = at.id
 ORDER BY 
     dk.gameID, Team;
+
 
 # Tasks
 pro_football_focus
@@ -613,9 +637,12 @@ pro_football_focus
 # ESPN show the cumulative stats up to that week
 # use sql formulas to calculate total per week (ps.PassingTouchdowns - SUM(PassingTouchdowns prior week))
 
-# Tasks
+# Future Item
 # sql query for defense 
 # espn defense for players will not match team defenses for fp 
 # we can do individual def positions if that is part of the lineup; if not then not worth doing
+
+# Future Item
+# /*sql query to return sportsbook edge based on moneylines and implied odds: (impliedOdds1 + impliedOdds2) - 1*/
 
 
