@@ -167,6 +167,7 @@ FROM (
 ORDER BY week, source;
 
 5. Return reults for individual athletes
+
 /*sql query to return individual athlete stats and fp betting line*/
 SELECT 
     ps.playerFK AS player_id,
@@ -208,6 +209,7 @@ WHERE
     AND fp.pass_ints IS NOT NULL;
 
 6. Return results for top ranked positions
+
 /*sql query to return results by QB position and fp betting line by week*/
 SELECT 
     ps.playerFK AS player_id,
@@ -257,6 +259,7 @@ WHERE
   
 ORDER BY 
     fp_projected_points DESC;
+
 
 /*sql query to return results by WR position and fp betting line by week*/
 SELECT 
@@ -515,7 +518,9 @@ ORDER BY
     fp.fga DESC;
 
 
-# /*sql query to return predicted game scores*/
+7. Return predicted game scores, moneyline, and odds
+
+/*sql query to return predicted game scores*/
 SELECT 
     dk.gameID,
     dk.gameDate,
@@ -547,7 +552,7 @@ ORDER BY
     dk.gameID, homeTeam;
 
 
-# /*sql query to return moneylines*/
+/*sql query to return moneylines*/
 SELECT DISTINCT
     dk.gameID,
     dk.gameDate,
@@ -572,7 +577,7 @@ ORDER BY
     dk.gameID, Team;
 
 
-# /*sql query to return moneylines and implied odds*/
+/*sql query to return moneylines and implied odds*/
 SELECT DISTINCT
     dk.gameID,
     dk.gameDate,
@@ -625,17 +630,82 @@ ORDER BY
     dk.gameID, Team;
 
 
-# Tasks
-pro_football_focus
+8. Prop bets moneyline, and odds
 
-# Tasks
-# section x: airyards
-# this is just deep passes per game so create your own stats
+/*sql query to return prop bets moneyline*/
+SELECT 
+    pff.props_last_updated_at AS date,
+    pff.player_id AS player,
+    a.firstName AS player_first_name,
+    a.lastName AS player_last_name,
+    pff.position_id AS position,
+    pos.position AS position_name,
+    pff.team_id AS team,
+    t.teamShortName AS team_name,
+    pff.prop_type,
+    pff.projection,
+    pff.line,
+    pff.over,
+    pff.under
+FROM 
+    pro_football_focus pff
+JOIN 
+    athletes a ON pff.player_id = a.id
+JOIN 
+    positions pos ON pff.position_id = pos.id
+JOIN 
+    teams t ON pff.team_id = t.id
+ORDER BY date DESC
+
+
+/*sql query to return prop bets moneyline and odds*/
+SELECT 
+    pff.props_last_updated_at AS date,
+    pff.player_id AS player,
+    a.firstName AS player_first_name,
+    a.lastName AS player_last_name,
+    pff.position_id AS position,
+    pos.position AS position_name,
+    pff.team_id AS team,
+    t.teamShortName AS team_name,
+    pff.prop_type,
+    pff.projection,
+    pff.line,
+    pff.over,
+    ROUND(
+        CASE 
+            WHEN pff.over < 0 THEN (-1 * pff.over) / ((-1 * pff.over) + 100.0)
+            ELSE 100.0 / (pff.over + 100.0)
+        END, 
+        3
+    ) AS pff_over_odds,
+    pff.under,
+    ROUND(
+        CASE 
+            WHEN pff.under < 0 THEN (-1 * pff.under) / ((-1 * pff.under) + 100.0)
+            ELSE 100.0 / (pff.under + 100.0)
+        END, 
+        3
+    ) AS pff_under_odds
+FROM 
+    pro_football_focus pff
+JOIN 
+    athletes a ON pff.player_id = a.id
+JOIN 
+    positions pos ON pff.position_id = pos.id
+JOIN 
+    teams t ON pff.team_id = t.id;
+
 
 # Tasks
 # Create new fields for totals for the game (not cumulative) for each week
 # ESPN show the cumulative stats up to that week
 # use sql formulas to calculate total per week (ps.PassingTouchdowns - SUM(PassingTouchdowns prior week))
+
+
+# Tasks
+# section x: airyards
+# this is just deep passes per game so create your own stats
 
 # Future Item
 # sql query for defense 
