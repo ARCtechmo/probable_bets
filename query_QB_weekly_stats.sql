@@ -6,12 +6,12 @@ SELECT
     a.firstName,
     a.lastName,
     pos.abbr AS position,
-    ps.PassingTouchdowns AS passing_touchdowns,
-    ps.TotalQBR,
+    ps.PassingTouchdowns AS passing_touchdowns,   
     ps.PassingYards AS passing_yards,
+	ps.Completions,
     ps.PassingAttempts AS passing_attempts,
-    ps.Completions AS completions,
-    ps.Interceptions AS interceptions
+	ps.Interceptions AS interceptions,
+	ps.TotalQBR
 FROM
     playerStatistics ps
 JOIN 

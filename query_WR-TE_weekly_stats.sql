@@ -7,9 +7,9 @@ SELECT
     a.lastName,
     pos.abbr AS position,
     ps.Receptions AS receptions,
+	ps.ReceivingTargets AS receiving_targets,
     ps.ReceivingYards AS receiving_yards,
     ps.ReceivingTouchdowns AS receiving_touchdowns,
-    ps.ReceivingTargets AS receiving_targets,
     ps.ReceivingYardsAfterCatch AS receiving_yards_after_catch,
     ps.ReceivingFirstDowns AS receiving_first_downs,
     ps.Yards20PlusReceivingPlays AS twenty_plus_yards_receiving_plays
