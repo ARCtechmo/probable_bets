@@ -35,9 +35,9 @@ ON
     ps.playerFK = a.id
 WHERE 
     ps.PlayerPositionFK = 7
-    AND ps.week LIKE 'Week 10'
-    AND strftime('%Y', ps.weekStart) = '2023'
-    AND fp.week = 10
+    AND ps.week LIKE 'Week 10'  /*manually change the week*/
+    AND strftime('%Y', ps.weekStart) = '2023' /*manually change the year*/
+    AND fp.week = 10  /*manually change the week*/
 	AND fp.points IS NOT NULL
 	AND fp.points_ppr IS NOT NULL
 	AND fp.rec_rec IS NOT NULL
