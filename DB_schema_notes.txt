@@ -27,6 +27,8 @@ FROM playerStatistics
 WHERE week LIKE('week 6') AND
 weekStart LIKE('%2023%')
 
+3. 
+
 Section C: FantasyPros Table foreign key relationships
 1. The FantasyPros tables are as follows:
 fantasy_pros_Def
