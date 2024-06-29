@@ -35,9 +35,9 @@ JOIN
 JOIN 
     positions pos ON ps.PlayerPositionFK = pos.id
 WHERE
-    LOWER(a.firstName) = LOWER('patrick')
-    AND LOWER(a.lastName) = LOWER('mahomes')
-    AND strftime('%Y', ps.weekStart) = '2023'
+    LOWER(a.firstName) = LOWER('patrick') /*manually change last name*/
+    AND LOWER(a.lastName) = LOWER('mahomes') /*manually change first name*/
+    AND strftime('%Y', ps.weekStart) = '2023' /*manually change year*/
     AND NOT (
         ps.PassingTouchdowns IS NULL AND
         ps.TotalQBR IS NULL AND
@@ -63,4 +63,4 @@ WHERE
         ps.ExtraPointsMade IS NULL
     )
 ORDER BY
-    CAST(SUBSTR(ps.week, 6) AS INTEGER) DESC;
+    CAST(SUBSTR(ps.week, 6) AS INTEGER);
