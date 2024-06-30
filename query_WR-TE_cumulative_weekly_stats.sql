@@ -1,4 +1,4 @@
-/*sql query returns TE / WR stats by week*/
+/*sql query returns cumulative TE / WR stats by week*/
 SELECT
     ps.weekStart,
     ps.weekEnd,

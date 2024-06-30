@@ -1,4 +1,4 @@
-/*sql query returns QB stats by week */
+/*sql query returns QB cumulative stats by week */
 SELECT
     ps.weekStart,
     ps.weekEnd,

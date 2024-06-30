@@ -852,8 +852,8 @@ ORDER BY
     cs.adjusted_week;
 
 
-# FIXME review and adjust 'week' column (if necessary)
-/*sql query returns QB stats by week */
+# review and adjust 'week' column (if necessary)
+/*sql query returns cumulative QB stats by week */
 SELECT
     ps.weekStart,
     ps.weekEnd,
@@ -889,8 +889,8 @@ WHERE
 ORDER BY
     ps.PassingTouchdowns DESC;
 
-# FIXME review and adjust 'week' column (if necessary)
-/*sql query returns RB stats by week */
+# review and adjust 'week' column (if necessary)
+/*sql query returns cumulative RB stats by week */
 SELECT
     ps.weekStart,
     ps.weekEnd,
@@ -927,8 +927,8 @@ WHERE
 ORDER BY
     ps.RushingTouchdowns DESC;
 
-# FIXME review and adjust 'week' column (if necessary)
-/*sql query returns TE / WR stats by week*/
+# review and adjust 'week' column (if necessary)
+/*sql query returns cumulative TE / WR stats by week*/
 SELECT
     ps.weekStart,
     ps.weekEnd,

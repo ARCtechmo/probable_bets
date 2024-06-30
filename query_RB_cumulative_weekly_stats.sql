@@ -1,4 +1,4 @@
-/*sql query returns RB stats by week */
+/*sql query returns cumulative RB stats by week */
 SELECT
     ps.weekStart,
     ps.weekEnd,
