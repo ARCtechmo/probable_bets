@@ -72,7 +72,6 @@ def parse_espn_url(url):
         return None
 
 # function parses the ESPN urls and dumps into json files
-# code modifications to handle separate counts for each "sort" criteria
 def handle_espn_data(url, remaining_athletes=None):
     data = fetch_data(url)
     count = 0
@@ -114,6 +113,77 @@ def handle_espn_data(url, remaining_athletes=None):
                 json.dump(data, txtfile, indent=4)
 
     return count, limit, athletes_fetched, sort_param
+
+## TASKS - test
+# function parses and formats the ESPN urls and includes week parameter
+def parse_espn_url_wks(url, week):
+    query_string = urlparse(url).query
+    params = parse_qs(query_string)
+    sort_param = params.get('sort', [''])[0]
+    page_param = params.get('page', [''])[0]
+    season_param = params.get('season', [''])[0]
+    seasontype_param = params.get('seasontype', [''])[0]
+
+    if sort_param and page_param and season_param and seasontype_param:
+        sort_value = sort_param.split('%')[0]
+        sort_value = sort_value.replace(':desc', '').replace('.', '_')
+        return f"espn_{sort_value}_page{page_param}_{season_param}_seasontype{seasontype_param}_week{week}.json"
+    return None
+
+# TASKS - test
+# function parses the ESPN urls to include week parameter and dumps into json files 
+def handle_espn_wk_data(url, week, remaining_athletes=None):
+    data = fetch_data(url)
+    count = 0
+    limit = 0
+    athletes_fetched = 0
+    sort_param = ''
+
+    if data:
+        count = data.get('pagination', {}).get('count', 0)
+        limit = data.get('pagination', {}).get('limit', 0)
+        sort_param = data.get('sort', '')
+        athletes = data.get('athletes', [])
+
+        if remaining_athletes is not None:
+            athletes = athletes[:remaining_athletes]
+
+        athletes_fetched = len(athletes)
+        json_file_name = parse_espn_url_wks(url, week)
+
+        if json_file_name:
+            with open(json_file_name, "w") as txtfile:
+                json.dump(data, txtfile, indent=4)
+
+    return count, limit, athletes_fetched, sort_param
+
+# tasks TEST
+# implement pagination in the if __name__ == "__main__" block
+def handle_espn_pagination_wk(initial_espn_url, week):
+    count, limit, athletes_fetched, sort_param = handle_espn_wk_data(initial_espn_url, week)
+    if limit == 0:
+        print(f"Limit is zero for URL: {initial_espn_url}. Skipping pagination.")
+        return
+
+    sort_data[sort_param] = {'count': count, 'limit': limit, 'total_athletes_fetched': 0}
+    sort_data[sort_param]['total_athletes_fetched'] += athletes_fetched
+    total_pages = ceil(count / limit)
+
+    remaining_athletes = count - athletes_fetched
+    print(f"Fetching {athletes_fetched} athletes for {sort_param} on page 1")  
+
+    for page in range(2, total_pages + 1):
+        espn_url = initial_espn_url.replace("page=1", f"page={page}")
+
+        if remaining_athletes >= limit:
+            _, _, athletes_fetched, _ = handle_espn_wk_data(espn_url, week)
+            print(f"Fetching {athletes_fetched} athletes for {sort_param} on page {page}")  
+        else:
+            _, _, athletes_fetched, _ = handle_espn_wk_data(espn_url, week, remaining_athletes)
+            print(f"Fetching remaining {athletes_fetched} athletes for {sort_param} on page {page}")  
+
+        sort_data[sort_param]['total_athletes_fetched'] += athletes_fetched
+        remaining_athletes -= athletes_fetched  
 
 # implement pagination in the if __name__ == "__main__" block
 def handle_espn_pagination(initial_espn_url):
@@ -313,6 +383,19 @@ def get_seasontype():
             # playoffs have started
             return str(3)
 
+def get_seasontype_from_user():
+    while True:
+        season_input = input("Enter the season type (regular (R) or playoff (P), or hit 'enter' for to get regular season data): ").strip().lower()
+        if season_input in ['q', 'Q', 'Quit', 'quit', 'QUIT']:
+            print("Exiting ESPN section")
+            return None
+        elif season_input in ['regular', 'Regular', 'REGULAR', 'r', 'R', '']:
+            return str(2)
+        elif season_input in ['playoff', 'Playoff', 'PLAYOFF', 'p', 'P']:
+            return str(3)
+        else:
+            print("Invalid input. Please enter 'regular' or 'playoff'.")
+
 def get_week():
     user_input = input("Enter the week (1,2,3...22): ")
     if user_input.isdigit():
@@ -326,14 +409,14 @@ def get_week():
         print("Invalid input. Please enter a number.")
         return None
 
+
+# TASKS - continue work on the while loop and user input
 # -main loop for data fetching and user input prompt only executes when the script is run directly.
 # -main loop will not get executed if import.py file is imported as a module
 if __name__ == "__main__":
     year = None
     season = None 
     week = None
-
-    ## NOTE: new function to get seasontype 
     seasontype = None
     
     # list of URLs
@@ -352,39 +435,106 @@ if __name__ == "__main__":
                 "https://site.web.api.espn.com/apis/common/v3/sports/football/nfl/statistics/byathlete?region=us&lang=en&contentorigin=espn&isqualified=true&page=1&limit=50&category=specialTeams%3Apunting&sort=punting.grossAvgPuntYards%3Adesc&season={year}&seasontype={seasontype}"
                 ]
 
+    # New variable for URLs with week parameter
+    espn_template_urls_wk = [
+    "https://site.web.api.espn.com/apis/common/v3/sports/football/nfl/statistics/byathlete?region=us&lang=en&contentorigin=espn&isqualified=false&page=1&limit=50&category=offense%3Apassing&sort=passing.passingYards%3Adesc&season={year}&seasontype={seasontype}&week={week}",
+    "https://site.web.api.espn.com/apis/common/v3/sports/football/nfl/statistics/byathlete?region=us&lang=en&contentorigin=espn&isqualified=false&page=1&limit=50&category=offense%3Arushing&sort=rushing.rushingYards%3Adesc&season={year}&seasontype={seasontype}&week={week}",
+    "https://site.web.api.espn.com/apis/common/v3/sports/football/nfl/statistics/byathlete?region=us&lang=en&contentorigin=espn&isqualified=false&page=1&limit=50&category=offense%3Areceiving&sort=receiving.receivingYards%3Adesc&season={year}&seasontype={seasontype}&week={week}",
+    "https://site.web.api.espn.com/apis/common/v3/sports/football/nfl/statistics/byathlete?region=us&lang=en&contentorigin=espn&isqualified=false&page=1&limit=50&category=defense&sort=defensive.totalTackles%3Adesc&season={year}&seasontype={seasontype}&week={week}",
+    "https://site.web.api.espn.com/apis/common/v3/sports/football/nfl/statistics/byathlete?region=us&lang=en&contentorigin=espn&isqualified=false&page=1&limit=50&category=scoring&sort=scoring.totalPoints%3Adesc&season={year}&seasontype={seasontype}&week={week}",
+    "https://site.web.api.espn.com/apis/common/v3/sports/football/nfl/statistics/byathlete?region=us&lang=en&contentorigin=espn&isqualified=false&page=1&limit=50&category=specialTeams%3Areturning&sort=returning.kickReturnYards%3Adesc&season={year}&seasontype={seasontype}&week={week}",
+    "https://site.web.api.espn.com/apis/common/v3/sports/football/nfl/statistics/byathlete?region=us&lang=en&contentorigin=espn&isqualified=false&page=1&limit=50&category=specialTeams%3Akicking&sort=kicking.fieldGoalsMade%3Adesc&season={year}&seasontype={seasontype}&week={week}",
+    "https://site.web.api.espn.com/apis/common/v3/sports/football/nfl/statistics/byathlete?region=us&lang=en&contentorigin=espn&isqualified=true&page=1&limit=50&category=specialTeams%3Apunting&sort=punting.grossAvgPuntYards%3Adesc&season={year}&seasontype={seasontype}&week={week}"
+    ]
+
     while True:
         user_choice = input("Would you like to download data or quit: press 1 to download data  or 'q' or 'quit' to exit the program. ")
-        if user_choice.lower() in ['q' or 'Q']:
+        if user_choice.lower() in ['q', 'Q', 'Quit', 'quit', 'QUIT']:
             print("Exiting the program")
             break
         
         elif user_choice == '1':
-            print("Make a selection:")
+            api_choice = input("Select the API (1-4) or press 'q' or 'Q' to quit: ").strip().lower()
             print("(1) ESPN")
             print("(2) Pro Football Focus")
             print("(3) Fantasy Pros")
             print("(4) Rotowire")
-            print("Press 'q' or 'Q' to quit.")
 
-            api_choice = input("Enter your choice: ")
-            if api_choice.lower() in ['q' or 'Q']:
+            if api_choice in ['q', 'Q', 'Quit', 'quit', 'QUIT']:
                 print("Exiting the program")
                 break
 
             elif api_choice == '1':
-                year = get_year() 
-                seasontype = get_seasontype()
-                handle_random_delay()
-                espn_urls = [url_template.format(year=year, seasontype=seasontype) for url_template in espn_template_urls]                
-                print("Fetching data from ESPN...")
+                while True:
+                    year_input = input("Enter the year (press 'enter' for the current year or 'q' to quit): ").strip().lower()
+                    if year_input in ['q', 'Q', 'Quit', 'quit', 'QUIT']:
+                        print("Exiting ESPN section")
+                        break
+                    elif year_input == '':
+                        year = get_year()
+                        seasontype = get_seasontype()
+                    else:
+                        year = year_input
+                        seasontype = get_seasontype_from_user()
+                        if seasontype is None:
+                            break
 
-                # Loop through all the ESPN URLs 
-                for initial_espn_url in espn_urls:
-                    handle_espn_pagination(initial_espn_url)
+                
+                    while True:
+                        week = get_week()
+                        if week is None:
+                            print("Exiting ESPN section")
+                            break
+                        else:
+                            handle_random_delay()
+                            espn_urls = [url_template.format(year=year, seasontype=seasontype, week=week) for url_template in espn_template_urls_wk]
+                            print("Fetching data from ESPN for specified week and year...")
 
-                    # Verify the data
-                    verify_data_fetched(sort_data)
-        
+                            # Loop through all the ESPN URLs 
+                            for initial_espn_url in espn_urls:
+                                handle_espn_pagination_wk(initial_espn_url, week)
+
+                            # Verify the data
+                            verify_data_fetched(sort_data)
+                            break
+                    break
+                
+                # week_option = input("Do you want to specify a week? (y/n): ").strip().lower()
+                # if week_option in ['y', 'Y', '', 'yes', 'YES', 'yEs', 'yES', 'yeS', 'YeS']:
+                #     year = get_year() 
+                #     seasontype = get_seasontype()
+                #     week = get_week()
+                #     if week:
+                #         handle_random_delay()
+                #         espn_urls = [url_template.format(year=year, seasontype=seasontype, week=week) for url_template in espn_template_urls_wk]
+                #         print(f"Fetching {year} data from ESPN for specified week {week}")
+
+                #         # Loop through all the ESPN URLs 
+                #         for initial_espn_url in espn_urls:
+                #             handle_espn_pagination(initial_espn_url, week)
+
+                #         # Verify the data
+                #         verify_data_fetched(sort_data)
+                        # break
+
+                # elif week_option in ['n', 'no']:
+                #     year = get_year()
+                #     seasontype = get_seasontype()
+                #     handle_random_delay()
+                #     espn_urls = [url_template.format(year=year, seasontype=seasontype) for url_template in espn_template_urls]                
+                #     print("Fetching data from ESPN for current year and week...")
+
+                #     # Loop through all the ESPN URLs 
+                #     for initial_espn_url in espn_urls:
+                #         handle_espn_pagination(initial_espn_url)
+
+                #     # Verify the data
+                #     verify_data_fetched(sort_data)
+                #     break
+                
+                # else:
+                #     print("Invalid choice. Please try again.")
+
             elif api_choice =='2':
                 handle_random_delay()
                 handle_pff_data(pro_football_focus_url)
