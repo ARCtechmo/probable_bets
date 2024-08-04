@@ -1,20 +1,37 @@
-import os
 import pandas as pd
 import re
 import glob
 
 def extract_data(file_path, columns):
+
+    # Extract year and week from the file name
+    match = re.search(r'(\d{4})_wk(\d+)', file_path)
+    if match:
+        year = int(match.group(1))
+        week = int(match.group(2))
+    else:
+        raise ValueError("Filename does not contain year and week information")
+    
     # Read the CSV file into a pandas DataFrame
     df = pd.read_csv(file_path)
     
+    # Insert the year and week as the first two columns
+    df.insert(0, 'Season', year)  
+    df.insert(1, 'Week', week)  
+    
     # Select relevant columns that are present in the DataFrame
     existing_columns = [col for col in columns if col in df.columns]
-    df = df[existing_columns]
+
+    # modified column order
+    if 'Player' in existing_columns:
+        column_order = ['Season', 'Week', 'Player', 'Rank'] + [col for col in existing_columns if col not in ['Season', 'Week', 'Player', 'Rank']]
+    else:
+        column_order = ['Season', 'Week', 'Rank'] + [col for col in existing_columns if col not in ['Season', 'Week', 'Rank']]
+    df = df[column_order]
     
     # Convert DataFrame to list of dictionaries
-    data_array = df.to_dict(orient='records')
-    
-    return data_array
+    data_array = df.to_dict(orient='records') 
+    return data_array  
 
 # Define columns for each position
 columns_dict = {
@@ -58,8 +75,8 @@ for position, pattern in file_patterns.items():
 # Define new field names mapping for each position
 field_mappings = {
     'WR': {
-        'Rank': 'rank',
         'Player': 'player',
+        'Rank': 'rank',
         'REC': 'receptions',
         'TGT': 'targets',
         'YDS': 'yards',
@@ -77,8 +94,8 @@ field_mappings = {
         'ROST': 'roster_percentage'
     },
     'TE': {
-        'Rank': 'rank',
         'Player': 'player',
+        'Rank': 'rank',
         'REC': 'receptions',
         'TGT': 'targets',
         'YDS': 'yards',
@@ -96,8 +113,8 @@ field_mappings = {
         'ROST': 'roster_percentage'
     },
     'RB': {
-        'Rank': 'rank',
         'Player': 'player',
+        'Rank': 'rank',
         'ATT': 'attempts',
         'YDS': 'yards',
         'Y/A': 'yards_per_attempt',
@@ -116,8 +133,8 @@ field_mappings = {
         'ROST': 'roster_percentage'
     },
     'QB': {
-        'Rank': 'rank',
         'Player': 'player',
+        'Rank': 'rank',
         'CMP': 'completions',
         'ATT': 'attempts',
         'PCT': 'completion_percentage',
@@ -135,8 +152,8 @@ field_mappings = {
         'ROST': 'roster_percentage'
     },
     'LB': {
-        'Rank': 'rank',
         'Player': 'player',
+        'Rank': 'rank',
         'TACKLE': 'tackles',
         'ASSIST': 'assists',
         'SACK': 'sacks',
@@ -151,8 +168,8 @@ field_mappings = {
         'ROST': 'roster_percentage'
     },
     'K': {
-        'Rank': 'rank',
         'Player': 'player',
+        'Rank': 'rank',
         'FGM': 'field_goals_made',
         'FGA': 'field_goals_attempted',
         'PCT': 'field_goal_percentage',
@@ -165,8 +182,8 @@ field_mappings = {
         'ROST': 'roster_percentage'
     },
     'DST': {
-        'Rank': 'rank',
         'Player': 'team',
+        'Rank': 'rank',
         'SACK': 'sacks',
         'INT': 'interceptions',
         'FR': 'fumble_recoveries',
@@ -179,8 +196,8 @@ field_mappings = {
         'ROST': 'roster_percentage'
     },
     'DL': {
-        'Rank': 'rank',
         'Player': 'player',
+        'Rank': 'rank',
         'TACKLE': 'tackles',
         'ASSIST': 'assists',
         'SACK': 'sacks',
@@ -195,8 +212,8 @@ field_mappings = {
         'ROST': 'roster_percentage'
     },
     'DB': {
-        'Rank': 'rank',
         'Player': 'player',
+        'Rank': 'rank',
         'TACKLE': 'tackles',
         'ASSIST': 'assists',
         'SACK': 'sacks',
